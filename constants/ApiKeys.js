@@ -6,4 +6,4 @@ const firebaseConfig = {
     databaseURL: "https://wejay-254716.firebaseio.com",
     storageBucket: "wejay-254716.appspot.com",
   };
-  const firebaseApp = firebase.initializeApp(firebaseConfig);
+export const firebaseApp = firebase.initializeApp(firebaseConfig);
