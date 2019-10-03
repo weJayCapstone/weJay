@@ -1,5 +1,6 @@
 import * as WebBrowser from 'expo-web-browser';
-import React from 'react';
+//react hooks
+import React, { useState, useEffect } from 'react';
 import {
   Image,
   Platform,
@@ -12,15 +13,47 @@ import {
 import {createStackNavigator, createAppContainer} from 'react-navigation'
 import SpotifyLoginScreen from './SpotifyLogin'
 import { MonoText } from '../components/StyledText';
+import db from '../cloudServer/index'
 
 const LoginNavigator = createStackNavigator({
     Login: {screen: SpotifyLoginScreen}
 })
 const Thing = createAppContainer(LoginNavigator);
 
+// async function queryTest() {
+//     try{
+//         const stuff = await db.collection('Rooms').doc('Test-Room').get();
+//         console.log('this is stuff',stuff.data());
+
+//         make a room
+//         const rooms = await db.collection('Rooms');
+//         let setRoom = rooms.doc('newRoom').set({
+//             RoomId: 2, 
+//             "Spotify Token": "BQC3TfzpQWaoL6tWosdouXmJkbrpi7Vd1WHyDlwAnzQzmhYLPlE9pCAWLzvyyJayTCJnDScXCCXs8m35HBk9DHVuK5Cg2TaxvRuPt_4RNj9QDZMwSetIqlDbviW1uSFnffOnlmAwzSCk3uP-fOurAiuyI9yU4lZW76wa5ENPEZk7xbVVvqeadNIly1irTKfxc9fT5yFiqP8zLhRS2nJs",
+//             UserId:1 
+//           });
+//         let roomRef = await db.collection('Rooms').doc('newRoom');
+//         let getDoc = roomRef.get()
+//             .then(doc => {
+//               if (!doc.exists) {
+//                 console.log('No such document!');
+//               } else {
+//                 console.log('Document data:', doc.data());
+
+//               }
+//             })
+//             .catch(err => {
+//               console.log('Error getting document', err);
+//             });
+        
+//     }catch(err){
+//         console.log(err)
+//     }
+// }
+
 export default function HomeScreen(props) {
-    console.log(props)
-const {navigate} = props.navigation;
+    
+    //queryTest();
   return (
     <View style={styles.container}>
       <View style={styles.tabBarInfoContainer}>
