@@ -6,14 +6,14 @@ import {
   TouchableHighlight,
   View
 } from 'react-native';
-import {Feather} from '@expo/vector-icons'
+import { Feather } from '@expo/vector-icons';
 
-export default class HomeScreen extends React.Component{
-    static navigationOptions = {
-        title: 'WeJay'
-    }
-    // headerLeft: <Feather name="music" size={20} color="black" />,
-    // headerRight: <Feather name="plus-square" size={20} color="black" />
+export default class HomeScreen extends React.Component {
+  static navigationOptions = {
+    title: 'WeJay'
+  };
+  // headerLeft: <Feather name="music" size={20} color="black" />,
+  // headerRight: <Feather name="plus-square" size={20} color="black" />
   render() {
     return (
       <ScrollView
@@ -34,12 +34,25 @@ export default class HomeScreen extends React.Component{
           >
             <Text style={styles.text}>Join Playlist</Text>
           </TouchableHighlight>
+
+          <TouchableHighlight
+            style={styles.button}
+            onPress={() => this.props.navigation.navigate('SearchScreen')}
+          >
+            <Text style={styles.text}>Search Screen Component (Gus)</Text>
+          </TouchableHighlight>
+
+          <TouchableHighlight
+            style={styles.button}
+            onPress={() => this.props.navigation.navigate('JoinRoom')}
+          >
+            <Text style={styles.text}>Join Room Component (Natalie)</Text>
+          </TouchableHighlight>
         </View>
       </ScrollView>
     );
   }
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -121,4 +134,3 @@ const styles = StyleSheet.create({
   //   marginTop: 5
   // }
 });
-

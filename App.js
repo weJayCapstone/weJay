@@ -9,6 +9,8 @@ import HomeScreen from './screens/HomeScreen';
 import CreatePlaylistForm from './screens/CreatePlaylistForm';
 import JoinPlaylistForm from './screens/JoinPlaylistForm';
 import PlaylistRoom from './screens/PlaylistRoom';
+import SearchScreen from './screens/SearchScreen';
+import JoinRoom from './screens/JoinRoom';
 
 export default class ReactNav extends Component {
   render() {
@@ -88,7 +90,9 @@ const StackNav = createStackNavigator({
   Home: { screen: HomeScreen },
   CreatePlaylistForm: { screen: CreatePlaylistForm },
   JoinPlaylistForm: { screen: JoinPlaylistForm },
-  PlaylistRoom: { screen: PlaylistRoom }
+  PlaylistRoom: { screen: PlaylistRoom },
+  SearchScreen: { screen: SearchScreen },
+  JoinRoom: { screen: JoinRoom }
 });
 
 const App = createAppContainer(StackNav);
