@@ -1,59 +1,79 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  Button,
   ScrollView,
   StyleSheet,
   Text,
-  TouchableHighlight,
+  TouchableOpacity,
   View
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Feather } from '@expo/vector-icons';
 
-export default class PlaylistRoom extends React.Component {
-  render() {
-    return (
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.contentContainer}
-      >
-        <View>
-          <Text style={styles.title}>PLAYLIST TITLE</Text>
-          <Text style={styles.host}>Hosted by: HOST NAME</Text>
-
-          <TouchableHighlight style={styles.button}>
-            <Text style={styles.text}>SONG #1</Text>
-          </TouchableHighlight>
-
-          <TouchableHighlight style={styles.button}>
-            <Text style={styles.text}>Song #2</Text>
-          </TouchableHighlight>
-          <TouchableHighlight style={styles.button}>
-            <Text style={styles.text}>SONG #3</Text>
-          </TouchableHighlight>
-
-          <TouchableHighlight style={styles.button}>
-            <Text style={styles.text}>Song #4</Text>
-          </TouchableHighlight>
-          <TouchableHighlight style={styles.button}>
-            <Text style={styles.text}>SONG #5</Text>
-          </TouchableHighlight>
-
-          <TouchableHighlight style={styles.button}>
-            <Text style={styles.text}>Song #6</Text>
-          </TouchableHighlight>
-        </View>
-      </ScrollView>
-    );
+const dummySongs = [
+  {
+    id: 1,
+    songTitle: 'Bye Bye Bye',
+    artist: 'NSYNC'
+  },
+  {
+    id: 2,
+    songTitle: 'Africa',
+    artist: 'Toto'
+  },
+  {
+    id: 3,
+    songTitle: 'Ay Vamos',
+    artist: 'J Balvin'
   }
+];
+
+export default function JoinRoom() {
+  let [songs, setSongs] = useState(dummySongs);
+
+  return (
+    <ScrollView>
+      <LinearGradient
+        colors={['#000000', '#666666', '#AAAAAA']}
+        style={{ padding: 15, borderRadius: 5 }}
+      >
+        <Text
+          style={{
+            backgroundColor: 'transparent',
+            fontSize: 20,
+            alignContent: 'center',
+            marginBottom: 10,
+            fontWeight: 'bold',
+            color: '#fff',
+            textAlign: 'center'
+          }}
+        >
+          teamFresh Jams
+        </Text>
+        {dummySongs.map(song => (
+          <View key={song.id} style={styles.songContainer}>
+            <Text style={{ color: '#ffffff' }}>{song.songTitle}</Text>
+            <Text style={{ color: '#ffffff' }}>{song.artist}</Text>
+            <TouchableOpacity style={{ justifyContent: 'flex-end' }}>
+              <Feather name="chevron-up" size={20} color="white" />
+              <Feather name="chevron-down" size={20} color="white" />
+            </TouchableOpacity>
+          </View>
+        ))}
+      </LinearGradient>
+    </ScrollView>
+  );
 }
 
 const styles = StyleSheet.create({
-  title: {
-    fontSize: 24
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
-  host: {
-    fontSize: 18
-  },
-  text: {
-    fontSize: 20
+  songContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10
   }
 });

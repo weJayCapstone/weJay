@@ -6,10 +6,14 @@ import {
   TouchableHighlight,
   View
 } from 'react-native';
+import { Feather } from '@expo/vector-icons';
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
     title: 'WeJay'
+
+    // headerLeft: <Feather name="music" size={20} color="black" />,
+    // headerRight: <Feather name="plus-square" size={20} color="black" />
   };
   render() {
     return (
@@ -37,10 +41,6 @@ export default class HomeScreen extends React.Component {
   }
 }
 
-// HomeScreen.navigationOptions = {
-//   header: null
-// };
-
 // function handleLearnMorePress() {
 //   WebBrowser.openBrowserAsync(
 //     'https://docs.expo.io/versions/latest/workflow/development-mode/'
@@ -61,6 +61,14 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 24,
     textAlign: 'center'
+  },
+  icon: {
+    paddingLeft: 10
+  },
+  iconContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    width: 120
   }
 
   // contentContainer: {
