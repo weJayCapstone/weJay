@@ -4,6 +4,7 @@ import { AsyncStorage } from 'react-native'
 
 //need to writ/read accessToken, refreshToken, expirationtime to firestore
 
+
 //need all spotify requests in this file
 
 async function logIn(){
@@ -39,7 +40,7 @@ async function getTokens(){
     try {
         const authorizationCode = await this.logIn()
         const ClientID = 'b7b6a836a01044abb7aa4eeb10c9039a'
-        const ClientSecret = 'b24315a073694a8eafb1ca555ee402f0'
+        const ClientSecret = process.env.SPOTIFY
         const redirect = 'https://auth.expo.io/@gbuchanan/weJay'
         const encodedRedirect = encodeURIComponent(redirect)
         const credsB64 = btoa(`${ClientID}:${ClientSecret}`)
@@ -77,7 +78,7 @@ async function refreshTokens(){
 
     try {
         const ClientID = 'b7b6a836a01044abb7aa4eeb10c9039a'
-        const ClientSecret = 'b24315a073694a8eafb1ca555ee402f0'
+        const ClientSecret = process.env.SPOTIFY
         const credsB64 = btoa(`${ClientID}:${ClientSecret}`)
         const refreshToken = await getUserData('refreshToken')
 
