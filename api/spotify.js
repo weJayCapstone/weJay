@@ -70,7 +70,6 @@ async function getTokens(){
     catch (e){
         console.log(e)
     }
-
 }
 
 
