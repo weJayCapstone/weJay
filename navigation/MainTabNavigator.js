@@ -5,18 +5,24 @@
 //   createBottomTabNavigator
 // } from 'react-navigation';
 
-<<<<<<< HEAD
-import TabBarIcon from '../components/TabBarIcon';
-import HomeScreen from '../screens/HomeScreen';
-import LinksScreen from '../screens/LinksScreen';
-import SearchScreen from '../screens/SearchScreen'
-import SettingsScreen from '../screens/SettingsScreen';
-=======
+// import TabBarIcon from '../components/TabBarIcon';
+// import HomeScreen from '../screens/HomeScreen';
+// import LinksScreen from '../screens/LinksScreen';
+// import SearchScreen from '../screens/SearchScreen'
+// import SettingsScreen from '../screens/SettingsScreen';
+
+// // import TabBarIcon from '../components/TabBarIcon';
+// // import HomeScreen from '../screens/HomeScreen';
+// // import LinksScreen from '../screens/LinksScreen';
+// // import SettingsScreen from '../screens/SettingsScreen';
+
+
 // import TabBarIcon from '../components/TabBarIcon';
 // import HomeScreen from '../screens/HomeScreen';
 // import LinksScreen from '../screens/LinksScreen';
 // import SettingsScreen from '../screens/SettingsScreen';
->>>>>>> 487e45888a75f857edcfd2b48a8680c2339004a3
+// //import JoinRoom from '../screens/JoinRoom'
+
 
 // const config = Platform.select({
 //   web: { headerMode: 'screen' },
@@ -46,21 +52,6 @@ import SettingsScreen from '../screens/SettingsScreen';
 
 // HomeStack.path = '';
 
-<<<<<<< HEAD
-const LinksStack = createStackNavigator(
-  {
-    Links: SearchScreen,
-  },
-  config
-);
-
-LinksStack.navigationOptions = {
-  tabBarLabel: 'Search',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'} />
-  ),
-};
-=======
 // const LinksStack = createStackNavigator(
 //   {
 //     Links: LinksScreen
@@ -77,16 +68,9 @@ LinksStack.navigationOptions = {
 //     />
 //   )
 // };
->>>>>>> 487e45888a75f857edcfd2b48a8680c2339004a3
 
 // LinksStack.path = '';
 
-// const SettingsStack = createStackNavigator(
-//   {
-//     Settings: SettingsScreen
-//   },
-//   config
-// );
 
 // SettingsStack.navigationOptions = {
 //   tabBarLabel: 'Settings',
