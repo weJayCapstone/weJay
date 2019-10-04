@@ -20,37 +20,6 @@ const LoginNavigator = createStackNavigator({
 })
 const Thing = createAppContainer(LoginNavigator);
 
-// async function queryTest() {
-//     try{
-//         const stuff = await db.collection('Rooms').doc('Test-Room').get();
-//         console.log('this is stuff',stuff.data());
-
-//         make a room
-//         const rooms = await db.collection('Rooms');
-//         let setRoom = rooms.doc('newRoom').set({
-//             RoomId: 2, 
-//             "Spotify Token": "BQC3TfzpQWaoL6tWosdouXmJkbrpi7Vd1WHyDlwAnzQzmhYLPlE9pCAWLzvyyJayTCJnDScXCCXs8m35HBk9DHVuK5Cg2TaxvRuPt_4RNj9QDZMwSetIqlDbviW1uSFnffOnlmAwzSCk3uP-fOurAiuyI9yU4lZW76wa5ENPEZk7xbVVvqeadNIly1irTKfxc9fT5yFiqP8zLhRS2nJs",
-//             UserId:1 
-//           });
-//         let roomRef = await db.collection('Rooms').doc('newRoom');
-//         let getDoc = roomRef.get()
-//             .then(doc => {
-//               if (!doc.exists) {
-//                 console.log('No such document!');
-//               } else {
-//                 console.log('Document data:', doc.data());
-
-//               }
-//             })
-//             .catch(err => {
-//               console.log('Error getting document', err);
-//             });
-        
-//     }catch(err){
-//         console.log(err)
-//     }
-// }
-
 export default function HomeScreen(props) {
     
     //queryTest();

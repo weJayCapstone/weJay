@@ -8,53 +8,64 @@ import {
     TouchableOpacity,
     View,
   } from 'react-native';
+  import { LinearGradient } from 'expo-linear-gradient';
+  import { Feather } from '@expo/vector-icons';
   import db from '../cloudServer/index';
   import axios from 'axios'
-
+  import {addSongs} from '../cloudServer/index'
+  import {getSpotifyPlaylist} from '../spotifyUtils/index'
   //user will have access to room name some how, for now we will try to access our newRoom
-  const roomName = 'newRoom'
-  async function getSpotifyPlaylist(token) {
-
-    try{
-        const playList = await axios.get("https://api.spotify.com/v1/playlists/2lZ0RyHoyDn8KpI1dAS6Fw/tracks?market=ES&fields=items(track(name%2Chref))", {
-          headers: {
-            "Authorization": "Bearer " + token
-          }
-        })
-        return playList.data.items
-    }catch(err){
-        console.log(err)
-    }
-  }
-
+  let currentToken = "BQBjBWbSLcJjEKuWehF1JhHLLBSXLmJ_oWE88zXEEUZvJe7eKblMP9SKBmuEcEYqVNG2QElXr08IE4mO3H7j5nws5qqx4hIymBB-BsV5Oru7YkZ4ImhiRcS5l59Zy2y-CO8qK6Vu7F12X3Uk13HbALd9IJRO2KrDZi6RzSDHE9l4-Hlo40uLVjYxd2PVun3lRmrt1d4hOTzmbQUG6TBQ";
+  const roomName = 'newRoom';
+  
   export default function JoinRoom() {
     const [songs, setSongs] = useState([]);
-    async function fetchDB(){
-            try{
-                let roomsRef =  db.collection('Rooms').doc(roomName);
-                let result = await roomsRef.get();
-                if(!result.exists) console.log('no document!')
-                else {
-                    let thing = result.data();
-                    return thing["Spotify Token"];
-                }
-            }catch(err){
-                console.log(err)
-            }
-        }
-    let anotherToken = "BQAkc_0wWE8rpfVzRJW_5s9fwtV1XeXq96Izs70SxpGOutOyRs2qf1R6nRqbn2_huyLGSFuF6_GizohH3hGCCsZSMXLLCzMKNKtCPU7ZrdZ7n8nAVnVLR1qCml3fPHjEHT8-2gITDkMIZ3Qpw6ZHcawv5I38l34_cdXyY-Xuxro4tCW-SJDXNccy_QcfrR9is-rJPcfvgH3c3K2iDF0L";
-
-    getSpotifyPlaylist(anotherToken)
-        .then(data => {
-            setSongs(data)
-        })
-        .catch(err => console.log(err))
+  
+    //get songs from spotify playlist?
+    
+    //add songs to database, try returning songs?
+   // addSongs(songs, 'newRoom'); adds infinite songs!!!!
     return (
         <ScrollView>
-        {
-            songs.map(song => <View key={song.track.name}><Text>{song.track.name}</Text></View>)
-        }
-
+            <LinearGradient
+          colors={['#000000', '#666666', '#AAAAAA']}
+          style={{ padding: 15, borderRadius: 5 }}>
+              <Text
+              style={{
+                backgroundColor: 'transparent',
+                fontSize: 20,
+                alignContent:'center',
+                marginBottom: 10,
+                fontWeight: 'bold',
+                color: '#fff',
+              }}
+              >Playlist Title</Text>
+            {
+                songs.map(song => <View key={song.track.name} style={styles.songContainer}>
+                    <Text style={{color:'#ffffff'}}>{song.track.name}</Text>
+                    <TouchableOpacity
+                    style={{justifyContent: 'flex-end'}}
+                    >
+                     <Feather name="thumbs-up" size={20} color="white" />
+                    </TouchableOpacity>
+                    </View>)
+            }
+            </LinearGradient>
         </ScrollView>
     )
   }
+
+
+const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    songContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent:'space-between',
+        marginBottom: 10
+    }
+});
