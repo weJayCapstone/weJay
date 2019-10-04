@@ -1,62 +1,96 @@
-import { AppLoading } from 'expo';
-import { Asset } from 'expo-asset';
-import * as Font from 'expo-font';
-import React, { useState } from 'react';
-import { Platform, StatusBar, StyleSheet, View } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+// THIS IS TEST CODE IP, UNALTERED BOILER PLATE CODE CAN BE FOUND IN APPTEST.JS
 
-import AppNavigator from './navigation/AppNavigator';
+'use strict';
+import React, { Component } from 'react';
+import { AppRegistry } from 'react-native';
+import { createStackNavigator, createAppContainer } from 'react-navigation';
 
-export default function App(props) {
-  const [isLoadingComplete, setLoadingComplete] = useState(false);
+import HomeScreen from './screens/HomeScreen';
+import CreatePlaylistForm from './screens/CreatePlaylistForm';
+import JoinPlaylistForm from './screens/JoinPlaylistForm';
+import PlaylistRoom from './screens/PlaylistRoom';
 
-  if (!isLoadingComplete && !props.skipLoadingScreen) {
-    return (
-      <AppLoading
-        startAsync={loadResourcesAsync}
-        onError={handleLoadingError}
-        onFinish={() => handleFinishLoading(setLoadingComplete)}
-      />
-    );
-  } else {
-    return (
-      <View style={styles.container}>
-        {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-        <AppNavigator />
-      </View>
-    );
+export default class ReactNav extends Component {
+  render() {
+    return <App />;
   }
 }
 
-async function loadResourcesAsync() {
-  await Promise.all([
-    Asset.loadAsync([
-      require('./assets/images/robot-dev.png'),
-      require('./assets/images/robot-prod.png')
-    ]),
-    Font.loadAsync({
-      // This is the font that we are using for our tab bar
-      ...Ionicons.font,
-      // We include SpaceMono because we use it in HomeScreen.js. Feel free to
-      // remove this if you are not using it in your app
-      'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf')
-    })
-  ]);
-}
+// class GreenScreen extends Component {
+//   static navigationOptions = {
+//     title: 'Green'
+//   };
+//   render() {
+//     return (
+//       <View style={styles.green}>
+//         <Text style={styles.text}>This is the Green Screen</Text>
+//         <TouchableHighlight
+//           style={styles.button}
+//           onPress={() => this.props.navigation.navigate('Red')}
+//         >
+//           <Text style={styles.text}>Go to Red</Text>
+//         </TouchableHighlight>
+//       </View>
+//     );
+//   }
+// }
 
-function handleLoadingError(error) {
-  // In this case, you might want to report the error to your error reporting
-  // service, for example Sentry
-  console.warn(error);
-}
+// class RedScreen extends Component {
+//   render() {
+//     return (
+//       <View style={styles.red}>
+//         <Text style={styles.text}>This is the Red Screen</Text>
+//         <TouchableHighlight
+//           style={styles.button}
+//           onPress={() => this.props.navigation.goBack()}
+//         >
+//           <Text style={styles.text}>Back to Green</Text>
+//         </TouchableHighlight>
+//       </View>
+//     );
+//   }
+// }
 
-function handleFinishLoading(setLoadingComplete) {
-  setLoadingComplete(true);
-}
+// RedScreen.navigationOptions = props => {
+//   const { navigation } = props;
+//   return {
+//     headerTitle: 'Red',
+//     headerRight: (
+//       <Button title="Purple" onPress={() => navigation.navigate('Purple')} />
+//     ),
+//     headerLeft: (
+//       <Button title="Blue" onPress={() => navigation.navigate('Blue')} />
+//     )
+//   };
+// };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff'
-  }
+// class BlueScreen extends Component {
+//   render() {
+//     return (
+//       <View style={styles.blue}>
+//         <Text style={styles.text}>This is the Blue Screen</Text>
+//       </View>
+//     );
+//   }
+// }
+
+// class PurpleScreen extends Component {
+//   render() {
+//     return (
+//       <View style={styles.purple}>
+//         <Text style={styles.text}>This is the Purple Screen</Text>
+//       </View>
+//     );
+//   }
+// }
+
+const StackNav = createStackNavigator({
+  Home: { screen: HomeScreen },
+  CreatePlaylistForm: { screen: CreatePlaylistForm },
+  JoinPlaylistForm: { screen: JoinPlaylistForm },
+  PlaylistRoom: { screen: PlaylistRoom }
 });
+
+const App = createAppContainer(StackNav);
+
+AppRegistry.registerComponent('ReactNav', () => ReactNav);
