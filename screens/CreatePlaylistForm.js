@@ -8,9 +8,11 @@ import {
 } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import {FormLabel, FormInput, FormValidationMessage} from 'react-native-elements';
+import {getTokens} from '../api/spotify'
 
 export default function CreatePlaylistForm() {
-    const [roomData, setRoomData] = useState({});
+    //const [roomData, setRoomData] = useState({});
+    getTokens();
     return (
       <View style={styles.conatiner}>
         <View>
@@ -25,7 +27,6 @@ export default function CreatePlaylistForm() {
               style={styles.textInput}
               placeholder="Playlist Title"
               maxLength={100}
-              onChange={()=>console.log('update formData')}
             />
             <FormLabel>
                 Name

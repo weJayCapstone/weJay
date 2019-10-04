@@ -35,10 +35,10 @@ async function logIn(){
     }
 }
 
-async function getTokens(){
+export async function getTokens(){
 
     try {
-        const authorizationCode = await this.logIn()
+        const authorizationCode = await logIn()
         const ClientID = 'b7b6a836a01044abb7aa4eeb10c9039a'
         const ClientSecret = process.env.SPOTIFY
         const redirect = 'https://auth.expo.io/@gbuchanan/weJay'
@@ -144,4 +144,4 @@ async function getUserData(key){
 }
 
 
-export default {logIn, getTokens, refreshTokens, getUserData}
+//export default {logIn, getTokens, refreshTokens, getUserData}
