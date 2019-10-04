@@ -11,36 +11,28 @@ const db = firebase.firestore();
 export default db;
 
 
-//add playlist of songs
+//create room
 export async function createRoom(roomData) {
-        let {passcode,hostId,token} = roomData;
         try{
-            const newRoom = await db.collection('Rooms').doc(roomData.roomName).set({passcode, hostId, token});
-            // let setRoom = rooms.doc('newRoom').set({
-            //     RoomId: 2, 
-            //     "Spotify Token": "BQC3TfzpQWaoL6tWosdouXmJkbrpi7Vd1WHyDlwAnzQzmhYLPlE9pCAWLzvyyJayTCJnDScXCCXs8m35HBk9DHVuK5Cg2TaxvRuPt_4RNj9QDZMwSetIqlDbviW1uSFnffOnlmAwzSCk3uP-fOurAiuyI9yU4lZW76wa5ENPEZk7xbVVvqeadNIly1irTKfxc9fT5yFiqP8zLhRS2nJs",
-            //     UserId:1 
-            //   });
-            await newRoom.collection('Playlist');
-           if(newRoom.exists){
-               console.log(`${roomName} was created!`, newRoom.data())
-           }else{
-               console.log('not made?')
-           }
+            const newRoom = await db.collection('Rooms').add(roomData);
+            //add gives the room a unique ID on firebase
+            console.log(`${roomData.roomName} was created!`)
+            //TestRoom gets overwritten, have to check if name exists first or use add() instead
         }catch(err){
             console.log(err)
         }
 }
 //get room
-async function getRoom(roomName) {
+async function getRoom(passcode) {
     try{
-        let roomRef = db.collection('Rooms').doc(roomName);
-            let getDoc = await roomRef.get()
-            if (!getDoc.exists) {
-                console.log('No such document!');
-            } else {
-                console.log('Document data:', doc.data());
-            }
+       let roomRef = db.collection('Rooms');
+       //query room via passcode
+       let query = await roomRef.where('passcode','==', passcode).get();
+       if(query.empty){
+           console.log("room doesn't exist or invalid password");
+       }else {
+           console.log(query.data());
+       }
     }catch(err){
         console.log(err)
     }
@@ -63,10 +55,16 @@ async function fetchToken(){
 }
 //add songs
 
-export async function addSong(song, roomName) {
+export async function addSong(passcode, songData) {
+    //this version adds duplicates because of add
     try{
-        const playlist = db.collection('Rooms').doc(roomName).collection('Playlist');
+        let roomRef = db.collection('Rooms');
+       //query room via passcode
+        let query = await roomRef.where('passcode','==', passcode).get();
+        query.collection('Playlist').add(songData)
+        //const playlist = db.collection('Rooms').doc(roomName).collection('Playlist');
         await playlist.add({song})
+        console.log('song was added!')
     }catch(err){
         console.log(err)
     }
