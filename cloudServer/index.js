@@ -12,14 +12,16 @@ export default db;
 
 
 //add playlist of songs
-export async function createRoom(roomName, passcode, hostid, token) {
+export async function createRoom(roomData) {
+        let {passcode,hostId,token} = roomData;
         try{
-            const newRoom = await db.collection('Rooms').doc(roomName).set({passcode, hostid, token});
+            const newRoom = await db.collection('Rooms').doc(roomData.roomName).set({passcode, hostId, token});
             // let setRoom = rooms.doc('newRoom').set({
             //     RoomId: 2, 
             //     "Spotify Token": "BQC3TfzpQWaoL6tWosdouXmJkbrpi7Vd1WHyDlwAnzQzmhYLPlE9pCAWLzvyyJayTCJnDScXCCXs8m35HBk9DHVuK5Cg2TaxvRuPt_4RNj9QDZMwSetIqlDbviW1uSFnffOnlmAwzSCk3uP-fOurAiuyI9yU4lZW76wa5ENPEZk7xbVVvqeadNIly1irTKfxc9fT5yFiqP8zLhRS2nJs",
             //     UserId:1 
             //   });
+            await newRoom.collection('Playlist');
            if(newRoom.exists){
                console.log(`${roomName} was created!`, newRoom.data())
            }else{
@@ -46,7 +48,7 @@ async function getRoom(roomName) {
 
 
 //get token
-async function fetchDB(){
+async function fetchToken(){
     try{
         let roomsRef =  db.collection('Rooms').doc(roomName);
         let result = await roomsRef.get();
@@ -84,13 +86,5 @@ export async function getPlaylist(roomName){
     }
 }
 
-//create room and playlist
-export async function createRoom(data){
-    try{
-
-    }catch(err){
-
-    }
-}
 
 //join playlist route given passcode, roomname,username

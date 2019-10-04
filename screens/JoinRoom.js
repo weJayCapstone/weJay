@@ -12,7 +12,7 @@ import {
   import { Feather } from '@expo/vector-icons';
   import db from '../cloudServer/index';
   import axios from 'axios'
-  import {addSongs} from '../cloudServer/index'
+  import {addSongs, createRoom} from '../cloudServer/index'
   import {getSpotifyPlaylist} from '../spotifyUtils/index'
   //user will have access to room name some how, for now we will try to access our newRoom
   let currentToken = "BQBjBWbSLcJjEKuWehF1JhHLLBSXLmJ_oWE88zXEEUZvJe7eKblMP9SKBmuEcEYqVNG2QElXr08IE4mO3H7j5nws5qqx4hIymBB-BsV5Oru7YkZ4ImhiRcS5l59Zy2y-CO8qK6Vu7F12X3Uk13HbALd9IJRO2KrDZi6RzSDHE9l4-Hlo40uLVjYxd2PVun3lRmrt1d4hOTzmbQUG6TBQ";
@@ -21,10 +21,15 @@ import {
   export default function JoinRoom() {
     const [songs, setSongs] = useState([]);
   
-    //get songs from spotify playlist?
-    
-    //add songs to database, try returning songs?
-   // addSongs(songs, 'newRoom'); adds infinite songs!!!!
+    //create room
+    const roomData = {
+        roomName: 'New Playlist',
+        passcode: 123,
+        hostId: 1,
+        token: '123ABC'
+    };
+    createRoom(roomData);
+
     return (
         <ScrollView>
             <LinearGradient
