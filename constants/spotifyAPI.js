@@ -1,5 +1,3 @@
-const ClientID = 'b7b6a836a01044abb7aa4eeb10c9039a';
-const ClientSecret = '9e675eb9215248e78d04bc94db860111';
 
 import {AuthSession} from 'expo'
 console.log(AuthSession.getRedirectUrl())

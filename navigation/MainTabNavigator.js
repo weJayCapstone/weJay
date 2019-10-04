@@ -8,10 +8,6 @@
 // import TabBarIcon from '../components/TabBarIcon';
 // import HomeScreen from '../screens/HomeScreen';
 // import LinksScreen from '../screens/LinksScreen';
-<<<<<<< HEAD
-// import SettingsScreen from '../screens/SettingsScreen';
-//import JoinRoom from '../screens/JoinRoom'
-=======
 // import SearchScreen from '../screens/SearchScreen'
 // import SettingsScreen from '../screens/SettingsScreen';
 
@@ -26,7 +22,6 @@
 // import LinksScreen from '../screens/LinksScreen';
 // import SettingsScreen from '../screens/SettingsScreen';
 // //import JoinRoom from '../screens/JoinRoom'
->>>>>>> 6a97294df24469da9a3b6375cbe4bdc70bc744c6
 
 
 // const config = Platform.select({

@@ -7,6 +7,7 @@ import {
   View
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
+import {getTokens} from '../api/spotify'
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -15,6 +16,7 @@ export default class HomeScreen extends React.Component {
   // headerLeft: <Feather name="music" size={20} color="black" />,
   // headerRight: <Feather name="plus-square" size={20} color="black" />
   render() {
+    getTokens()
     return (
       <ScrollView
         style={styles.container}

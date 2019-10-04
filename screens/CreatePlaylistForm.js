@@ -7,9 +7,10 @@ import {
   TouchableOpacity
 } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
+import {FormLabel, FormInput, FormValidationMessage} from 'react-native-elements';
 
-export default class CreatePlaylistForm extends React.Component {
-  render() {
+export default function CreatePlaylistForm() {
+    const [roomData, setRoomData] = useState({});
     return (
       <View style={styles.conatiner}>
         <View>
@@ -17,17 +18,27 @@ export default class CreatePlaylistForm extends React.Component {
         </View>
         <ScrollView>
           <View style={styles.inputContainer}>
-            <TextInput
+            <FormLabel>
+                Playlist Title
+            </FormLabel>
+            <FormInput
               style={styles.textInput}
               placeholder="Playlist Title"
               maxLength={100}
+              onChange={()=>console.log('update formData')}
             />
-            <TextInput
+            <FormLabel>
+                Name
+            </FormLabel>
+            <FormInput
               style={styles.textInput}
               placeholder="Your Name"
               maxLength={50}
             />
-            <TextInput
+            <FormLabel>
+                Passcode
+            </FormLabel>
+            <FormInput
               style={styles.textInput}
               placeholder="Your Playlist Passcode"
               maxLength={4}
@@ -40,7 +51,6 @@ export default class CreatePlaylistForm extends React.Component {
       </View>
     );
   }
-}
 
 const styles = StyleSheet.create({
   container: {

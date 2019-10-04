@@ -144,4 +144,4 @@ async function getUserData(key){
 }
 
 
-export default {logIn, getTokens, refreshTokens}
+export default {logIn, getTokens, refreshTokens, getUserData}
