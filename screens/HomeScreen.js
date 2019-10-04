@@ -6,15 +6,14 @@ import {
   TouchableHighlight,
   View
 } from 'react-native';
-import { Feather } from '@expo/vector-icons';
+import {Feather} from '@expo/vector-icons'
 
-export default class HomeScreen extends React.Component {
-  static navigationOptions = {
-    title: 'WeJay'
-
+export default class HomeScreen extends React.Component{
+    static navigationOptions = {
+        title: 'WeJay'
+    }
     // headerLeft: <Feather name="music" size={20} color="black" />,
     // headerRight: <Feather name="plus-square" size={20} color="black" />
-  };
   render() {
     return (
       <ScrollView
@@ -41,17 +40,6 @@ export default class HomeScreen extends React.Component {
   }
 }
 
-// function handleLearnMorePress() {
-//   WebBrowser.openBrowserAsync(
-//     'https://docs.expo.io/versions/latest/workflow/development-mode/'
-//   );
-// }
-
-// function handleHelpPress() {
-//   WebBrowser.openBrowserAsync(
-//     'https://docs.expo.io/versions/latest/workflow/up-and-running/#cant-see-your-changes'
-//   );
-// }
 
 const styles = StyleSheet.create({
   container: {
