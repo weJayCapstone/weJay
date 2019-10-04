@@ -12,6 +12,7 @@ import {
 import {createStackNavigator, createAppContainer} from 'react-navigation'
 import SpotifyLoginScreen from './SpotifyLogin'
 import { MonoText } from '../components/StyledText';
+import {AuthSession} from 'expo'
 
 const LoginNavigator = createStackNavigator({
     Login: {screen: SpotifyLoginScreen}
@@ -19,7 +20,10 @@ const LoginNavigator = createStackNavigator({
 const Thing = createAppContainer(LoginNavigator);
 
 export default function HomeScreen(props) {
-    console.log(props)
+
+  
+console.log('this is URI, ', AuthSession.getRedirectUrl())
+
 const {navigate} = props.navigation;
   return (
     <View style={styles.container}>
