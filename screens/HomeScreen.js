@@ -49,9 +49,9 @@ export default class HomeScreen extends React.Component {
 
           <TouchableHighlight
             style={styles.button}
-            onPress={() => this.props.navigation.navigate('JoinRoom')}
+            onPress={() => this.props.navigation.navigate('TestRoom')}
           >
-            <Text style={styles.text}>Join Room Component (Natalie)</Text>
+            <Text style={styles.text}>TestRoom Component (Natalie)</Text>
           </TouchableHighlight>
         </View>
       </ScrollView>

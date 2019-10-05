@@ -7,12 +7,13 @@ import { AsyncStorage } from 'react-native'
 
 //need all spotify requests in this file
 
-async function logIn(){
+export async function logIn(){
 
     try {
-        const redirect = 'https://auth.expo.io/@gbuchanan/weJay'
+        const redirect = AuthSession.getRedirectUrl();
+        console.log(redirect)
         const encodedRedirect = encodeURIComponent(redirect)
-        const ClientID = 'b7b6a836a01044abb7aa4eeb10c9039a'
+        const ClientID = '1e3132e15cd843c3b1d22c13f3ef7902'
         const scopesArr = ['playlist-modify-public', 'user-modify-playback-state', 'user-read-private', 'user-read-email']
         const scopes = encodeURIComponent(scopesArr.join(' '))
 
@@ -26,8 +27,8 @@ async function logIn(){
             encodedRedirect +
             (scopes ? '&scope=' + scopes : '')
         })
-
-        return result.params.code
+        console.log(result)
+        //return result.params.code
 
     }
     catch (err){
@@ -39,9 +40,10 @@ export async function getTokens(){
 
     try {
         const authorizationCode = await logIn()
-        const ClientID = 'b7b6a836a01044abb7aa4eeb10c9039a'
+        const ClientID = '1e3132e15cd843c3b1d22c13f3ef7902' //replace with your client Id from spotify
         const ClientSecret = process.env.SPOTIFY
-        const redirect = 'https://auth.expo.io/@gbuchanan/weJay'
+        const redirect = AuthSession.getRedirectUrl()
+        //add variables to secrets file
         const encodedRedirect = encodeURIComponent(redirect)
         const credsB64 = btoa(`${ClientID}:${ClientSecret}`)
 
@@ -64,9 +66,9 @@ export async function getTokens(){
 
         const expirationTime = new Date().getTime() + expiresIn * 1000;
 
-        await setUserData('accessToken', accessToken)
-        await setUserData('refreshToken', refreshToken)
-        await setUserData('expirationTime', expirationTime.toString())
+        // await setUserData('accessToken', accessToken)
+        // await setUserData('refreshToken', refreshToken)
+        // await setUserData('expirationTime', expirationTime.toString())
     }
     catch (e){
         console.log(e)
@@ -74,7 +76,7 @@ export async function getTokens(){
 }
 
 
-async function refreshTokens(){
+export async function refreshTokens(){
 
     try {
         const ClientID = 'b7b6a836a01044abb7aa4eeb10c9039a'
@@ -121,7 +123,7 @@ async function refreshTokens(){
 
 }
 
-async function setUserData(key, value){
+export async function setUserData(key, value){
 
     try {
         await AsyncStorage.setItem(key, value)
@@ -131,7 +133,7 @@ async function setUserData(key, value){
     }
 }
 
-async function getUserData(key){
+export async function getUserData(key){
     try {
         const value = await AsyncStorage.getItem(key)
         if (value !== null){
@@ -142,6 +144,3 @@ async function getUserData(key){
         console.log(e)
     }
 }
-
-
-//export default {logIn, getTokens, refreshTokens, getUserData}
