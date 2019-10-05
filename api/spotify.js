@@ -27,8 +27,7 @@ export async function logIn(){
             encodedRedirect +
             (scopes ? '&scope=' + scopes : '')
         })
-        console.log(result)
-        //return result.params.code
+        return result.params.code;
 
     }
     catch (err){
@@ -41,7 +40,7 @@ export async function getTokens(){
     try {
         const authorizationCode = await logIn()
         const ClientID = '1e3132e15cd843c3b1d22c13f3ef7902' //replace with your client Id from spotify
-        const ClientSecret = process.env.SPOTIFY
+        const ClientSecret = '0f1507d595284f63be6ee2dfaf21ae39'
         const redirect = AuthSession.getRedirectUrl()
         //add variables to secrets file
         const encodedRedirect = encodeURIComponent(redirect)
@@ -57,14 +56,14 @@ export async function getTokens(){
             })
 
         const responseJSON = await response.json()
+        return responseJSON;
+        // const {
+        //     access_token: accessToken,
+        //     refresh_token: refreshToken,
+        //     expires_in: expiresIn
+        // } = responseJSON
 
-        const {
-            access_token: accessToken,
-            refresh_token: refreshToken,
-            expires_in: expiresIn
-        } = responseJSON
-
-        const expirationTime = new Date().getTime() + expiresIn * 1000;
+        //const expirationTime = new Date().getTime() + expiresIn * 1000;
 
         // await setUserData('accessToken', accessToken)
         // await setUserData('refreshToken', refreshToken)

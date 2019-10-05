@@ -16,18 +16,24 @@ export default function CreatePlaylistForm() {
         hostName: '',
         passcode: null,
     });
-    getTokens();
-    const handleSubmit = (formData) => {
-        //create playlist function with spotify function
-        //if playlist was created
-        //create firestore room w/ access token, refresh token given from spotify
-        //right now its making a room in firebase with the formData
-        // formData.playlistId = '';
-        // formData.accessToken = '';
-        // formData.refreshToken ='';
-        // formData.expirationTime = ''; 
-        createRoom(roomData);
-        //after room is created redirect host to playlist screen
+    
+    const handleSubmit = async (formData) => {
+        //this needs success checks
+        try{
+            const spotifyTokens = await getTokens();
+            formData.accessToken = spotifyTokens.access_token;
+            formData.refreshToken = spotifyTokens.refresh_token;
+            formData.expiresIn = spotifyTokens.expires_in;
+            createRoom(formData);
+            // if(spotifyResponse.type === 'success'){
+            //     formData.accessToken = spotifyResponse.code;
+            //     formData.refreshToken = spotifyResponse.url; // not sure if this the refresh token
+            //     createRoom(formData);
+            // }
+            //after room is created redirect host to playlist screen
+        }catch(err){
+            console.log(err)
+        }
     }
     return (
       <View style={styles.conatiner}>

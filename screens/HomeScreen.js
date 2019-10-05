@@ -4,7 +4,8 @@ import {
   ScrollView,
   StyleSheet,
   TouchableHighlight,
-  View
+  View,
+  StatusBar
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import {getTokens} from '../api/spotify'
@@ -14,7 +15,14 @@ export default class HomeScreen extends React.Component {
         super();
     }
   static navigationOptions = {
-    title: 'WeJay'
+    title: 'WeJay',
+    headerStyle: {
+        backgroundColor: '#000',
+      },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+        fontWeight: 'bold',
+    }
   };
   // headerLeft: <Feather name="music" size={20} color="black" />,
   // headerRight: <Feather name="plus-square" size={20} color="black" />
@@ -25,6 +33,7 @@ export default class HomeScreen extends React.Component {
         style={styles.container}
         contentContainerStyle={styles.contentContainer}
       >
+          <StatusBar barStyle="light-content" />
         <View>
           <TouchableHighlight
             style={styles.button}
@@ -62,11 +71,12 @@ export default class HomeScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff'
+    backgroundColor: '#000'
   },
   text: {
     fontSize: 24,
-    textAlign: 'center'
+    textAlign: 'center',
+    color: '#fff'
   },
   icon: {
     paddingLeft: 10
@@ -75,8 +85,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     width: 120
+  },
+  button: {
+    marginTop: 10,
   }
-
   // contentContainer: {
   //   paddingTop: 30
   // },
