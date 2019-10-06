@@ -10,8 +10,9 @@ import CreatePlaylistForm from './screens/CreatePlaylistForm';
 import JoinPlaylistForm from './screens/JoinPlaylistForm';
 import PlaylistRoom from './screens/PlaylistRoom';
 import SearchScreen from './screens/SearchScreen';
-import JoinRoom from './screens/JoinRoom';
-
+import TestRoom from './screens/TestRoom';
+//if you want to use our keys you need to require the secrets file
+require('./secrets')
 export default class ReactNav extends Component {
   render() {
     return <App />;
@@ -92,7 +93,7 @@ const StackNav = createStackNavigator({
   JoinPlaylistForm: { screen: JoinPlaylistForm },
   PlaylistRoom: { screen: PlaylistRoom },
   SearchScreen: { screen: SearchScreen },
-  JoinRoom: { screen: JoinRoom }
+  TestRoom: { screen: TestRoom }
 });
 
 const App = createAppContainer(StackNav);
