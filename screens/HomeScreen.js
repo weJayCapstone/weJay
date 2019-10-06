@@ -4,6 +4,8 @@ import {
   ScrollView,
   StyleSheet,
   TouchableHighlight,
+  TouchableOpacity,
+  TouchableOpacityBase,
   View,
   StatusBar
 } from 'react-native';
@@ -42,12 +44,12 @@ export default class HomeScreen extends React.Component {
             <Text style={styles.text}>Create Playlist</Text>
           </TouchableHighlight>
 
-          <TouchableHighlight
+          <TouchableOpacity
             style={styles.button}
             onPress={() => this.props.navigation.navigate('JoinPlaylistForm')}
           >
             <Text style={styles.text}>Join Playlist</Text>
-          </TouchableHighlight>
+          </TouchableOpacity>
 
           <TouchableHighlight
             style={styles.button}
@@ -56,12 +58,12 @@ export default class HomeScreen extends React.Component {
             <Text style={styles.text}>Search Screen Component (Gus)</Text>
           </TouchableHighlight>
 
-          <TouchableHighlight
+          <TouchableOpacity
             style={styles.button}
             onPress={() => this.props.navigation.navigate('TestRoom')}
           >
             <Text style={styles.text}>TestRoom Component (Natalie)</Text>
-          </TouchableHighlight>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     );
@@ -76,7 +78,11 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 24,
     textAlign: 'center',
-    color: '#fff'
+    color: '#fff',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#fff',
+    padding:10,
   },
   icon: {
     paddingLeft: 10

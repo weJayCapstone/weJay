@@ -16,14 +16,16 @@ export default function CreatePlaylistForm() {
         hostName: '',
         passcode: null,
     });
-    
+    getTokens(); //this is to test the process.env variable getTokens would be in handlesubmit you can comment this out
     const handleSubmit = async (formData) => {
         //this needs success checks
         try{
-            const spotifyTokens = await getTokens();
-            formData.accessToken = spotifyTokens.access_token;
-            formData.refreshToken = spotifyTokens.refresh_token;
-            formData.expiresIn = spotifyTokens.expires_in;
+            //for debugging purposes I commented out the next 6 lines
+            //const spotifyTokens = await getTokens();
+            //console.log(spotifyTokens)
+            //formData.accessToken = spotifyTokens.access_token;
+            //formData.refreshToken = spotifyTokens.refresh_token;
+            //formData.expiresIn = spotifyTokens.expires_in;
             createRoom(formData);
             // if(spotifyResponse.type === 'success'){
             //     formData.accessToken = spotifyResponse.code;
