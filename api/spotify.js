@@ -1,7 +1,6 @@
 import {AuthSession} from 'expo'
 import { encode as btoa } from 'base-64'
 import { AsyncStorage } from 'react-native'
-
 //need to writ/read accessToken, refreshToken, expirationtime to firestore
 
 
@@ -39,7 +38,6 @@ export async function getTokens(){
     try {
         const authorizationCode = await logIn()
         const ClientID = '1e3132e15cd843c3b1d22c13f3ef7902' //replace with your client Id from spotify
-        console.log(process.env)
         const ClientSecret = process.env.SPOTIFY_NATALIE_SECRET; //replace with your own secret
         const redirect = AuthSession.getRedirectUrl()
         //add variables to secrets file

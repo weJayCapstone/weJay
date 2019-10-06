@@ -12,7 +12,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Feather } from '@expo/vector-icons';
 import db from '../firebase/index';
 import axios from 'axios';
-import { addSong, createRoom } from '../firebase/index';
+import { addSong, createRoom, getRoom } from '../firebase/index';
 import { getSpotifyPlaylist } from '../spotifyUtils/index';
 //user will have access to room name some how, for now we will try to access our newRoom
 let currentToken =
@@ -20,7 +20,15 @@ let currentToken =
 const roomName = 'newRoom';
 
 export default function TestRoom() {
-  const [songs, setSongs] = useState([]);
+  const [room, setRoom] = useState({});
+  const passcode = '1234'
+  const hostName = 'Panda'
+  //use effect used to update room
+  useEffect(() => {
+      getRoom(passcode, hostName)
+      .then(result => setRoom(result))
+      .catch(err => console.log(err))
+  }, []);
   return (
     <ScrollView>
       <LinearGradient
@@ -37,7 +45,7 @@ export default function TestRoom() {
             color: '#fff'
           }}
         >
-          Playlist Title
+          {`Welcome to ${room.title} hosted by ${room.hostName}`}
         </Text>
       </LinearGradient>
     </ScrollView>

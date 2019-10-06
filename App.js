@@ -11,7 +11,8 @@ import JoinPlaylistForm from './screens/JoinPlaylistForm';
 import PlaylistRoom from './screens/PlaylistRoom';
 import SearchScreen from './screens/SearchScreen';
 import TestRoom from './screens/TestRoom';
-
+//if you want to use our keys you need to require the secrets file
+require('./secrets')
 export default class ReactNav extends Component {
   render() {
     return <App />;

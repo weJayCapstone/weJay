@@ -1,5 +1,5 @@
 import * as firebase from 'firebase';
-import firestore from 'firebase/firestore'
+import firestore from 'firebase/firestore';
 // Initialize Firebase
 const firebaseConfig = {
     apiKey: process.env.FIREBASE_API_KEY,
@@ -22,17 +22,19 @@ export async function createRoom(roomData) {
             console.log(err)
         }
 }
-//get room
-async function getRoom(passcode) {
+//get room with password and hostName
+export async function getRoom(passcode, hostName) {
+    let result = {};
     try{
        let roomRef = db.collection('Rooms');
        //query room via passcode
-       let query = await roomRef.where('passcode','==', passcode).get();
+       let query = await roomRef.where('passcode','==', passcode).where('hostName','==', hostName).get();
        if(query.empty){
            console.log("room doesn't exist or invalid password");
        }else {
-           console.log(query.data());
+           query.forEach(doc => result = doc.data())
        }
+       return result;
     }catch(err){
         console.log(err)
     }
@@ -40,14 +42,14 @@ async function getRoom(passcode) {
 
 
 //get token
-async function fetchToken(){
+async function fetchToken(passcode){
     try{
-        let roomsRef =  db.collection('Rooms').doc(roomName);
+        let roomsRef =  db.collection('Rooms');
         let result = await roomsRef.get();
         if(!result.exists) console.log('no document!')
         else {
             let thing = result.data();
-            return thing["Spotify Token"];
+            return thing.accessToken;
         }
     }catch(err){
         console.log(err)
@@ -55,12 +57,13 @@ async function fetchToken(){
 }
 //add songs
 
-export async function addSong(passcode, songData) {
+export async function addSong(hostName, songData) {
     //this version adds duplicates because of add
+    let results = [];
     try{
         let roomRef = db.collection('Rooms');
        //query room via passcode
-        let query = await roomRef.where('passcode','==', passcode).get();
+        let query = await roomRef.where('hostName','==', hostName).get();
         query.collection('Playlist').add(songData)
         //const playlist = db.collection('Rooms').doc(roomName).collection('Playlist');
         await playlist.add({song})
