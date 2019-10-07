@@ -115,7 +115,7 @@ export async function getPlaylist(roomName){
         allSongs.forEach(song => {
             songArr.push(song.data())
         })
-        
+        return songArr;
     }catch(err){
         console.log(err)
     }
