@@ -95,11 +95,8 @@ const StackNav = createStackNavigator({
   PlaylistRoom: { screen: PlaylistRoom },
   SearchScreen: { screen: SearchScreen },
   TestRoom: { screen: TestRoom },
-<<<<<<< HEAD
-  CleanSearch: { screen: CleanSearch}
-=======
+  CleanSearch: { screen: CleanSearch},
   SingleSong: { screen: SingleSong }
->>>>>>> 9074e985ebe6ad6bdfb9accb7b47fe53c2603c83
 });
 
 const App = createAppContainer(StackNav);
