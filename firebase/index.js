@@ -36,10 +36,34 @@ export async function getRoom(passcode, hostName) {
     } else {
       query.forEach(doc => (result = doc.data()));
     }
+  } catch (err) {
+    console.log(err);
+  }
+}
+export async function enterRoom(passcode, roomName, userName) {
+  let result = {};
+  try {
+    let roomRef = db.collection('Rooms');
+    //query room via passcode
+    let query = await roomRef
+      .where('passcode', '==', passcode)
+      .where('title', '==', roomName)
+      .get();
+    if (query.empty) {
+      console.log("room doesn't exist or invalid password");
+      return 'Invalid credentials';
+    } else {
+      query.forEach(doc => {
+        roomRef.doc(doc.id).update({ userName });
+        result = doc.data();
+      });
+      console.log('You are in the room!');
+    }
     return result;
   } catch (err) {
     console.log(err);
   }
+  return result;
 }
 
 //get token
@@ -47,8 +71,9 @@ async function fetchToken(passcode) {
   try {
     let roomsRef = db.collection('Rooms');
     let result = await roomsRef.get();
-    if (!result.exists) {console.log("no document!");}
-    else {
+    if (!result.exists) {
+      console.log('no document!');
+    } else {
       let thing = result.data();
       return thing.accessToken;
     }
