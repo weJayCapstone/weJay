@@ -8,27 +8,20 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Feather } from '@expo/vector-icons';
+import { getPlaylist, getRoom } from '../firebase/index';
 
-const dummySongs = [
-  {
-    id: 1,
-    songTitle: 'Bye Bye Bye',
-    artist: 'NSYNC'
-  },
-  {
-    id: 2,
-    songTitle: 'Africa',
-    artist: 'Toto'
-  },
-  {
-    id: 3,
-    songTitle: 'Ay Vamos',
-    artist: 'J Balvin'
-  }
-];
+export default function PlaylistRoom(props) {
+  let playlist = {};
 
-export default function JoinRoom() {
-  let [songs, setSongs] = useState(dummySongs);
+  let [songs, setSongs] = useState([]);
+
+  useEffect(() => {
+    getPlaylist('Test-Room')
+      .then(data => setSongs(data))
+      .catch(err => console.log(err));
+  }, []);
+
+  console.log(songs);
 
   return (
     <ScrollView>
@@ -46,13 +39,11 @@ export default function JoinRoom() {
             color: '#fff',
             textAlign: 'center'
           }}
-        >
-          teamFresh Jams
-        </Text>
-        {dummySongs.map(song => (
-          <View key={song.id} style={styles.songContainer}>
-            <Text style={{ color: '#ffffff' }}>{song.songTitle}</Text>
-            <Text style={{ color: '#ffffff' }}>{song.artist}</Text>
+        />
+        {songs.map(song => (
+          <View key={song.title} style={styles.songContainer}>
+            <Text style={{ color: '#ffffff' }}>{song.title}</Text>
+            <Text style={{ color: '#ffffff' }}>{song.title}</Text>
             <TouchableOpacity style={{ justifyContent: 'flex-end' }}>
               <Feather name="chevron-up" size={20} color="white" />
               <Feather name="chevron-down" size={20} color="white" />

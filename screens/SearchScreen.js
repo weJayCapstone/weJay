@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, {Component} from 'react'
 import {AuthSession} from 'expo'
 import { encode as btoa } from 'base-64'
@@ -411,3 +412,15 @@ const styles = StyleSheet.create({
         backgroundColor: '#d6c2c0'
     }
 })
+=======
+import React from 'react'
+import {View, Text} from 'react-native'
+
+export default function SearchScreen() {
+    return (
+        <View><Text>
+            Hello
+            </Text></View>
+    )
+}
+>>>>>>> 9074e985ebe6ad6bdfb9accb7b47fe53c2603c83

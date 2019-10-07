@@ -12,8 +12,8 @@ import PlaylistRoom from './screens/PlaylistRoom';
 import SearchScreen from './screens/SearchScreen';
 import CleanSearch from './screens/CleanSearch';
 import TestRoom from './screens/TestRoom';
-//if you want to use our keys you need to require the secrets file
-require('./secrets')
+import SingleSong from './screens/SingleSong';
+require('./secrets');
 export default class ReactNav extends Component {
   render() {
     return <App />;
@@ -95,7 +95,11 @@ const StackNav = createStackNavigator({
   PlaylistRoom: { screen: PlaylistRoom },
   SearchScreen: { screen: SearchScreen },
   TestRoom: { screen: TestRoom },
+<<<<<<< HEAD
   CleanSearch: { screen: CleanSearch}
+=======
+  SingleSong: { screen: SingleSong }
+>>>>>>> 9074e985ebe6ad6bdfb9accb7b47fe53c2603c83
 });
 
 const App = createAppContainer(StackNav);

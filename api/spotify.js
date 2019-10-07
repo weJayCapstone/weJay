@@ -1,6 +1,7 @@
-import {AuthSession} from 'expo'
-import { encode as btoa } from 'base-64'
-import { AsyncStorage } from 'react-native'
+import { AuthSession } from 'expo';
+import { encode as btoa } from 'base-64';
+import { AsyncStorage } from 'react-native';
+require('../secrets');
 //need to writ/read accessToken, refreshToken, expirationtime to firestore
 
 //need all spotify requests in this file
@@ -70,73 +71,130 @@ export async function getTokens(){
         console.log(e)
     }
 }
+export const makeNewPlaylist = async (accessToken, playListName) => {
+  try {
+    //const code = await getUserData('accessToken')
 
+    console.log('this is accessToken', accessToken);
 
-export async function refreshTokens(){
+    let user = await fetch('https://api.spotify.com/v1/me', {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+      }
+    });
 
-    try {
-        const ClientID = 'b7b6a836a01044abb7aa4eeb10c9039a'
-        const ClientSecret = process.env.SPOTIFY
-        const credsB64 = btoa(`${ClientID}:${ClientSecret}`)
-        const refreshToken = await getUserData('refreshToken')
+    const userJSON = await user.json();
+    //console.log('user object, ', userJSON)
+    //console.log('this is userId? ', userJSON.id)
+    const userID = userJSON.id;
 
-        const response = await fetch('https://accounts.spotify.com/api/token', {
-            method: 'POST',
-            headers: {
-                Authorization: `Basic ${credsB64}`,
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: `grant_type=refresh_token&refresh_token=${refreshToken}`
-        });
+    const playlist = await fetch(
+      `https://api.spotify.com/v1/users/${userID}/playlists`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name: playListName, public: true })
+      }
+    );
 
-        const responseJSON = await response.json();
+    const playlistJSON = await playlist.json();
+    const playlistID = playlistJSON.id;
+    //console.log('this is playlist, ', playlistJSON)
+    console.log('this is playlistID', playlistID);
+    console.log('Youve made a playlist!');
+    return playlistID;
+  } catch (e) {
+    console.log(e);
+  }
+};
 
-        if (responseJSON.error){
-            await this.getTokens()
-        }
-        else {
-            const {
-                access_token: newAccessToken,
-                refresh_token: newRefreshToken,
-                expires_in: expiresIn,
-            } = responseJSON
+export async function refreshTokens() {
+  try {
+    const ClientID = 'b7b6a836a01044abb7aa4eeb10c9039a';
+    const ClientSecret = process.env.SPOTIFY;
+    const credsB64 = btoa(`${ClientID}:${ClientSecret}`);
+    const refreshToken = await getUserData('refreshToken');
 
-            const expirationTime = new Date().getTime() + expiresIn * 1000;
+    const response = await fetch('https://accounts.spotify.com/api/token', {
+      method: 'POST',
+      headers: {
+        Authorization: `Basic ${credsB64}`,
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: `grant_type=refresh_token&refresh_token=${refreshToken}`
+    });
 
-            await setUserData('accesssToken', newAccessToken)
+    const responseJSON = await response.json();
 
-            if (newRefreshToken){
-                await setUserData('refreshToken', newRefreshToken)
-            }
-            await setUserData('expirationTime', expirationTime.toString())
+    if (responseJSON.error) {
+      await this.getTokens();
+    } else {
+      const {
+        access_token: newAccessToken,
+        refresh_token: newRefreshToken,
+        expires_in: expiresIn
+      } = responseJSON;
 
-        }
+      const expirationTime = new Date().getTime() + expiresIn * 1000;
+
+      await setUserData('accesssToken', newAccessToken);
+
+      if (newRefreshToken) {
+        await setUserData('refreshToken', newRefreshToken);
+      }
+      await setUserData('expirationTime', expirationTime.toString());
     }
-    catch (e){
-        console.log(e)
-    }
-
-
+  } catch (err) {
+    console.log(err);
+  }
 }
 
-export async function setUserData(key, value){
+export const addSong = async (accessToken, playlistID) => {
+  try {
+    const song = await fetch(
+      `https://api.spotify.com/v1/playlists/${playlistID}/tracks`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          uris: [
+            'spotify:track:4qsAYBCJnu2OkTKUVbbOF1',
+            'spotify:track:7e89621JPkKaeDSTQ3avtg'
+          ]
+        })
+      }
+    );
 
-    try {
-        await AsyncStorage.setItem(key, value)
-    }
-    catch (e){
-        console.log(e)
-    }
+    const songJSON = await song.json();
+    console.log('this is songJSON ', songJSON);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export async function setUserData(key, value) {
+  try {
+    await AsyncStorage.setItem(key, value);
+  } catch (e) {
+    console.log(e);
+  }
 }
 
-export async function getUserData(key){
-    try {
-        const value = await AsyncStorage.getItem(key)
-        if (value !== null){
-            return value
-        }
+export async function getUserData(key) {
+  try {
+    const value = await AsyncStorage.getItem(key);
+    if (value !== null) {
+      return value;
     }
-    catch (e){
-        console.log(e)
-    }
+  } catch (e) {
+    console.log(e);
+  }
 }

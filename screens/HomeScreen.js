@@ -10,20 +10,17 @@ import {
   StatusBar
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import {getTokens} from '../api/spotify'
+import { getTokens } from '../api/spotify';
 
 export default class HomeScreen extends React.Component {
-    constructor(){
-        super();
-    }
   static navigationOptions = {
     title: 'WeJay',
     headerStyle: {
-        backgroundColor: '#000',
-      },
+      backgroundColor: '#000'
+    },
     headerTintColor: '#fff',
     headerTitleStyle: {
-        fontWeight: 'bold',
+      fontWeight: 'bold'
     }
   };
   // headerLeft: <Feather name="music" size={20} color="black" />,
@@ -35,7 +32,7 @@ export default class HomeScreen extends React.Component {
         style={styles.container}
         contentContainerStyle={styles.contentContainer}
       >
-          <StatusBar barStyle="light-content" />
+        <StatusBar barStyle="light-content" />
         <View>
           <TouchableHighlight
             style={styles.button}
@@ -64,6 +61,13 @@ export default class HomeScreen extends React.Component {
           >
             <Text style={styles.text}>TestRoom Component (Natalie)</Text>
           </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => this.props.navigation.navigate('SingleSong')}
+          >
+            <Text style={styles.text}>SingleSong</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     );
@@ -82,7 +86,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: '#fff',
-    padding:10,
+    padding: 10
   },
   icon: {
     paddingLeft: 10
@@ -93,7 +97,7 @@ const styles = StyleSheet.create({
     width: 120
   },
   button: {
-    marginTop: 10,
+    marginTop: 10
   }
   // contentContainer: {
   //   paddingTop: 30
