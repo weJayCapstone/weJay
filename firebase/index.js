@@ -1,5 +1,6 @@
 import * as firebase from 'firebase';
 import firestore from 'firebase/firestore';
+import {refreshTokens} from '../api/spotify'
 // Initialize Firebase
 const firebaseConfig = {
     apiKey: process.env.FIREBASE_API_KEY,
@@ -45,34 +46,41 @@ export async function enterRoom(passcode, roomName, userName) {
     }
 }
 
-
-//get token
-async function fetchToken(passcode){
+//getRoom data
+export const getRoomData = async (docId) => {
+    let roomRef = db.collection('Rooms').doc(docId);
     try{
-        let roomsRef =  db.collection('Rooms');
-        let result = await roomsRef.get();
-        if(!result.exists) console.log('no document!')
-        else {
-            let thing = result.data();
-            return thing.accessToken;
-        }
+        let result = await roomRef.get();
+        return result.data();
+    }catch(err){
+        console.log(err)
+    }
+}
+//get token
+export async function refreshRoomToken(docId){
+    try{
+        let currentRoomData = await getRoomData(docId);
+        let result = await refreshTokens(currentRoomData.refreshToken);
+        currentRoomData.accessToken = result.access_token;
+        currentRoomData.expiresIn = result.expires_in;
+        //update room data
+        let roomRef = db.collection('Rooms').doc(docId);
+        roomRef.update(currentRoomData)
+        return currentRoomData;
     }catch(err){
         console.log(err)
     }
 }
 //add songs
 
-export async function addSong(hostName, songData) {
+export async function addSongToDB(roomId, songData) {
     //this version adds duplicates because of add
-    let results = [];
     try{
-        let roomRef = db.collection('Rooms');
        //query room via passcode
-        let query = await roomRef.where('hostName','==', hostName).get();
-        query.collection('Playlist').add(songData)
-        //const playlist = db.collection('Rooms').doc(roomName).collection('Playlist');
-        await playlist.add({song})
+        const playlist = db.collection('Rooms').doc(roomId).collection('Playlist');
+        await playlist.add({songData})
         console.log('song was added!')
+        //return newPlaylist?
     }catch(err){
         console.log(err)
     }
@@ -85,8 +93,9 @@ export async function getPlaylist(roomName){
         const playlist = db.collection('Rooms').doc(roomName).collection('Playlist');
         let allSongs = await playlist.get();
         allSongs.forEach(song => {
-            songArr.push(song)
+            songArr.push(song.data())
         })
+        
     }catch(err){
         console.log(err)
     }

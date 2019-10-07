@@ -54,6 +54,7 @@ export async function getTokens(){
             })
 
         const responseJSON = await response.json()
+        console.log(responseJSON)
         return responseJSON;
         // const {
         //     access_token: accessToken,
@@ -112,7 +113,7 @@ export const makeNewPlaylist = async (accessToken, playListName) => {
     }
 }
 
-export const addSong = async(accessToken, playlistID) => {
+export const addSong = async(accessToken, playlistID, songData) => {
     try{
         const song = await fetch(`https://api.spotify.com/v1/playlists/${playlistID}/tracks`, {
             method: 'POST',
@@ -120,23 +121,22 @@ export const addSong = async(accessToken, playlistID) => {
                 Authorization: `Bearer ${accessToken}`,
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({uris: ['spotify:track:4qsAYBCJnu2OkTKUVbbOF1', 'spotify:track:7e89621JPkKaeDSTQ3avtg']})
+            body: JSON.stringify({uris: [songData.songUri]})
         })
-
         const songJSON = await song.json();
         console.log('this is songJSON ', songJSON)
+        //if this succeeds add to database
     }catch(err){
         console.log(err)
     }
 }
 
-export async function refreshTokens(){
+export async function refreshTokens(refreshToken){
 
     try {
-        const ClientID = 'b7b6a836a01044abb7aa4eeb10c9039a'
-        const ClientSecret = process.env.SPOTIFY
+        const ClientID = '1e3132e15cd843c3b1d22c13f3ef7902';
+        const ClientSecret = process.env.SPOTIFY_NATALIE_SECRET;
         const credsB64 = btoa(`${ClientID}:${ClientSecret}`)
-        const refreshToken = await getUserData('refreshToken')
 
         const response = await fetch('https://accounts.spotify.com/api/token', {
             method: 'POST',
@@ -148,27 +148,27 @@ export async function refreshTokens(){
         });
 
         const responseJSON = await response.json();
+        return responseJSON;
+        // if (responseJSON.error){
+        //     await getTokens()
+        // }
+        // else {
+        //     const {
+        //         access_token: newAccessToken,
+        //         refresh_token: newRefreshToken,
+        //         expires_in: expiresIn,
+        //     } = responseJSON
 
-        if (responseJSON.error){
-            await this.getTokens()
-        }
-        else {
-            const {
-                access_token: newAccessToken,
-                refresh_token: newRefreshToken,
-                expires_in: expiresIn,
-            } = responseJSON
+        //     const expirationTime = new Date().getTime() + expiresIn * 1000;
 
-            const expirationTime = new Date().getTime() + expiresIn * 1000;
+        //     await setUserData('accesssToken', newAccessToken)
 
-            await setUserData('accesssToken', newAccessToken)
+        //     if (newRefreshToken){
+        //         await setUserData('refreshToken', newRefreshToken)
+        //     }
+        //     await setUserData('expirationTime', expirationTime.toString())
 
-            if (newRefreshToken){
-                await setUserData('refreshToken', newRefreshToken)
-            }
-            await setUserData('expirationTime', expirationTime.toString())
-
-        }
+        // }
     }
     catch (e){
         console.log(e)
