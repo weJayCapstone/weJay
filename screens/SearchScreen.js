@@ -267,10 +267,10 @@ export default class SearchScreen extends Component {
 
     //    this.test()
 
-    // if (this.state.results){
-    //     console.log('this.state.results.tracks.items[0].album.images[2]', this.state.results.tracks.items[0].album.images[2].url)
+    if (this.state.results){
+        console.log('this.state.results.tracks.items[0].uri', this.state.results.tracks.items[0].uri)
 
-    // }
+    }
 
         return (
 
