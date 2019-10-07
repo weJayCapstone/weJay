@@ -12,31 +12,36 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Feather } from '@expo/vector-icons';
-import db from '../firebase/index';
 import axios from 'axios';
-import { addSong, createRoom, enterRoom } from '../firebase/index';
+import { addSongToDB, getRoomData, refreshRoomToken } from '../firebase/index';
 import { getSpotifyPlaylist } from '../spotifyUtils/index';
+import {getTokens, addSong, refreshTokens} from '../api/spotify'
 //user will have access to room name some how, for now we will try to access our newRoom
 let currentToken =
   'BQBjBWbSLcJjEKuWehF1JhHLLBSXLmJ_oWE88zXEEUZvJe7eKblMP9SKBmuEcEYqVNG2QElXr08IE4mO3H7j5nws5qqx4hIymBB-BsV5Oru7YkZ4ImhiRcS5l59Zy2y-CO8qK6Vu7F12X3Uk13HbALd9IJRO2KrDZi6RzSDHE9l4-Hlo40uLVjYxd2PVun3lRmrt1d4hOTzmbQUG6TBQ';
 const roomName = 'newRoom';
 
 export default function TestRoom(props) {
-  const [authData, setAuthData] = useState({});
-  const [room, setRoom] = useState({});
-  const passcode = '1234'
-  const hostName = 'Panda'
-  //use effect used to update room
-//   useEffect(() => {
-//       getRoom(passcode, hostName)
-//       .then(result => setRoom(result))
-//       .catch(err => console.log(err))
-//   }, []);
+  const [roomData, setRoomData] = useState('');
+  //const [room, setRoom] = useState({});
+  const docId = 'HO3h8aunRIEIgcYmpvMN';
+  const songData = {}
+  songData.songUri = 'spotify:track:1oGdVdYjeQvojGKDddxLQQ';
+  useEffect(() => {
+      refreshRoomToken(docId)
+      .then(result => setRoomData(result))
+      .catch(err => console.log(err))
+  }, []);
+    console.log(roomData)
+    addSong(roomData.accessToken, roomData.playlistID, songData)
+    addSongToDB(docId, songData);
   return (
     <ScrollView>
-        <View style={styles.conatiner}>
+        <View style={styles.container}>
         <View>
-          <Text style={styles.header}>Add Freebird to your playlist</Text>
+            <TouchableOpacity>
+            <Text style={styles.textInput}>Add Freebird to your playlist</Text>
+            </TouchableOpacity>
         </View>
       </View>
     </ScrollView>
