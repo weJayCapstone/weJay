@@ -55,7 +55,7 @@ export async function enterRoom(passcode, roomName, userName) {
     } else {
       query.forEach(doc => {
         roomRef.doc(doc.id).update({ userName });
-        result = doc.data();
+        result = doc.id;
       });
       console.log('You are in the room!');
     }
@@ -67,10 +67,11 @@ export async function enterRoom(passcode, roomName, userName) {
 }
 
 //get token
-async function fetchToken(passcode) {
+async function fetchToken(roomId) {
   try {
     let roomsRef = db.collection('Rooms');
-    let result = await roomsRef.get();
+    let result = await roomsRef.doc(roomId).get();
+
     if (!result.exists) {
       console.log('no document!');
     } else {
@@ -81,8 +82,8 @@ async function fetchToken(passcode) {
     console.log(err);
   }
 }
-//add songs
 
+//add songs
 export async function addSong(hostName, songData) {
   //this version adds duplicates because of add
   let results = [];
@@ -109,8 +110,9 @@ export async function getPlaylist(roomName) {
       .collection('Playlist');
     let allSongs = await playlist.get();
     allSongs.forEach(song => {
-      songArr.push(song);
+      songArr.push(song.data());
     });
+    return songArr;
   } catch (err) {
     console.log(err);
   }

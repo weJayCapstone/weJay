@@ -1,23 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
   View,
   ScrollView,
   TouchableOpacity
-} from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
-import { getTokens, logIn, makeNewPlaylist } from '../api/spotify';
-import { createRoom } from '../firebase/index';
+} from "react-native";
+import { TextInput } from "react-native-gesture-handler";
+import { getTokens, logIn, makeNewPlaylist } from "../api/spotify";
+import { createRoom } from "../firebase/index";
 
 export default function CreatePlaylistForm(props) {
   const [roomData, setRoomData] = useState({
-    title: '',
-    hostName: '',
+    title: "",
+    hostName: "",
     passcode: null
   });
   const handleSubmit = async formData => {
-    //this needs success checks
     try {
       const spotifyTokens = await getTokens();
       formData.accessToken = spotifyTokens.access_token;
@@ -30,11 +29,9 @@ export default function CreatePlaylistForm(props) {
         formData.title
       );
       createRoom(formData);
-      console.log(formData);
-      // if(spotifyResponse.type === 'success'){
-      //    make some checks
-      // }
-      //navigate to search room
+      if (roomData.accessToken) {
+        props.navigation.navigate("PlaylistRoom");
+      }
     } catch (err) {
       console.log(err);
     }
@@ -57,12 +54,14 @@ export default function CreatePlaylistForm(props) {
             style={styles.textInput}
             placeholder="Your Name"
             maxLength={50}
+            value={roomData.hostName}
             onChangeText={text => setRoomData({ ...roomData, hostName: text })}
           />
           <TextInput
             style={styles.textInput}
             placeholder="Your Playlist Passcode"
             maxLength={4}
+            value={roomData.passcode}
             onChangeText={text => setRoomData({ ...roomData, passcode: text })}
           />
         </View>
@@ -79,18 +78,18 @@ export default function CreatePlaylistForm(props) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#F5FCFF'
+    backgroundColor: "#F5FCFF"
   },
   header: {
     fontSize: 25,
-    textAlign: 'center',
-    fontWeight: 'bold'
+    textAlign: "center",
+    fontWeight: "bold"
   },
   inputContainer: {
     paddingTop: 15
   },
   textInput: {
-    borderColor: '#CCCCCC',
+    borderColor: "#CCCCCC",
     borderTopWidth: 1,
     borderBottomWidth: 1,
     height: 50,
@@ -98,14 +97,14 @@ const styles = StyleSheet.create({
   },
   saveButton: {
     borderWidth: 1,
-    borderColor: '#007BFF',
-    backgroundColor: '#007BFF',
+    borderColor: "#007BFF",
+    backgroundColor: "#007BFF",
     padding: 15,
     margin: 5
   },
   saveButtonText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 20,
-    textAlign: 'center'
+    textAlign: "center"
   }
 });
