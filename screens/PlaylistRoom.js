@@ -8,27 +8,23 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Feather } from '@expo/vector-icons';
+import { createRoom, getPlaylist } from '../firebase/index';
 
-const dummySongs = [
-  {
-    id: 1,
-    songTitle: 'Bye Bye Bye',
-    artist: 'NSYNC'
-  },
-  {
-    id: 2,
-    songTitle: 'Africa',
-    artist: 'Toto'
-  },
-  {
-    id: 3,
-    songTitle: 'Ay Vamos',
-    artist: 'J Balvin'
-  }
-];
+//will need to make a request to the db to get playlist and songs
 
-export default function JoinRoom() {
-  let [songs, setSongs] = useState(dummySongs);
+// Object {
+//   "accessToken": "BQA_fH3_l6bjX_Q6XpuTeI4ZQvEE31-2rVJA4RIi-0JgdBpNbtrITyxjEkws1sWjYKxVNLYQLi20qQZ97hHuW42Buor7s3_Qb__xf1W_V4F3Jv6VZKouoKuzYxmWauNeASlC6mpvw2qpUctgvxBsiYnG4COpqge0RXzGWHtE2153xJ6J32vW6SlHaeGfASnZ1a0-eIzK",
+//   "expiresIn": 3600,
+//   "hostName": "Nat ",
+//   "passcode": "1234",
+//   "playlistID": "2PxePaUEY3U9bjqa4pSPmJ",
+//   "refreshToken": "AQAdVa6EEVh935eX7oVPoXT0-VH3aNndZYEU-VOQQcjS-C8YtytBDpvXq_HZSt3nH0wT0_tXVMi0CceeFwuR--fcfYc4C2R1W2ivQZ5exEgIazGZSTXzAcycQu2_DmE3a-mujQ",
+//   "title": "Test 5",
+//  }
+
+export default function JoinRoom(props) {
+  console.log(props);
+  let [songs, setSongs] = useState();
 
   return (
     <ScrollView>
@@ -49,7 +45,7 @@ export default function JoinRoom() {
         >
           teamFresh Jams
         </Text>
-        {dummySongs.map(song => (
+        {songs.map(song => (
           <View key={song.id} style={styles.songContainer}>
             <Text style={{ color: '#ffffff' }}>{song.songTitle}</Text>
             <Text style={{ color: '#ffffff' }}>{song.artist}</Text>
