@@ -11,7 +11,7 @@ export async function logIn(){
     try {
         const redirect = AuthSession.getRedirectUrl();
         const encodedRedirect = encodeURIComponent(redirect)
-        const ClientID = '1e3132e15cd843c3b1d22c13f3ef7902'
+        const ClientID = process.env.SPOTIFY_NATALIE_CLIENT_ID;
         const scopesArr = ['playlist-modify-public', 'user-modify-playback-state', 'user-read-private', 'user-read-email']
         const scopes = encodeURIComponent(scopesArr.join(' '))
 
@@ -37,7 +37,7 @@ export async function getTokens(){
 
     try {
         const authorizationCode = await logIn()
-        const ClientID = '1e3132e15cd843c3b1d22c13f3ef7902' //replace with your client Id from spotify
+        const ClientID = process.env.SPOTIFY_NATALIE_CLIENT_ID; //replace with your client Id from spotify
         const ClientSecret = process.env.SPOTIFY_NATALIE_SECRET; //replace with your own secret
         const redirect = AuthSession.getRedirectUrl()
         //add variables to secrets file
@@ -71,7 +71,64 @@ export async function getTokens(){
         console.log(e)
     }
 }
+export const makeNewPlaylist = async (accessToken, playListName) => {
+    try {
+        //const code = await getUserData('accessToken')
 
+        console.log('this is accessToken', accessToken)
+
+        let user = await fetch('https://api.spotify.com/v1/me', {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Content-Type': 'application/json'
+            }
+        })
+
+        const userJSON = await user.json()
+        //console.log('user object, ', userJSON)
+        //console.log('this is userId? ', userJSON.id)
+
+        const userID = userJSON.id
+
+        const playlist = await fetch(`https://api.spotify.com/v1/users/${userID}/playlists`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({name: playListName, public: true})
+        })
+
+        const playlistJSON = await playlist.json()
+        const playlistID = playlistJSON.id
+        //console.log('this is playlist, ', playlistJSON)
+        console.log('this is playlistID', playlistID)
+        console.log('Youve made a playlist!');
+        return playlistID;
+    }
+    catch (e){
+        console.log(e)
+    }
+}
+
+export const addSong = async(accessToken, playlistID) => {
+    try{
+        const song = await fetch(`https://api.spotify.com/v1/playlists/${playlistID}/tracks`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({uris: ['spotify:track:4qsAYBCJnu2OkTKUVbbOF1', 'spotify:track:7e89621JPkKaeDSTQ3avtg']})
+        })
+
+        const songJSON = await song.json();
+        console.log('this is songJSON ', songJSON)
+    }catch(err){
+        console.log(err)
+    }
+}
 
 export async function refreshTokens(){
 

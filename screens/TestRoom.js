@@ -6,48 +6,39 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
+  TextInput,
+  Alert
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Feather } from '@expo/vector-icons';
 import db from '../firebase/index';
 import axios from 'axios';
-import { addSong, createRoom, getRoom } from '../firebase/index';
+import { addSong, createRoom, enterRoom } from '../firebase/index';
 import { getSpotifyPlaylist } from '../spotifyUtils/index';
 //user will have access to room name some how, for now we will try to access our newRoom
 let currentToken =
   'BQBjBWbSLcJjEKuWehF1JhHLLBSXLmJ_oWE88zXEEUZvJe7eKblMP9SKBmuEcEYqVNG2QElXr08IE4mO3H7j5nws5qqx4hIymBB-BsV5Oru7YkZ4ImhiRcS5l59Zy2y-CO8qK6Vu7F12X3Uk13HbALd9IJRO2KrDZi6RzSDHE9l4-Hlo40uLVjYxd2PVun3lRmrt1d4hOTzmbQUG6TBQ';
 const roomName = 'newRoom';
 
-export default function TestRoom() {
+export default function TestRoom(props) {
+  const [authData, setAuthData] = useState({});
   const [room, setRoom] = useState({});
   const passcode = '1234'
   const hostName = 'Panda'
   //use effect used to update room
-  useEffect(() => {
-      getRoom(passcode, hostName)
-      .then(result => setRoom(result))
-      .catch(err => console.log(err))
-  }, []);
+//   useEffect(() => {
+//       getRoom(passcode, hostName)
+//       .then(result => setRoom(result))
+//       .catch(err => console.log(err))
+//   }, []);
   return (
     <ScrollView>
-      <LinearGradient
-        colors={['#000000', '#666666', '#AAAAAA']}
-        style={styles.container}
-      >
-        <Text
-          style={{
-            backgroundColor: 'transparent',
-            fontSize: 20,
-            alignContent: 'center',
-            marginBottom: 10,
-            fontWeight: 'bold',
-            color: '#fff'
-          }}
-        >
-          {`Welcome to ${room.title} hosted by ${room.hostName}`}
-        </Text>
-      </LinearGradient>
+        <View style={styles.conatiner}>
+        <View>
+          <Text style={styles.header}>Add Freebird to your playlist</Text>
+        </View>
+      </View>
     </ScrollView>
   );
 }
@@ -65,5 +56,24 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 10
+  },
+  textInput: {
+    borderColor: '#CCCCCC',
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    height: 50,
+    fontSize: 25
+  },
+  saveButton: {
+    borderWidth: 1,
+    borderColor: '#007BFF',
+    backgroundColor: '#007BFF',
+    padding: 15,
+    margin: 5
+  },
+  saveButtonText: {
+    color: '#FFFFFF',
+    fontSize: 20,
+    textAlign: 'center'
   }
 });
