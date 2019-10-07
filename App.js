@@ -10,6 +10,7 @@ import CreatePlaylistForm from './screens/CreatePlaylistForm';
 import JoinPlaylistForm from './screens/JoinPlaylistForm';
 import PlaylistRoom from './screens/PlaylistRoom';
 import SearchScreen from './screens/SearchScreen';
+import CleanSearch from './screens/CleanSearch';
 import TestRoom from './screens/TestRoom';
 import SingleSong from './screens/SingleSong';
 require('./secrets');
@@ -94,6 +95,7 @@ const StackNav = createStackNavigator({
   PlaylistRoom: { screen: PlaylistRoom },
   SearchScreen: { screen: SearchScreen },
   TestRoom: { screen: TestRoom },
+  CleanSearch: { screen: CleanSearch},
   SingleSong: { screen: SingleSong }
 });
 
