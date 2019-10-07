@@ -127,7 +127,7 @@ export const addSong = async(accessToken, playlistID, songData) => {
         const songJSON = await song.json();
         console.log('this is songJSON ', songJSON)
         //if this succeeds add to database
-    }catch(err){
+    } catch(err){
         console.log(err)
     }
 }
