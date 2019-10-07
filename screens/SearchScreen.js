@@ -4,18 +4,38 @@ import { encode as btoa } from 'base-64'
 import {
     Text,
     View,
+    FlatList,
+    Image,
+    StyleSheet,
+    ScrollView,
+    TouchableHighlight,
     AsyncStorage,
+    SafeAreaView
 } from 'react-native'
 import {
-    SearchBar
+    SearchBar,
 } from 'react-native-elements'
+import {
+    Container,
+    Header,
+    Content,
+    Footer,
+    Title,
+    InputGroup,
+    Input,
+    Icon
+} from 'native-base';
+require('../secrets')
+import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 'react-native-cards';
+import SongCard from '../screens/SongCard.js'
+
 
 export default class SearchScreen extends Component {
 
     constructor(props){
         super(props)
         this.state = {
-            search: ''
+            search: '',
         }
         this.updateSearch = this.updateSearch.bind(this)
         this.logIn = this.logIn.bind(this)
@@ -25,8 +45,38 @@ export default class SearchScreen extends Component {
         this.test = this.test.bind(this)
     }
 
+    componentDidMount(){
+        this.accountInitialize()
+    }
+
     updateSearch(search){
         this.setState({search})
+    }
+
+
+
+    search = async () => {
+
+        const code = await getUserData('accessToken')
+
+        const q = encodeURIComponent(this.state.search)
+
+        const search = await fetch(`https://api.spotify.com/v1/search?type=track&limit=10&market=US&q=${q}`, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${code}`
+            }
+        })
+
+        const searchJSON = await search.json()
+
+        //console.log('these are search results: ', searchJSON)
+
+        this.setState({results: searchJSON})
+
+        this.setState({search: ''})
+
+        //console.log('this is state results : ', this.state.results)
     }
 
 
@@ -62,6 +112,7 @@ export default class SearchScreen extends Component {
         try {
             const authorizationCode = await this.logIn()
             const ClientID = 'b7b6a836a01044abb7aa4eeb10c9039a'
+            // const ClientSecret = '4c7abdb1351b49fba4b18a5008f62bb9'
             const ClientSecret = process.env.SPOTIFY
             const redirect = 'https://auth.expo.io/@gbuchanan/weJay'
             const encodedRedirect = encodeURIComponent(redirect)
@@ -103,6 +154,7 @@ export default class SearchScreen extends Component {
         
         try {
             const ClientID = 'b7b6a836a01044abb7aa4eeb10c9039a'
+            // const ClientSecret = '4c7abdb1351b49fba4b18a5008f62bb9'
             const ClientSecret = process.env.SPOTIFY
             const credsB64 = btoa(`${ClientID}:${ClientSecret}`)
             const refreshToken = await getUserData('refreshToken')
@@ -198,7 +250,7 @@ export default class SearchScreen extends Component {
             })
 
             const songJSON = await song.json();
-            console.log('this is songJSON ', songJSON)
+            //console.log('this is songJSON ', songJSON)
 
         }
         catch (e){
@@ -206,45 +258,108 @@ export default class SearchScreen extends Component {
         }
     }
 
-    // search = async () => {
-    //     try {
-            
-    //         let fart = 'fart'
-
-
-
-
-    //     }
-    //     catch (err){
-    //         console.log(err)
-    //     }
-
-
-    // }
-
-
     render(){
 
         const { search } = this.state
         //const authCode = this.logIn()
 
-       this.accountInitialize()
+    //    this.accountInitialize()
 
-       this.test()
+    //    this.test()
+
+    // if (this.state.results){
+    //     console.log('this.state.results.tracks.items[0].album.images[2]', this.state.results.tracks.items[0].album.images[2].url)
+
+    // }
 
         return (
 
-            <View>
-                <Text>Whatup</Text>
-                <SearchBar
-                placeholder='Search'
-                onChangeText={this.updateSearch}
-                value={search}
+
+            <Container style={styles.mainView}>
+                <View style={{height: 13}} />
+
+                <Content>
+                    <SearchBar
+                    placeholder='Search'
+                    onChangeText={this.updateSearch}
+                    value={search}
+                    />
+
+                    <TouchableHighlight
+                        style={styles.button}
+                        onPress={this.search}
+                    >
+                        <Text style={styles.text}>Search</Text>
+                    </TouchableHighlight>
+                    
+            <ScrollView style={{top: 10}}>
+                    
+                {this.state.results ?
+                <FlatList
+                data={this.state.results.tracks.items}
+                renderItem={({item}) => <SongCard item={item} />}
+                keyExtractor={item => item.id}
                 />
-            </View>
+                :
+                <Text>Search We-J for a Song!</Text>}
+
+            </ScrollView>
+
+                </Content>
+            </Container>
+
+
+
+
+
+
+
+
+            // <ScrollView style={styles.container}>
+            //     <Text>Search View</Text>
+            //     <SearchBar
+            //     placeholder='Search'
+            //     onChangeText={this.updateSearch}
+            //     value={search}
+            //     />
+
+            //     <TouchableHighlight
+            //         style={styles.button}
+            //         onPress={this.search}
+            //     >
+            //     <Text style={styles.text}>Search</Text>
+            //     </TouchableHighlight>
+
+            //     {this.state.results ?
+            //     <FlatList
+            //     data={this.state.results.tracks.items}
+            //     renderItem={({item}) => <SongCard item={item} />}
+            //     keyExtractor={item => item.id}
+            //     />
+            //     :
+            //     <Text>''</Text>}
+
+
+            // </ScrollView>
 
         )
     }
+}
+
+function ListCard({item}){
+    return (
+
+    <View>
+        <Text>Song: {item.name}</Text>
+        <Text>Album: {item.album.name}</Text>
+        <Text>Artist: {item.album.artists[0].name}</Text>
+        <Image
+        style={{width: 64, height: 64}}
+        source={{uri: `${item.album.images[2]}`}}
+        // source={{uri: 'https://i.scdn.co/image/ab67616d000048518074759e322b06e493cbe154'}}
+         />
+    </View>
+)
 }
 
 async function setUserData(key, value){
@@ -269,3 +384,30 @@ async function getUserData(key){
     }
 }
 
+
+const styles = StyleSheet.create({
+    mainView: {
+        backgroundColor: 'grey',
+
+    },
+    card: {
+        backgroundColor: '#E7F9A9',
+        color: '#E7F9A9',
+        display: 'flex',
+        flexDirection: 'row',
+        borderWidth: 2.5,
+        borderColor: 'white'
+    },
+    songInfo: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'stretch',
+        // left: 7,
+        // top: 7,
+        padding: 13,
+        justifyContent: 'center'
+    },
+    searchBar: {
+        backgroundColor: '#d6c2c0'
+    }
+})
