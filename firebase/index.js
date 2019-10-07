@@ -23,16 +23,21 @@ export async function createRoom(roomData) {
         }
 }
 //get room with password and hostName
-export async function getRoom(passcode, hostName) {
+export async function enterRoom(passcode, roomName, userName) {
     let result = {};
     try{
        let roomRef = db.collection('Rooms');
        //query room via passcode
-       let query = await roomRef.where('passcode','==', passcode).where('hostName','==', hostName).get();
+       let query = await roomRef.where('passcode','==', passcode).where('title','==', roomName).get();
        if(query.empty){
            console.log("room doesn't exist or invalid password");
+           return 'Invalid credentials';
        }else {
-           query.forEach(doc => result = doc.data())
+           query.forEach(doc => {
+               roomRef.doc(doc.id).update({userName})
+               result = doc.data();
+            });
+           console.log('You are in the room!');
        }
        return result;
     }catch(err){

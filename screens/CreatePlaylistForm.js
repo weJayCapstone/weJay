@@ -10,7 +10,7 @@ import { TextInput } from 'react-native-gesture-handler';
 import {getTokens, logIn} from '../api/spotify'
 import {createRoom} from '../firebase/index'
 
-export default function CreatePlaylistForm() {
+export default function CreatePlaylistForm(props) {
     const [roomData, setRoomData] = useState({
         title: '',
         hostName: '',
@@ -27,7 +27,7 @@ export default function CreatePlaylistForm() {
             // if(spotifyResponse.type === 'success'){
             //    make some checks
             // }
-            //after room is created redirect host to playlist screen
+            props.navigation.navigate('PlaylistRoom')
         }catch(err){
             console.log(err)
         }

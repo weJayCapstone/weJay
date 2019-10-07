@@ -11,7 +11,7 @@ export async function logIn(){
     try {
         const redirect = AuthSession.getRedirectUrl();
         const encodedRedirect = encodeURIComponent(redirect)
-        const ClientID = '1e3132e15cd843c3b1d22c13f3ef7902'
+        const ClientID = process.env.SPOTIFY_NATALIE_CLIENT_ID;
         const scopesArr = ['playlist-modify-public', 'user-modify-playback-state', 'user-read-private', 'user-read-email']
         const scopes = encodeURIComponent(scopesArr.join(' '))
 
@@ -37,7 +37,7 @@ export async function getTokens(){
 
     try {
         const authorizationCode = await logIn()
-        const ClientID = '1e3132e15cd843c3b1d22c13f3ef7902' //replace with your client Id from spotify
+        const ClientID = process.env.SPOTIFY_NATALIE_CLIENT_ID; //replace with your client Id from spotify
         const ClientSecret = process.env.SPOTIFY_NATALIE_SECRET; //replace with your own secret
         const redirect = AuthSession.getRedirectUrl()
         //add variables to secrets file
