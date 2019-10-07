@@ -7,7 +7,7 @@ import {
   TouchableOpacity
 } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
-import {getTokens, logIn} from '../api/spotify'
+import {getTokens, logIn, makeNewPlaylist} from '../api/spotify'
 import {createRoom} from '../firebase/index'
 
 export default function CreatePlaylistForm(props) {
@@ -23,11 +23,15 @@ export default function CreatePlaylistForm(props) {
             formData.accessToken = spotifyTokens.access_token;
             formData.refreshToken = spotifyTokens.refresh_token;
             formData.expiresIn = spotifyTokens.expires_in;
+            //create room in firebase with Data, add playlist id
+            //make playlist on spotify
+            formData.playlistID = await makeNewPlaylist(formData.accessToken, formData.title);
             createRoom(formData);
+            console.log(formData);
             // if(spotifyResponse.type === 'success'){
             //    make some checks
             // }
-            props.navigation.navigate('PlaylistRoom')
+            //navigate to search room
         }catch(err){
             console.log(err)
         }
