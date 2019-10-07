@@ -6,34 +6,31 @@ require('../secrets');
 
 //need all spotify requests in this file
 
-export async function logIn() {
-  try {
-    const redirect = AuthSession.getRedirectUrl();
-    console.log(redirect);
-    const encodedRedirect = encodeURIComponent(redirect);
-    const ClientID = process.env.SPOTIFY_CHRISTINE_CLIENTID;
-    const scopesArr = [
-      'playlist-modify-public',
-      'user-modify-playback-state',
-      'user-read-private',
-      'user-read-email'
-    ];
-    const scopes = encodeURIComponent(scopesArr.join(' '));
+export async function logIn(){
 
-    const result = await AuthSession.startAsync({
-      authUrl:
-        'https://accounts.spotify.com/authorize' +
-        '?client_id=' +
-        ClientID +
-        '&response_type=code' +
-        '&redirect_uri=' +
-        encodedRedirect +
-        (scopes ? '&scope=' + scopes : '')
-    });
-    return result.params.code;
-  } catch (err) {
-    console.log(err);
-  }
+    try {
+        const redirect = AuthSession.getRedirectUrl();
+        const encodedRedirect = encodeURIComponent(redirect)
+        const ClientID = 'b7b6a836a01044abb7aa4eeb10c9039a'
+        const scopesArr = ['playlist-modify-public', 'user-modify-playback-state', 'user-read-private', 'user-read-email']
+        const scopes = encodeURIComponent(scopesArr.join(' '))
+
+        const result = await AuthSession.startAsync({
+            authUrl:
+            'https://accounts.spotify.com/authorize' +
+            '?client_id=' +
+            ClientID +
+            '&response_type=code' +
+            '&redirect_uri=' +
+            encodedRedirect +
+            (scopes ? '&scope=' + scopes : '')
+        })
+        return result.params.code;
+
+    }
+    catch (err){
+        console.log(err)
+    }
 }
 
 export async function getTokens(){
