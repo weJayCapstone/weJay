@@ -1,16 +1,15 @@
 import { AuthSession } from 'expo';
 import { encode as btoa } from 'base-64';
 import { AsyncStorage } from 'react-native';
-
 //need to writ/read accessToken, refreshToken, expirationtime to firestore
 
 //need all spotify requests in this file
 
-async function logIn() {
+export async function logIn() {
   try {
-    const redirect = 'https://auth.expo.io/@christinevargas/weJay';
+    const redirect = AuthSession.getRedirectUrl();
     const encodedRedirect = encodeURIComponent(redirect);
-    const ClientID = 'b7b6a836a01044abb7aa4eeb10c9039a';
+    const ClientID = '1e3132e15cd843c3b1d22c13f3ef7902';
     const scopesArr = [
       'playlist-modify-public',
       'user-modify-playback-state',
@@ -29,7 +28,6 @@ async function logIn() {
         encodedRedirect +
         (scopes ? '&scope=' + scopes : '')
     });
-
     return result.params.code;
   } catch (err) {
     console.log(err);
@@ -39,9 +37,10 @@ async function logIn() {
 export async function getTokens() {
   try {
     const authorizationCode = await logIn();
-    const ClientID = 'b7b6a836a01044abb7aa4eeb10c9039a';
-    const ClientSecret = process.env.SPOTIFY;
-    const redirect = 'https://auth.expo.io/@gbuchanan/weJay';
+    const ClientID = '1e3132e15cd843c3b1d22c13f3ef7902'; //replace with your client Id from spotify
+    const ClientSecret = process.env.SPOTIFY_NATALIE_SECRET; //replace with your own secret
+    const redirect = AuthSession.getRedirectUrl();
+    //add variables to secrets file
     const encodedRedirect = encodeURIComponent(redirect);
     const credsB64 = btoa(`${ClientID}:${ClientSecret}`);
 
@@ -55,24 +54,24 @@ export async function getTokens() {
     });
 
     const responseJSON = await response.json();
+    return responseJSON;
+    // const {
+    //     access_token: accessToken,
+    //     refresh_token: refreshToken,
+    //     expires_in: expiresIn
+    // } = responseJSON
 
-    const {
-      access_token: accessToken,
-      refresh_token: refreshToken,
-      expires_in: expiresIn
-    } = responseJSON;
+    //const expirationTime = new Date().getTime() + expiresIn * 1000;
 
-    const expirationTime = new Date().getTime() + expiresIn * 1000;
-
-    await setUserData('accessToken', accessToken);
-    await setUserData('refreshToken', refreshToken);
-    await setUserData('expirationTime', expirationTime.toString());
+    // await setUserData('accessToken', accessToken)
+    // await setUserData('refreshToken', refreshToken)
+    // await setUserData('expirationTime', expirationTime.toString())
   } catch (e) {
     console.log(e);
   }
 }
 
-async function refreshTokens() {
+export async function refreshTokens() {
   try {
     const ClientID = 'b7b6a836a01044abb7aa4eeb10c9039a';
     const ClientSecret = process.env.SPOTIFY;
@@ -113,7 +112,7 @@ async function refreshTokens() {
   }
 }
 
-async function setUserData(key, value) {
+export async function setUserData(key, value) {
   try {
     await AsyncStorage.setItem(key, value);
   } catch (e) {
@@ -121,7 +120,7 @@ async function setUserData(key, value) {
   }
 }
 
-async function getUserData(key) {
+export async function getUserData(key) {
   try {
     const value = await AsyncStorage.getItem(key);
     if (value !== null) {
@@ -131,5 +130,3 @@ async function getUserData(key) {
     console.log(e);
   }
 }
-
-//export default {logIn, getTokens, refreshTokens, getUserData}

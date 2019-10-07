@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,12 +7,31 @@ import {
   TouchableOpacity
 } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
-import {FormLabel, FormInput, FormValidationMessage} from 'react-native-elements';
-import {getTokens} from '../api/spotify'
+import {getTokens, logIn} from '../api/spotify'
+import {createRoom} from '../firebase/index'
 
 export default function CreatePlaylistForm() {
-    //const [roomData, setRoomData] = useState({});
-    getTokens();
+    const [roomData, setRoomData] = useState({
+        title: '',
+        hostName: '',
+        passcode: null,
+    });
+    const handleSubmit = async (formData) => {
+        //this needs success checks
+        try{
+            const spotifyTokens = await getTokens();
+            formData.accessToken = spotifyTokens.access_token;
+            formData.refreshToken = spotifyTokens.refresh_token;
+            formData.expiresIn = spotifyTokens.expires_in;
+            createRoom(formData);
+            // if(spotifyResponse.type === 'success'){
+            //    make some checks
+            // }
+            //after room is created redirect host to playlist screen
+        }catch(err){
+            console.log(err)
+        }
+    }
     return (
       <View style={styles.conatiner}>
         <View>
@@ -20,33 +39,31 @@ export default function CreatePlaylistForm() {
         </View>
         <ScrollView>
           <View style={styles.inputContainer}>
-            <FormLabel>
-                Playlist Title
-            </FormLabel>
-            <FormInput
+            <TextInput
               style={styles.textInput}
               placeholder="Playlist Title"
               maxLength={100}
+              value={roomData.title}
+              onChangeText = {text => setRoomData({...roomData, title: text})}
             />
-            <FormLabel>
-                Name
-            </FormLabel>
-            <FormInput
+            <TextInput
               style={styles.textInput}
               placeholder="Your Name"
               maxLength={50}
+              onChangeText = {text => setRoomData({...roomData, hostName: text})}
             />
-            <FormLabel>
-                Passcode
-            </FormLabel>
-            <FormInput
+            <TextInput
               style={styles.textInput}
               placeholder="Your Playlist Passcode"
               maxLength={4}
+              onChangeText = {text => setRoomData({...roomData, passcode: text})}
             />
           </View>
-          <TouchableOpacity style={styles.saveButton}>
-            <Text style={styles.saveButtonText}>Save</Text>
+          <TouchableOpacity 
+            style={styles.saveButton}
+            onPress= {()=>handleSubmit(roomData)}
+          >
+            <Text style={styles.saveButtonText}>Create Playlist</Text>
           </TouchableOpacity>
         </ScrollView>
       </View>

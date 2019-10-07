@@ -4,7 +4,10 @@ import {
   ScrollView,
   StyleSheet,
   TouchableHighlight,
-  View
+  TouchableOpacity,
+  TouchableOpacityBase,
+  View,
+  StatusBar
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import {getTokens} from '../api/spotify'
@@ -14,7 +17,14 @@ export default class HomeScreen extends React.Component {
         super();
     }
   static navigationOptions = {
-    title: 'WeJay'
+    title: 'WeJay',
+    headerStyle: {
+        backgroundColor: '#000',
+      },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+        fontWeight: 'bold',
+    }
   };
   // headerLeft: <Feather name="music" size={20} color="black" />,
   // headerRight: <Feather name="plus-square" size={20} color="black" />
@@ -25,6 +35,7 @@ export default class HomeScreen extends React.Component {
         style={styles.container}
         contentContainerStyle={styles.contentContainer}
       >
+          <StatusBar barStyle="light-content" />
         <View>
           <TouchableHighlight
             style={styles.button}
@@ -33,12 +44,12 @@ export default class HomeScreen extends React.Component {
             <Text style={styles.text}>Create Playlist</Text>
           </TouchableHighlight>
 
-          <TouchableHighlight
+          <TouchableOpacity
             style={styles.button}
             onPress={() => this.props.navigation.navigate('JoinPlaylistForm')}
           >
             <Text style={styles.text}>Join Playlist</Text>
-          </TouchableHighlight>
+          </TouchableOpacity>
 
           <TouchableHighlight
             style={styles.button}
@@ -47,12 +58,12 @@ export default class HomeScreen extends React.Component {
             <Text style={styles.text}>Search Screen Component (Gus)</Text>
           </TouchableHighlight>
 
-          <TouchableHighlight
+          <TouchableOpacity
             style={styles.button}
-            onPress={() => this.props.navigation.navigate('JoinRoom')}
+            onPress={() => this.props.navigation.navigate('TestRoom')}
           >
-            <Text style={styles.text}>Join Room Component (Natalie)</Text>
-          </TouchableHighlight>
+            <Text style={styles.text}>TestRoom Component (Natalie)</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     );
@@ -62,11 +73,16 @@ export default class HomeScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff'
+    backgroundColor: '#000'
   },
   text: {
     fontSize: 24,
-    textAlign: 'center'
+    textAlign: 'center',
+    color: '#fff',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#fff',
+    padding:10,
   },
   icon: {
     paddingLeft: 10
@@ -75,8 +91,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     width: 120
+  },
+  button: {
+    marginTop: 10,
   }
-
   // contentContainer: {
   //   paddingTop: 30
   // },
