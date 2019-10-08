@@ -93,14 +93,10 @@ export default function SearchScreen(props){
                         </ScrollView>
 
                     </Content>
-<<<<<<< HEAD
                 </Container>
 
         )
 }
-
-=======
-
                 <Footer>
                     <Card style={{
                     display: 'flex',
@@ -124,7 +120,6 @@ export default function SearchScreen(props){
 }
 
 
->>>>>>> 8e88a097872eff9b7e18bca9774f532717b845c7
 const styles = StyleSheet.create({
     button: {
         padding: 10,
