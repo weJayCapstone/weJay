@@ -37,7 +37,7 @@ export async function getTokens(){
     try {
         const authorizationCode = await logIn()
         const ClientID = process.env.SPOTIFY_CLIENT_ID; //replace with your client Id from spotify
-        const ClientSecret = process.env.SPOTIFY; //replace with your own secret
+        const ClientSecret = process.env.SPOTIFY_NATALIE_SECRET; //replace with your own secret
         const redirect = AuthSession.getRedirectUrl()
         //add variables to secrets file
         const encodedRedirect = encodeURIComponent(redirect)
@@ -134,7 +134,7 @@ export const addSong = async(roomData, songData) => {
 export async function refreshTokens(refreshToken){
 
     try {
-        const ClientID = process.env.SPOTIFY_CLIENT_ID;
+        const ClientID = process.env.CLIENT_ID;
         const ClientSecret = process.env.SPOTIFY;
         const credsB64 = btoa(`${ClientID}:${ClientSecret}`)
 

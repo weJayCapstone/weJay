@@ -93,10 +93,6 @@ export default function SearchScreen(props){
                         </ScrollView>
 
                     </Content>
-                </Container>
-
-        )
-}
                 <Footer>
                     <Card style={{
                     display: 'flex',
