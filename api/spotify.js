@@ -9,7 +9,7 @@ export async function logIn() {
   try {
     const redirect = AuthSession.getRedirectUrl();
     const encodedRedirect = encodeURIComponent(redirect);
-    const ClientID = process.env.SPOTIFY_CLIENTID;
+    const ClientID = process.env.SPOTIFY_CLIENT_ID;
     const scopesArr = [
       'playlist-modify-public',
       'user-modify-playback-state',
@@ -37,7 +37,7 @@ export async function logIn() {
 export async function getTokens() {
   try {
     const authorizationCode = await logIn();
-    const ClientID = process.env.SPOTIFY_CLIENTID; //replace with your client Id from spotify
+    const ClientID = process.env.SPOTIFY_CLIENT_ID; //replace with your client Id from spotify
     const ClientSecret = process.env.SPOTIFY; //replace with your own secret
     const redirect = AuthSession.getRedirectUrl();
     //add variables to secrets file
@@ -132,7 +132,7 @@ export const addSong = async (roomData, songData) => {
 };
 export async function refreshTokens(refreshToken) {
   try {
-    const ClientID = process.env.SPOTIFY_CLIENTID;
+    const ClientID = process.env.SPOTIFY_CLIENT_ID;
     const ClientSecret = process.env.SPOTIFY;
     const credsB64 = btoa(`${ClientID}:${ClientSecret}`);
 
@@ -146,6 +146,7 @@ export async function refreshTokens(refreshToken) {
     });
 
     const responseJSON = await response.json();
+    console.log('JSON', responseJSON);
     return responseJSON;
     // if (responseJSON.error){
     //     await getTokens()

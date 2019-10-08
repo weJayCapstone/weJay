@@ -2,8 +2,15 @@
 
 'use strict';
 import React, { Component } from 'react';
-import { AppRegistry } from 'react-native';
-import { createStackNavigator, createAppContainer } from 'react-navigation';
+import {
+  createStackNavigator,
+  createAppContainer,
+  createDrawerNavigator,
+  createSwitchNavigator
+} from 'react-navigation';
+import { DrawerActions } from 'react-navigation-drawer';
+import { TouchableOpacity, StyleSheet } from 'react-native';
+import { Feather } from '@expo/vector-icons';
 
 import HomeScreen from './screens/HomeScreen';
 import CreatePlaylistForm from './screens/CreatePlaylistForm';
@@ -14,91 +21,81 @@ import CleanSearch from './screens/CleanSearch';
 import TestRoom from './screens/TestRoom';
 import SingleSong from './screens/SingleSong';
 require('./secrets');
+
 export default class ReactNav extends Component {
   render() {
     return <App />;
   }
 }
 
-// class GreenScreen extends Component {
-//   static navigationOptions = {
-//     title: 'Green'
-//   };
-//   render() {
-//     return (
-//       <View style={styles.green}>
-//         <Text style={styles.text}>This is the Green Screen</Text>
-//         <TouchableHighlight
-//           style={styles.button}
-//           onPress={() => this.props.navigation.navigate('Red')}
-//         >
-//           <Text style={styles.text}>Go to Red</Text>
-//         </TouchableHighlight>
-//       </View>
-//     );
-//   }
-// }
-
-// class RedScreen extends Component {
-//   render() {
-//     return (
-//       <View style={styles.red}>
-//         <Text style={styles.text}>This is the Red Screen</Text>
-//         <TouchableHighlight
-//           style={styles.button}
-//           onPress={() => this.props.navigation.goBack()}
-//         >
-//           <Text style={styles.text}>Back to Green</Text>
-//         </TouchableHighlight>
-//       </View>
-//     );
-//   }
-// }
-
-// RedScreen.navigationOptions = props => {
-//   const { navigation } = props;
-//   return {
-//     headerTitle: 'Red',
-//     headerRight: (
-//       <Button title="Purple" onPress={() => navigation.navigate('Purple')} />
-//     ),
-//     headerLeft: (
-//       <Button title="Blue" onPress={() => navigation.navigate('Blue')} />
-//     )
-//   };
-// };
-
-// class BlueScreen extends Component {
-//   render() {
-//     return (
-//       <View style={styles.blue}>
-//         <Text style={styles.text}>This is the Blue Screen</Text>
-//       </View>
-//     );
-//   }
-// }
-
-// class PurpleScreen extends Component {
-//   render() {
-//     return (
-//       <View style={styles.purple}>
-//         <Text style={styles.text}>This is the Purple Screen</Text>
-//       </View>
-//     );
-//   }
-// }
+const DrawerNav = createDrawerNavigator({
+  Home: {
+    screen: HomeScreen,
+    navigationOptions: {
+      title: 'Home'
+    }
+  },
+  CreatePlaylistForm: {
+    screen: CreatePlaylistForm,
+    navigationOptions: {
+      title: 'Create a Playlist'
+    }
+  },
+  JoinPlaylistForm: {
+    screen: JoinPlaylistForm,
+    navigationOptions: {
+      title: 'Join a Playlist'
+    }
+  }
+});
 
 const StackNav = createStackNavigator({
+  DrawerNav: {
+    screen: DrawerNav,
+    navigationOptions: ({ navigation }) => {
+      const { state } = navigation;
+
+      if (state.isDrawerOpen) {
+        return {
+          title: null,
+          headerLeft: (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.dispatch(DrawerActions.toggleDrawer());
+              }}
+            >
+              <Feather name="menu" size={32} color="black" />
+            </TouchableOpacity>
+          )
+        };
+      } else {
+        return {
+          title: null,
+          headerLeft: (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.dispatch(DrawerActions.toggleDrawer());
+              }}
+            >
+              <Feather name="menu" size={32} color="black" />
+            </TouchableOpacity>
+          )
+        };
+      }
+    }
+  },
   Home: { screen: HomeScreen },
   CreatePlaylistForm: { screen: CreatePlaylistForm },
   JoinPlaylistForm: { screen: JoinPlaylistForm },
   PlaylistRoom: { screen: PlaylistRoom },
   SearchScreen: { screen: SearchScreen },
   TestRoom: { screen: TestRoom },
-  CleanSearch: { screen: CleanSearch},
+  CleanSearch: { screen: CleanSearch },
   SingleSong: { screen: SingleSong }
 });
 
-const App = createAppContainer(StackNav);
+const MainNav = createSwitchNavigator({
+  App: StackNav
+});
 
-AppRegistry.registerComponent('ReactNav', () => ReactNav);
+const App = createAppContainer(MainNav);

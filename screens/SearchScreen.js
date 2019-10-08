@@ -42,7 +42,10 @@ export default function SearchScreen(props) {
   let [accessToken, setAccessToken] = useState('');
   const accountInitialize = async () => {
     try {
+      console.log('docId', props.navigation.state.params.docId);
       let result = await refreshRoomToken(docId);
+      console.log('result', result);
+
       setAccessToken(result.accessToken);
     } catch (e) {
       console.log(e);

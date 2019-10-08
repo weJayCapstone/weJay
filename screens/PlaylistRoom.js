@@ -47,23 +47,22 @@ export default function PlaylistRoom(props) {
               <Feather name="chevron-down" size={20} color="white" />
             </TouchableOpacity>
           </View>
-        ))
-      }
+        ))}
       </LinearGradient>
       <TouchableOpacity
-        style= {styles.button}
-        onPress={() => props.navigation.navigate('SearchScreen', {docId})}
+        style={styles.button}
+        onPress={() => props.navigation.navigate('SearchScreen', { docId })}
       >
-          <Text>Add A Song</Text>
+        <Text>Add A Song</Text>
       </TouchableOpacity>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-   button: {
-    padding: 10, 
-    borderWidth: 1, 
+  button: {
+    padding: 10,
+    borderWidth: 1,
     borderColor: '#000',
     borderRadius: 25,
     width: 150
