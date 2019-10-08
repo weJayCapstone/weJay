@@ -34,46 +34,6 @@ export async function logIn() {
   }
 }
 
-<<<<<<< HEAD
-export async function getTokens(){
-
-    try {
-        const authorizationCode = await logIn()
-        const ClientID = process.env.SPOTIFY_CLIENT_ID; //replace with your client Id from spotify
-        const ClientSecret = process.env.SPOTIFY; //replace with your own secret
-        const redirect = AuthSession.getRedirectUrl()
-        //add variables to secrets file
-        const encodedRedirect = encodeURIComponent(redirect)
-        const credsB64 = btoa(`${ClientID}:${ClientSecret}`)
-
-        const response = await fetch('https://accounts.spotify.com/api/token', {
-                method: 'POST',
-                headers: {
-                    Authorization: `Basic ${credsB64}`,
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `grant_type=authorization_code&code=${authorizationCode}&redirect_uri=${encodedRedirect}`,
-            })
-
-        const responseJSON = await response.json()
-        console.log(responseJSON)
-        return responseJSON;
-        // const {
-        //     access_token: accessToken,
-        //     refresh_token: refreshToken,
-        //     expires_in: expiresIn
-        // } = responseJSON
-
-        //const expirationTime = new Date().getTime() + expiresIn * 1000;
-
-        // await setUserData('accessToken', accessToken)
-        // await setUserData('refreshToken', refreshToken)
-        // await setUserData('expirationTime', expirationTime.toString())
-    }
-    catch (e){
-        console.log(e)
-    }
-=======
 export async function getTokens() {
   try {
     const authorizationCode = await logIn();
@@ -109,7 +69,6 @@ export async function getTokens() {
   } catch (e) {
     console.log(e);
   }
->>>>>>> 8256bc5272569d11923db934b49e18848fccabf7
 }
 export const makeNewPlaylist = async (accessToken, playListName) => {
   try {
@@ -178,56 +137,11 @@ export const addSong = async (roomData, songData) => {
   }
 };
 
-<<<<<<< HEAD
-export async function refreshTokens(refreshToken){
-
-    try {
-        const ClientID = process.env.SPOTIFY_CLIENT_ID;
-        const ClientSecret = process.env.SPOTIFY;
-        const credsB64 = btoa(`${ClientID}:${ClientSecret}`)
-
-        const response = await fetch('https://accounts.spotify.com/api/token', {
-            method: 'POST',
-            headers: {
-                Authorization: `Basic ${credsB64}`,
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: `grant_type=refresh_token&refresh_token=${refreshToken}`
-        });
-
-        const responseJSON = await response.json();
-        return responseJSON;
-        // if (responseJSON.error){
-        //     await getTokens()
-        // }
-        // else {
-        //     const {
-        //         access_token: newAccessToken,
-        //         refresh_token: newRefreshToken,
-        //         expires_in: expiresIn,
-        //     } = responseJSON
-
-        //     const expirationTime = new Date().getTime() + expiresIn * 1000;
-
-        //     await setUserData('accesssToken', newAccessToken)
-
-        //     if (newRefreshToken){
-        //         await setUserData('refreshToken', newRefreshToken)
-        //     }
-        //     await setUserData('expirationTime', expirationTime.toString())
-
-        // }
-    }
-    catch (e){
-        console.log(e)
-    }
-=======
 export async function refreshTokens(refreshToken) {
   try {
     const ClientID = process.env.SPOTIFY_CLIENT_ID;
     const ClientSecret = process.env.SPOTIFY;
     const credsB64 = btoa(`${ClientID}:${ClientSecret}`);
->>>>>>> 8256bc5272569d11923db934b49e18848fccabf7
 
     const response = await fetch("https://accounts.spotify.com/api/token", {
       method: "POST",
