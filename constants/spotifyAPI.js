@@ -1,9 +1,7 @@
+import { AuthSession } from 'expo';
+console.log(AuthSession.getRedirectUrl());
 
-import {AuthSession} from 'expo'
-console.log(AuthSession.getRedirectUrl())
-
-                // `https://accounts.spotify.com/authorize?client_id=${ClientID}&response_type=code&redirect_uri=${encodedRedirect}`
-
+// `https://accounts.spotify.com/authorize?client_id=${ClientID}&response_type=code&redirect_uri=${encodedRedirect}`
 
 // logIn = async () => {
 //     try {
