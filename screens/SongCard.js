@@ -19,26 +19,35 @@ import {addSongToDB, getRoomData} from '../firebase/index'
 export default class SongCard extends Component {
 
     constructor(props){
-        super(props)
+        super(props);
+        this.state ={
+            docId: this.props.docId
+        }
         this.handleSongSelection = this.handleSongSelection.bind(this)
     }
-
+    songDataParser = (data) => {
+        let result  = {
+            mame: data.name,
+            id: data.id,
+            href: data.href,
+            uri: data.uri,
+            artist: data.artists[0].name,
+            imageUrl: data.album.images[0].url,
+            albumName: data.album.name
+        };
+        return result;
+    }
    handleSongSelection = async () => {
-        console.log('is on press working?')
-        const roomID = 'J63ViPbDgGvPdsJ2It0Y'
-        
-       const roomData = await getRoomData(roomID)
-       const playlistID = roomData.playlistID
-       
-       const accessToken = roomData.accessToken
+        const roomID = this.state.docId;
     //    const songURI = {songUri: 'spotify:track:4JGKZS7h4Qa16gOU3oNETV'}
-       const songURI = {songUri: `${this.props.item.uri}`}
-
-        //accessToken, playlistId, songData
-        await addSong(accessToken, playlistID, songURI);
         //roomId and songData
-        await addSongToDB(roomID, songURI);
-
+        const songData = this.songDataParser(this.props.item);
+        //console.log(songData);
+        try{
+            await addSongToDB(roomID, songData);
+        }catch(err){
+            console.log(err);
+        }
     }
 
     render(){

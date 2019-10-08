@@ -1,6 +1,6 @@
 import * as firebase from 'firebase';
 import firestore from 'firebase/firestore';
-import {refreshTokens} from '../api/spotify'
+import {refreshTokens, addSong} from '../api/spotify'
 // Initialize Firebase
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -94,11 +94,12 @@ export async function refreshRoomToken(docId){
 }
 
 export async function addSongToDB(roomId, songData) {
-    //this version adds duplicates because of add
     try{
-       //query room via passcode
+        let result = await refreshRoomToken(roomId);
+        //add song to spotify playlist
+        await addSong(result, songData)
         const playlist = db.collection('Rooms').doc(roomId).collection('Playlist');
-        await playlist.add({songData})
+        await playlist.add(songData)
         console.log('song was added!')
         //return newPlaylist?
     }catch(err){
@@ -107,11 +108,14 @@ export async function addSongToDB(roomId, songData) {
 }
 
 //get playlist return array of song objects (ideally?)
-export async function getPlaylist(roomName){
+export async function getPlaylist(roomId){
     let songArr = [];
     try{
-        const playlist = db.collection('Rooms').doc(roomName).collection('Playlist');
+        const playlist = db.collection('Rooms').doc(roomId).collection('Playlist');
         let allSongs = await playlist.get();
+        if(allSongs.empty){
+            return songArr;
+        }
         allSongs.forEach(song => {
             songArr.push(song.data())
         })
