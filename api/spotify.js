@@ -10,8 +10,8 @@ export async function logIn(){
     try {
         const redirect = AuthSession.getRedirectUrl();
         const encodedRedirect = encodeURIComponent(redirect)
-        const ClientID = process.env.SPOTIFY_CLIENT_ID
-        const scopesArr = ['playlist-modify-public', 'user-modify-playback-state', 'user-read-private', 'user-read-email']
+        const ClientID = process.env.SPOTIFY_CLIENT_ID;
+        const scopesArr = ['playlist-modify-public','playlist-modify-private', 'user-modify-playback-state', 'user-read-private', 'user-read-email']
         const scopes = encodeURIComponent(scopesArr.join(' '))
 
         const result = await AuthSession.startAsync({
@@ -37,7 +37,7 @@ export async function getTokens(){
     try {
         const authorizationCode = await logIn()
         const ClientID = process.env.SPOTIFY_CLIENT_ID; //replace with your client Id from spotify
-        const ClientSecret = process.env.SPOTIFY; //replace with your own secret
+        const ClientSecret = process.env.SPOTIFY_NATALIE_SECRET; //replace with your own secret
         const redirect = AuthSession.getRedirectUrl()
         //add variables to secrets file
         const encodedRedirect = encodeURIComponent(redirect)
@@ -89,7 +89,7 @@ export const makeNewPlaylist = async (accessToken, playListName) => {
     //console.log('user object, ', userJSON)
     //console.log('this is userId? ', userJSON.id)
     const userID = userJSON.id;
-
+    console.log(userID)
     const playlist = await fetch(
       `https://api.spotify.com/v1/users/${userID}/playlists`,
       {
@@ -98,7 +98,7 @@ export const makeNewPlaylist = async (accessToken, playListName) => {
           Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ name: playListName, public: true })
+        body: JSON.stringify({ name: playListName, public: false, collaborative: true })
       }
     );
 
@@ -134,7 +134,7 @@ export const addSong = async(roomData, songData) => {
 export async function refreshTokens(refreshToken){
 
     try {
-        const ClientID = process.env.SPOTIFY_CLIENT_ID;
+        const ClientID = process.env.CLIENT_ID;
         const ClientSecret = process.env.SPOTIFY;
         const credsB64 = btoa(`${ClientID}:${ClientSecret}`)
 
