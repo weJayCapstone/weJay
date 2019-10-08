@@ -16,9 +16,9 @@ export default class HomeScreen extends React.Component {
   static navigationOptions = {
     title: 'WeJay',
     headerStyle: {
-      backgroundColor: '#000'
+      backgroundColor: '#fff'
     },
-    headerTintColor: '#fff',
+    headerTintColor: '#000',
     headerTitleStyle: {
       fontWeight: 'bold'
     }
@@ -54,20 +54,6 @@ export default class HomeScreen extends React.Component {
           >
             <Text style={styles.text}>Search Screen Component (Gus)</Text>
           </TouchableHighlight>
-
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => this.props.navigation.navigate('TestRoom')}
-          >
-            <Text style={styles.text}>TestRoom Component (Natalie)</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => this.props.navigation.navigate('SingleSong')}
-          >
-            <Text style={styles.text}>SingleSong</Text>
-          </TouchableOpacity>
         </View>
       </ScrollView>
     );
@@ -77,15 +63,15 @@ export default class HomeScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000'
+    backgroundColor: '#fff'
   },
   text: {
     fontSize: 24,
     textAlign: 'center',
-    color: '#fff',
+    color: '#000',
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#fff',
+    borderColor: '#000',
     padding: 10
   },
   icon: {
