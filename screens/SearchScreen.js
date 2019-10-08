@@ -1,38 +1,12 @@
 import React, { Component, useState, useEffect } from 'react';
 import { AuthSession } from 'expo';
 import { encode as btoa } from 'base-64';
-import {
-  Text,
-  View,
-  FlatList,
-  Image,
-  StyleSheet,
-  ScrollView,
-  TouchableHighlight,
-  AsyncStorage,
-  SafeAreaView
-} from 'react-native';
-import { SearchBar } from 'react-native-elements';
+import { Text, View, FlatList, StyleSheet, ScrollView } from 'react-native';
+
 import { SearchBar, Button } from 'react-native-elements';
-import {
-  Container,
-  Header,
-  Content,
-  Footer,
-  Title,
-  InputGroup,
-  Input,
-  Icon
-} from 'native-base';
+import { Container, Content, Footer } from 'native-base';
 require('../secrets');
-import {
-  Card,
-  CardTitle,
-  CardContent,
-  CardAction,
-  CardButton,
-  CardImage
-} from 'react-native-cards';
+import { Card, CardButton } from 'react-native-cards';
 import SongCard from '../screens/SongCard.js';
 import { refreshRoomToken, getRoomData } from '../firebase/index';
 

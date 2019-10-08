@@ -150,26 +150,6 @@ export async function refreshTokens(refreshToken) {
 
     const responseJSON = await response.json();
     return responseJSON;
-    // if (responseJSON.error){
-    //     await getTokens()
-    // }
-    // else {
-    //     const {
-    //         access_token: newAccessToken,
-    //         refresh_token: newRefreshToken,
-    //         expires_in: expiresIn,
-    //     } = responseJSON
-
-    //     const expirationTime = new Date().getTime() + expiresIn * 1000;
-
-    //     await setUserData('accesssToken', newAccessToken)
-
-    //     if (newRefreshToken){
-    //         await setUserData('refreshToken', newRefreshToken)
-    //     }
-    //     await setUserData('expirationTime', expirationTime.toString())
-
-    // }
   } catch (e) {
     console.log(e);
   }
