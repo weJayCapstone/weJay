@@ -141,7 +141,7 @@ export const addSong = async (accessToken, playlistID) => {
 
 export async function refreshTokens() {
   try {
-    const ClientID = 'b7b6a836a01044abb7aa4eeb10c9039a';
+    const ClientID = process.env.SPOTIFY_CLIENTID;
     const ClientSecret = process.env.SPOTIFY;
     const credsB64 = btoa(`${ClientID}:${ClientSecret}`);
     const refreshToken = await getUserData('refreshToken');

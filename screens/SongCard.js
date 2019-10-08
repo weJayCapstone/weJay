@@ -12,17 +12,42 @@ import {
     SafeAreaView
 } from 'react-native'
 
+import {addSong} from '../api/spotify'
+import {addSongToDB, getRoomData} from '../firebase/index'
+
+
 export default class SongCard extends Component {
 
     constructor(props){
         super(props)
+        this.handleSongSelection = this.handleSongSelection.bind(this)
+    }
+
+   handleSongSelection = async () => {
+        console.log('is on press working?')
+        const roomID = 'J63ViPbDgGvPdsJ2It0Y'
+        
+       const roomData = await getRoomData(roomID)
+       const playlistID = roomData.playlistID
+       
+       const accessToken = roomData.accessToken
+    //    const songURI = {songUri: 'spotify:track:4JGKZS7h4Qa16gOU3oNETV'}
+       const songURI = {songUri: `${this.props.item.uri}`}
+
+        //accessToken, playlistId, songData
+        await addSong(accessToken, playlistID, songURI);
+        //roomId and songData
+        await addSongToDB(roomID, songURI);
 
     }
 
     render(){
         return (
-
-        <Card style={styles.card}>
+    
+    <TouchableHighlight onPress={this.handleSongSelection}>
+        <Card
+        style={styles.card}
+        >
 
             <View>
                 <Image
@@ -45,7 +70,7 @@ export default class SongCard extends Component {
             </View>
 
         </Card>
-
+    </TouchableHighlight>
 
         )
     }

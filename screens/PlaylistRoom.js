@@ -49,7 +49,8 @@ export default function PlaylistRoom(props) {
               <Feather name="chevron-down" size={20} color="white" />
             </TouchableOpacity>
           </View>
-        ))}
+        ))
+      }
       </LinearGradient>
     </ScrollView>
   );

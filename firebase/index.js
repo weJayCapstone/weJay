@@ -1,11 +1,11 @@
-import * as firebase from 'firebase';
-import firestore from 'firebase/firestore';
-import { refreshTokens } from '../api/spotify';
+import * as firebase from "firebase";
+import firestore from "firebase/firestore";
+import { refreshTokens } from "../api/spotify";
 // Initialize Firebase
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
   authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-  projectId: 'wejay-254716'
+  projectId: "wejay-254716"
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
@@ -14,7 +14,7 @@ export default db;
 //create room
 export async function createRoom(roomData) {
   try {
-    const newRoom = await db.collection('Rooms').add(roomData);
+    const newRoom = await db.collection("Rooms").add(roomData);
     //add gives the room a unique ID on firebase
     console.log(`${roomData.title} was created!`);
     //TestRoom gets overwritten, have to check if name exists first or use add() instead
@@ -26,11 +26,11 @@ export async function createRoom(roomData) {
 export async function getRoom(passcode, hostName) {
   let result = {};
   try {
-    let roomRef = db.collection('Rooms');
+    let roomRef = db.collection("Rooms");
     //query room via passcode
     let query = await roomRef
-      .where('passcode', '==', passcode)
-      .where('hostName', '==', hostName)
+      .where("passcode", "==", passcode)
+      .where("hostName", "==", hostName)
       .get();
     if (query.empty) {
       console.log("room doesn't exist or invalid password");
@@ -44,21 +44,21 @@ export async function getRoom(passcode, hostName) {
 export async function enterRoom(passcode, roomName, userName) {
   let result = {};
   try {
-    let roomRef = db.collection('Rooms');
+    let roomRef = db.collection("Rooms");
     //query room via passcode
     let query = await roomRef
-      .where('passcode', '==', passcode)
-      .where('title', '==', roomName)
+      .where("passcode", "==", passcode)
+      .where("title", "==", roomName)
       .get();
     if (query.empty) {
       console.log("room doesn't exist or invalid password");
-      return 'Invalid credentials';
+      return "Invalid credentials";
     } else {
       query.forEach(doc => {
         roomRef.doc(doc.id).update({ userName });
         result = doc.id;
       });
-      console.log('You are in the room!');
+      console.log("You are in the room!");
     }
     return result;
   } catch (err) {
@@ -69,7 +69,7 @@ export async function enterRoom(passcode, roomName, userName) {
 
 //getRoom data
 export const getRoomData = async docId => {
-  let roomRef = db.collection('Rooms').doc(docId);
+  let roomRef = db.collection("Rooms").doc(docId);
   try {
     let result = await roomRef.get();
     return result.data();
@@ -85,7 +85,7 @@ export async function refreshRoomToken(docId) {
     currentRoomData.accessToken = result.access_token;
     currentRoomData.expiresIn = result.expires_in;
     //update room data
-    let roomRef = db.collection('Rooms').doc(docId);
+    let roomRef = db.collection("Rooms").doc(docId);
     roomRef.update(currentRoomData);
     return currentRoomData;
   } catch (err) {
@@ -98,11 +98,11 @@ export async function addSongToDB(roomId, songData) {
   try {
     //query room via passcode
     const playlist = db
-      .collection('Rooms')
+      .collection("Rooms")
       .doc(roomId)
-      .collection('Playlist');
+      .collection("Playlist");
     await playlist.add({ songData });
-    console.log('song was added!');
+    console.log("song was added!");
     //return newPlaylist?
   } catch (err) {
     console.log(err);
@@ -114,9 +114,9 @@ export async function getPlaylist(roomName) {
   let songArr = [];
   try {
     const playlist = db
-      .collection('Rooms')
+      .collection("Rooms")
       .doc(roomName)
-      .collection('Playlist');
+      .collection("Playlist");
     let allSongs = await playlist.get();
     allSongs.forEach(song => {
       songArr.push(song.data());
