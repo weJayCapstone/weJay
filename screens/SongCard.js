@@ -19,33 +19,40 @@ import {addSongToDB, getRoomData} from '../firebase/index'
 export default class SongCard extends Component {
 
     constructor(props){
-        super(props)
+        super(props);
+        this.state = {
+            docId: this.props.docId
+        }
         this.handleSongSelection = this.handleSongSelection.bind(this)
     }
-
+    songDataParser = (data) => {
+        let result  = {
+            name: data.name,
+            id: data.id,
+            href: data.href,
+            uri: data.uri,
+            artist: data.artists[0].name,
+            imageUrl: data.album.images[0].url,
+            albumName: data.album.name
+        };
+        return result;
+    }
    handleSongSelection = async () => {
-        console.log('is on press working?')
-        const roomID = '93U8lHnsswBNChIP0Tmj'
-        
-       const roomData = await getRoomData(roomID)
-       const playlistID = roomData.playlistID
-       
-
-       //this is causing time out
-       const accessToken = roomData.accessToken
-   
-       const songURI = {songUri: `${this.props.item.uri}`}
-
-        //accessToken, playlistId, songData
-        await addSong(accessToken, playlistID, songURI);
+        const roomID = this.state.docId;
+    //    const songURI = {songUri: 'spotify:track:4JGKZS7h4Qa16gOU3oNETV'}
         //roomId and songData
-        await addSongToDB(roomID, songURI);
-
+        const songData = this.songDataParser(this.props.item);
+        //console.log(songData);
+        try {
+            await addSongToDB(roomID, songData);
+        } catch (err){
+            console.log(err);
+        }
     }
 
     render(){
         return (
-    
+
     <TouchableHighlight onPress={this.handleSongSelection}>
         <Card
         style={styles.card}
@@ -58,7 +65,6 @@ export default class SongCard extends Component {
                 source={{uri: `${this.props.item.album.images[1].url}`}}
                 />
             </View>
-
             <View style={styles.songInfo}>
             <View>
                 <Text numberOfLines={1} ellipsizeMode='tail' style={{fontSize: 19}}>{this.props.item.name} </Text>
@@ -106,13 +112,3 @@ const styles = StyleSheet.create({
         backgroundColor: '#d6c2c0'
     }
 })
-
-{/* <Card style={styles.card}>
-<CardImage source={{uri: `${this.props.item.album.images[1].url}`}} />
-<CardContent>
-    <CardTitle title ={this.props.item.name} />
-    <Text>Artist: {this.props.item.album.artists[0].name}</Text>
-    <Text>Album: {this.props.item.album.name}</Text>
-</CardContent>
-<CardButton title='Add!' />
-</Card> */}

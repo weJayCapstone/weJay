@@ -3,7 +3,6 @@ import { encode as btoa } from 'base-64';
 import { AsyncStorage } from 'react-native';
 require('../secrets');
 //need to writ/read accessToken, refreshToken, expirationtime to firestore
-
 //need all spotify requests in this file
 
 export async function logIn(){
@@ -11,7 +10,7 @@ export async function logIn(){
     try {
         const redirect = AuthSession.getRedirectUrl();
         const encodedRedirect = encodeURIComponent(redirect)
-        const ClientID = 'b7b6a836a01044abb7aa4eeb10c9039a'
+        const ClientID = process.env.SPOTIFY_CLIENT_ID
         const scopesArr = ['playlist-modify-public', 'user-modify-playback-state', 'user-read-private', 'user-read-email']
         const scopes = encodeURIComponent(scopesArr.join(' '))
 
@@ -114,15 +113,15 @@ export const makeNewPlaylist = async (accessToken, playListName) => {
   }
 };
 
-export const addSong = async(accessToken, playlistID, songData) => {
-    try {
-        const song = await fetch(`https://api.spotify.com/v1/playlists/${playlistID}/tracks`, {
+export const addSong = async(roomData, songData) => {
+    try{
+        const song = await fetch(`https://api.spotify.com/v1/playlists/${roomData.playlistID}/tracks`, {
             method: 'POST',
             headers: {
-                Authorization: `Bearer ${accessToken}`,
+                Authorization: `Bearer ${roomData.accessToken}`,
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({uris: [songData.songUri]})
+            body: JSON.stringify({uris: [songData.uri]})
         })
         const songJSON = await song.json();
         console.log('this is songJSON ', songJSON)
@@ -135,7 +134,7 @@ export const addSong = async(accessToken, playlistID, songData) => {
 export async function refreshTokens(refreshToken){
 
     try {
-        const ClientID = '1e3132e15cd843c3b1d22c13f3ef7902';
+        const ClientID = process.env.SPOTIFY_CLIENT_ID;
         const ClientSecret = process.env.SPOTIFY;
         const credsB64 = btoa(`${ClientID}:${ClientSecret}`)
 

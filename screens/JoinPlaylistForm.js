@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { enterRoom, getPlaylist } from '../firebase/index';
+import { Input } from 'react-native-elements';
 
 export default function JoinPlayListForm(props) {
   const [authData, setAuthData] = useState({});
@@ -79,14 +80,22 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   inputContainer: {
-    paddingTop: 15
+    paddingTop: 15,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   textInput: {
-    borderColor: '#CCCCCC',
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    height: 50,
-    fontSize: 25
+      borderColor: 'lightgray',
+      backgroundColor: '#fff',
+      borderRadius:30,
+      borderWidth: 1,
+      width:250,
+      fontSize: 18,
+      height:45,
+      marginBottom:20,
+      flexDirection: 'row',
+      alignItems:'center'
   },
   saveButton: {
     borderWidth: 1,

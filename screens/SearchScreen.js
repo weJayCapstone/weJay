@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {Component, useState, useEffect} from 'react'
 import {AuthSession} from 'expo'
 import { encode as btoa } from 'base-64'
 import {
@@ -29,264 +29,70 @@ import {
 require('../secrets')
 import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 'react-native-cards';
 import SongCard from '../screens/SongCard.js'
+import {refreshRoomToken, getRoomData} from '../firebase/index';
 
 
-export default class SearchScreen extends Component {
+export default function SearchScreen(props){
 
-    constructor(props){
-        super(props)
-        this.state = {
-            search: '',
+    let [search, setSearch] = useState('');
+    let [results, setResults] = useState({});
+    let [docId, setDocId] = useState(props.navigation.state.params.docId);
+    let [accessToken, setAccessToken] = useState('');
+
+    const accountInitialize = async () => {
+        try {
+            let result = await refreshRoomToken(docId);
+            setAccessToken(result.accessToken);
         }
-        this.updateSearch = this.updateSearch.bind(this)
-        this.logIn = this.logIn.bind(this)
-        this.getTokens = this.getTokens.bind(this)
-        this.accountInitialize = this.accountInitialize.bind(this)
-        this.refreshTokens = this.refreshTokens.bind(this)
-        this.test = this.test.bind(this)
-    }
+        catch (e){
+            console.log(e)
+        }
+    };
 
-    componentDidMount(){
-        this.accountInitialize()
-    }
+    useEffect(() => {
+        accountInitialize();
+    }, []);
 
-    updateSearch(search){
-        this.setState({search})
-    }
-
-    search = async () => {
-
-        const code = await getUserData('accessToken')
-
-        const q = encodeURIComponent(this.state.search)
-
-        const search = await fetch(`https://api.spotify.com/v1/search?type=track&limit=10&market=US&q=${q}`, {
+    const searchHandler = async () => {
+        const q = encodeURIComponent(search)
+        const response = await fetch(`https://api.spotify.com/v1/search?type=track&limit=10&market=US&q=${q}`, {
             method: 'GET',
             headers: {
-                Authorization: `Bearer ${code}`
+                Authorization: `Bearer ${accessToken}`
             }
-        })
-
-        const searchJSON = await search.json()
-
-        this.setState({results: searchJSON})
-
-        this.setState({search: ''})
+        });
+        const searchJSON = await response.json()
+        setResults(searchJSON)
+        setSearch('');
     }
 
-
-    logIn = async () => {
-        try {
-            const redirect = 'https://auth.expo.io/@gbuchanan/weJay'
-            const encodedRedirect = encodeURIComponent(redirect)
-            const ClientID = 'b7b6a836a01044abb7aa4eeb10c9039a'
-            const scopesArr = ['playlist-modify-public', 'user-modify-playback-state', 'user-read-private', 'user-read-email']
-            const scopes = encodeURIComponent(scopesArr.join(' '))
-
-            const result = await AuthSession.startAsync({
-                authUrl:
-                'https://accounts.spotify.com/authorize' +
-                '?client_id=' +
-                ClientID +
-                '&response_type=code' +
-                '&redirect_uri=' +
-                encodedRedirect +
-                (scopes ? '&scope=' + scopes : '')
-            })
-
-            return result.params.code
-
-        }
-        catch (err){
-            console.log(err)
-        }
-    }
-
-    getTokens = async () => {
-
-        try {
-            const authorizationCode = await this.logIn()
-            const ClientID = 'b7b6a836a01044abb7aa4eeb10c9039a'
-            const ClientSecret = process.env.SPOTIFY
-            const redirect = 'https://auth.expo.io/@gbuchanan/weJay'
-            const encodedRedirect = encodeURIComponent(redirect)
-            const credsB64 = btoa(`${ClientID}:${ClientSecret}`)
-
-            const response = await fetch('https://accounts.spotify.com/api/token', {
-                    method: 'POST',
-                    headers: {
-                        Authorization: `Basic ${credsB64}`,
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: `grant_type=authorization_code&code=${authorizationCode}&redirect_uri=${encodedRedirect}`,
-                })
-
-            const responseJSON = await response.json()
-
-            const {
-                access_token: accessToken,
-                refresh_token: refreshToken,
-                expires_in: expiresIn
-            } = responseJSON
-
-            const expirationTime = new Date().getTime() + expiresIn * 1000;
-
-            await setUserData('accessToken', accessToken)
-            await setUserData('refreshToken', refreshToken)
-            await setUserData('expirationTime', expirationTime.toString())
-            console.log('this is access token...', await getUserData('accessToken'))
-        }
-        catch (e){
-            console.log(e)
-        }
-    }
-
-    refreshTokens = async () => {
-
-        try {
-            const ClientID = 'b7b6a836a01044abb7aa4eeb10c9039a'
-            const ClientSecret = process.env.SPOTIFY
-            const credsB64 = btoa(`${ClientID}:${ClientSecret}`)
-            const refreshToken = await getUserData('refreshToken')
-
-            const response = await fetch('https://accounts.spotify.com/api/token', {
-                method: 'POST',
-                headers: {
-                    Authorization: `Basic ${credsB64}`,
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `grant_type=refresh_token&refresh_token=${refreshToken}`
-            });
-
-            const responseJSON = await response.json();
-
-            if (responseJSON.error){
-                await this.getTokens()
-            }
-            else {
-                const {
-                    access_token: newAccessToken,
-                    refresh_token: newRefreshToken,
-                    expires_in: expiresIn,
-                } = responseJSON
-
-                const expirationTime = new Date().getTime() + expiresIn * 1000;
-
-                await setUserData('accesssToken', newAccessToken)
-
-                if (newRefreshToken){
-                    await setUserData('refreshToken', newRefreshToken)
-                }
-                await setUserData('expirationTime', expirationTime.toString())
-
-            }
-        }
-        catch (e){
-            console.log(e)
-        }
-    }
-
-    accountInitialize = async () => {
-        try {
-            await this.refreshTokens();
-            await this.getTokens()
-        }
-        catch (e){
-            console.log(e)
-        }
-    }
-
-    test = async () => {
-        try {
-            const code = await getUserData('accessToken')
-
-            console.log('this is accessToken', code)
-
-            let user = await fetch('https://api.spotify.com/v1/me', {
-                method: 'GET',
-                headers: {
-                    Authorization: `Bearer ${code}`,
-                    'Content-Type': 'application/json'
-                }
-            })
-
-            const userJSON = await user.json()
-            console.log('user object, ', userJSON)
-            console.log('this is userId? ', userJSON.id)
-
-            const userID = userJSON.id
-
-            const playlist = await fetch(`https://api.spotify.com/v1/users/${userID}/playlists`, {
-                method: 'POST',
-                headers: {
-                    Authorization: `Bearer ${code}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({name: 'Please Work Again', public: true})
-            })
-
-            const playlistJSON = await playlist.json()
-            const playlistID = playlistJSON.id
-            console.log('this is playlist, ', playlistJSON)
-            console.log('this is playlistID', playlistID)
-
-
-            const song = await fetch(`https://api.spotify.com/v1/playlists/${playlistID}/tracks`, {
-                method: 'POST',
-                headers: {
-                    Authorization: `Bearer ${code}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({uris: ['spotify:track:4qsAYBCJnu2OkTKUVbbOF1', 'spotify:track:7e89621JPkKaeDSTQ3avtg']})
-            })
-
-            const songJSON = await song.json();
-            //console.log('this is songJSON ', songJSON)
-
-        }
-        catch (e){
-            console.log(e)
-        }
-    }
-
-    render(){
-
-        const { search } = this.state
-
-        return (
-
-
+    return (
             <Container style={styles.mainView}>
-                <View style={{height: 13}} />
+                    <View style={{height: 13}} />
 
-                <Content style={{backgroundColor: '#343434'}}>
-                    <SearchBar
-                    placeholder='Search'
-                    onChangeText={this.updateSearch}
-                    value={search}
-                    onSubmitEditing={this.search}
-                    returnKeyType = 'search'
-                    round={true}
-                    />
-                    
-            <ScrollView contentContainerStyle={{flexGrow: 1}}>
-                    
-                {this.state.results ?
-                <FlatList
-                data={this.state.results.tracks.items}
-                renderItem={({item}) => <SongCard item={item} />}
-                keyExtractor={item => item.id}
-                />
-                :
-                <View style={{alignItems: 'center', fontSize: 30, backgroundColor: 'red'}}>
-                    <Text>Search We-J for a Song!</Text>
-                </View>
-                }
+                    <Content>
+                        <SearchBar
+                        placeholder='Search'
+                        onChangeText={text => setSearch(text)}
+                        value={search}
+                        onSubmitEditing={searchHandler}
+                        returnKeyType = 'search'
+                        />
+                        
+                        <ScrollView style={{top: 10}}>
+                                
+                            {results.tracks ?
+                            <FlatList
+                            data={results.tracks.items}
+                            renderItem={({item}) => <SongCard item={item} docId={docId} />}
+                            keyExtractor={item => item.id}
+                            />
+                            :
+                            <Text>Search We-J for a Song!</Text>}
 
+                        </ScrollView>
 
-            </ScrollView>
-             
-                </Content>
+                    </Content>
 
                 <Footer>
                     <Card style={{
@@ -295,48 +101,34 @@ export default class SearchScreen extends Component {
                     alignItems: 'center',
                     backgroundColor: 'white',   
                     }}>
-                            <CardButton
-                            title='ADD'
-                            color='yellow'
-                            style={{
-                                backgroundColor: 'green',
-                                alignSelf: 'stretch',
-                                right: 4
-                            }}
-                            />
+                        <CardButton
+                        title='ADD'
+                        color='yellow'
+                        style={{
+                            backgroundColor: 'green',
+                            alignSelf: 'stretch',
+                            right: 4
+                        }}
+                        />
                     </Card>
                 </Footer>
             </Container>
-
         )
-    }
-}
-
-
-async function setUserData(key, value){
-
-    try {
-        await AsyncStorage.setItem(key, value)
-    }
-    catch (e){
-        console.log(e)
-    }
-}
-
-async function getUserData(key){
-    try {
-        const value = await AsyncStorage.getItem(key)
-        if (value !== null){
-            return value
-        }
-    }
-    catch (e){
-        console.log(e)
-    }
 }
 
 
 const styles = StyleSheet.create({
+    button: {
+        padding: 10,
+        margin: 1,
+        borderRadius: 25,
+        borderWidth: 1,
+        borderColor: '#fff'
+    },
+    text: {
+        fontSize: 20,
+        textAlign: 'center'
+    },
     mainView: {
         backgroundColor: '#343434',
         display: 'flex',
@@ -354,8 +146,6 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'stretch',
-        // left: 7,
-        // top: 7,
         padding: 13,
         justifyContent: 'center'
     },
