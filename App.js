@@ -1,4 +1,4 @@
-// THIS IS TEST CODE IP, UNALTERED BOILER PLATE CODE CAN BE FOUND IN APPTEST.JS
+//UNALTERED BOILER PLATE CODE CAN BE FOUND IN APPTEST.JS
 
 'use strict';
 import React, { Component } from 'react';
@@ -12,6 +12,7 @@ import { DrawerActions } from 'react-navigation-drawer';
 import { TouchableOpacity, StyleSheet } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 
+//screens
 import HomeScreen from './screens/HomeScreen';
 import CreatePlaylistForm from './screens/CreatePlaylistForm';
 import JoinPlaylistForm from './screens/JoinPlaylistForm';

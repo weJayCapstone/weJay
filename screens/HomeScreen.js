@@ -54,20 +54,6 @@ export default class HomeScreen extends React.Component {
           >
             <Text style={styles.text}>Search Screen Component (Gus)</Text>
           </TouchableHighlight>
-
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => this.props.navigation.navigate('TestRoom')}
-          >
-            <Text style={styles.text}>TestRoom Component (Natalie)</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => this.props.navigation.navigate('SingleSong')}
-          >
-            <Text style={styles.text}>SingleSong</Text>
-          </TouchableOpacity>
         </View>
       </ScrollView>
     );
