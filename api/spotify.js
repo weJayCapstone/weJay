@@ -10,8 +10,8 @@ export async function logIn(){
     try {
         const redirect = AuthSession.getRedirectUrl();
         const encodedRedirect = encodeURIComponent(redirect)
-        const ClientID = process.env.SPOTIFY_CLIENT_ID
-        const scopesArr = ['playlist-modify-public', 'user-modify-playback-state', 'user-read-private', 'user-read-email']
+        const ClientID = process.env.SPOTIFY_CLIENT_ID;
+        const scopesArr = ['playlist-modify-public','playlist-modify-private', 'user-modify-playback-state', 'user-read-private', 'user-read-email']
         const scopes = encodeURIComponent(scopesArr.join(' '))
 
         const result = await AuthSession.startAsync({
@@ -89,7 +89,7 @@ export const makeNewPlaylist = async (accessToken, playListName) => {
     //console.log('user object, ', userJSON)
     //console.log('this is userId? ', userJSON.id)
     const userID = userJSON.id;
-
+    console.log(userID)
     const playlist = await fetch(
       `https://api.spotify.com/v1/users/${userID}/playlists`,
       {
@@ -98,7 +98,7 @@ export const makeNewPlaylist = async (accessToken, playListName) => {
           Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ name: playListName, public: true })
+        body: JSON.stringify({ name: playListName, public: false, collaborative: true })
       }
     );
 

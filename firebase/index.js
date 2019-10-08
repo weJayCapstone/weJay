@@ -17,6 +17,7 @@ export async function createRoom(roomData) {
     const newRoom = await db.collection('Rooms').add(roomData);
     //add gives the room a unique ID on firebase
     console.log(`${roomData.title} was created!`);
+    return newRoom.id;
     //TestRoom gets overwritten, have to check if name exists first or use add() instead
   } catch (err) {
     console.log(err);

@@ -94,59 +94,8 @@ export default function SearchScreen(props){
                     </Content>
                 </Container>
 
-
-
-
-
-
-
-
-            // <ScrollView style={styles.container}>
-            //     <Text>Search View</Text>
-            //     <SearchBar
-            //     placeholder='Search'
-            //     onChangeText={this.updateSearch}
-            //     value={search}
-            //     />
-
-            //     <TouchableHighlight
-            //         style={styles.button}
-            //         onPress={this.search}
-            //     >
-            //     <Text style={styles.text}>Search</Text>
-            //     </TouchableHighlight>
-
-            //     {this.state.results ?
-            //     <FlatList
-            //     data={this.state.results.tracks.items}
-            //     renderItem={({item}) => <SongCard item={item} />}
-            //     keyExtractor={item => item.id}
-            //     />
-            //     :
-            //     <Text>''</Text>}
-
-
-            // </ScrollView>
-
         )
 }
-
-function ListCard({item}){
-    return (
-
-    <View>
-        <Text>Song: {item.name}</Text>
-        <Text>Album: {item.album.name}</Text>
-        <Text>Artist: {item.album.artists[0].name}</Text>
-        <Image
-        style={{width: 64, height: 64}}
-        source={{uri: `${item.album.images[2]}`}}
-        // source={{uri: 'https://i.scdn.co/image/ab67616d000048518074759e322b06e493cbe154'}}
-         />
-    </View>
-)
-}
-
 
 const styles = StyleSheet.create({
     button:{
