@@ -38,7 +38,7 @@ export default function PlaylistRoom(props) {
           }}
         />
         {songs.map(song => (
-          <View key={song.name} style={styles.songContainer}>
+          <View key={song.id} style={styles.songContainer}>
             <Text style={{ color: '#ffffff' }}>{song.name}</Text>
             <Text style={{ color: '#ffffff' }}>{song.artist}</Text>
             <Text style={{ color: '#ffffff' }}>{song.albumName}</Text>
