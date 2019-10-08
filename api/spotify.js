@@ -115,7 +115,7 @@ export const makeNewPlaylist = async (accessToken, playListName) => {
 };
 
 export const addSong = async(accessToken, playlistID, songData) => {
-    try{
+    try {
         const song = await fetch(`https://api.spotify.com/v1/playlists/${playlistID}/tracks`, {
             method: 'POST',
             headers: {
@@ -127,7 +127,7 @@ export const addSong = async(accessToken, playlistID, songData) => {
         const songJSON = await song.json();
         console.log('this is songJSON ', songJSON)
         //if this succeeds add to database
-    } catch(err){
+    } catch (err){
         console.log(err)
     }
 }

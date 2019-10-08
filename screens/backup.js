@@ -47,7 +47,7 @@ export default class SearchScreen extends Component {
     }
 
     componentDidMount(){
-        this.accountInitialize()
+        //this.accountInitialize()
     }
 
     updateSearch(search){
@@ -259,7 +259,7 @@ export default class SearchScreen extends Component {
             <Container style={styles.mainView}>
                 <View style={{height: 13}} />
 
-                <Content style={{backgroundColor: '#343434'}}>
+                <Content style={{backgroundColor: 'blue'}}>
                     <SearchBar
                     placeholder='Search'
                     onChangeText={this.updateSearch}
@@ -338,7 +338,7 @@ async function getUserData(key){
 
 const styles = StyleSheet.create({
     mainView: {
-        backgroundColor: '#343434',
+        backgroundColor: 'blue',
         display: 'flex',
         alignItems: 'stretch'
     },

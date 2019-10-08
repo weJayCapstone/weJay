@@ -25,13 +25,15 @@ export default class SongCard extends Component {
 
    handleSongSelection = async () => {
         console.log('is on press working?')
-        const roomID = 'J63ViPbDgGvPdsJ2It0Y'
+        const roomID = '93U8lHnsswBNChIP0Tmj'
         
        const roomData = await getRoomData(roomID)
        const playlistID = roomData.playlistID
        
+
+       //this is causing time out
        const accessToken = roomData.accessToken
-    //    const songURI = {songUri: 'spotify:track:4JGKZS7h4Qa16gOU3oNETV'}
+   
        const songURI = {songUri: `${this.props.item.uri}`}
 
         //accessToken, playlistId, songData
@@ -51,7 +53,7 @@ export default class SongCard extends Component {
 
             <View>
                 <Image
-                style={{width: 100, height: 100}}
+                style={{width: 75, height: 75}}
                 resizeMode='cover'
                 source={{uri: `${this.props.item.album.images[1].url}`}}
                 />
@@ -59,12 +61,12 @@ export default class SongCard extends Component {
 
             <View style={styles.songInfo}>
             <View>
-                <Text style={{fontSize: 30}}>{this.props.item.name}</Text>
+                <Text numberOfLines={1} ellipsizeMode='tail' style={{fontSize: 19}}>{this.props.item.name} </Text>
             </View>
 
-            <View style={{top: 5}}>
+            <View style={{top: 10}}>
 
-                <Text style={{fontSize: 18}}>{this.props.item.album.artists[0].name} - {this.props.item.album.name}</Text>
+                <Text numberOfLines={1} ellipsizeMode='tail' style={{fontSize: 15}}>{this.props.item.album.artists[0].name} - {this.props.item.album.name}</Text>
 
             </View>
             </View>
@@ -88,16 +90,17 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         borderWidth: 2.5,
-        borderColor: 'white'
+        borderColor: 'white',
+        padding: 4
     },
     songInfo: {
         display: 'flex',
         flexDirection: 'column',
+        flexWrap: 'wrap',
         alignItems: 'stretch',
-        // left: 7,
-        // top: 7,
+        flex: 1,
         padding: 13,
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     searchBar: {
         backgroundColor: '#d6c2c0'
