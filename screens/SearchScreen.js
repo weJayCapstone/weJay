@@ -14,6 +14,7 @@ import {
 } from 'react-native'
 import {
     SearchBar,
+    Button
 } from 'react-native-elements'
 import {
     Container,
@@ -32,10 +33,12 @@ import {refreshRoomToken, getRoomData} from '../firebase/index';
 
 
 export default function SearchScreen(props){
+
     let [search, setSearch] = useState('');
     let [results, setResults] = useState({});
     let [docId, setDocId] = useState(props.navigation.state.params.docId);
     let [accessToken, setAccessToken] = useState('');
+
     const accountInitialize = async () => {
         try {
             let result = await refreshRoomToken(docId);
@@ -45,9 +48,11 @@ export default function SearchScreen(props){
             console.log(e)
         }
     };
+
     useEffect(() => {
         accountInitialize();
     }, []);
+
     const searchHandler = async () => {
         const q = encodeURIComponent(search)
         const response = await fetch(`https://api.spotify.com/v1/search?type=track&limit=10&market=US&q=${q}`, {
@@ -60,8 +65,9 @@ export default function SearchScreen(props){
         setResults(searchJSON)
         setSearch('');
     }
+
     return (
-                <Container style={styles.mainView}>
+            <Container style={styles.mainView}>
                     <View style={{height: 13}} />
 
                     <Content>
@@ -69,36 +75,58 @@ export default function SearchScreen(props){
                         placeholder='Search'
                         onChangeText={text => setSearch(text)}
                         value={search}
+                        onSubmitEditing={searchHandler}
+                        returnKeyType = 'search'
                         />
-
-                        <TouchableHighlight
-                            style={styles.button}
-                            onPress={searchHandler}
-                        >
-                            <Text style={styles.text}>Search</Text>
-                        </TouchableHighlight>
                         
-                <ScrollView style={{top: 10}}>
-                        
-                    {results.tracks ?
-                    <FlatList
-                    data={results.tracks.items}
-                    renderItem={({item}) => <SongCard item={item} docId={docId} />}
-                    keyExtractor={item => item.id}
-                    />
-                    :
-                    <Text>Search We-J for a Song!</Text>}
+                        <ScrollView style={{top: 10}}>
+                                
+                            {results.tracks ?
+                            <FlatList
+                            data={results.tracks.items}
+                            renderItem={({item}) => <SongCard item={item} docId={docId} />}
+                            keyExtractor={item => item.id}
+                            />
+                            :
+                            <Text>Search We-J for a Song!</Text>}
 
-                </ScrollView>
+                        </ScrollView>
 
                     </Content>
+<<<<<<< HEAD
                 </Container>
 
         )
 }
 
+=======
+
+                <Footer>
+                    <Card style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: 'white',   
+                    }}>
+                        <CardButton
+                        title='ADD'
+                        color='yellow'
+                        style={{
+                            backgroundColor: 'green',
+                            alignSelf: 'stretch',
+                            right: 4
+                        }}
+                        />
+                    </Card>
+                </Footer>
+            </Container>
+        )
+}
+
+
+>>>>>>> 8e88a097872eff9b7e18bca9774f532717b845c7
 const styles = StyleSheet.create({
-    button:{
+    button: {
         padding: 10,
         margin: 1,
         borderRadius: 25,
@@ -110,8 +138,9 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     mainView: {
-        backgroundColor: 'grey',
-
+        backgroundColor: '#343434',
+        display: 'flex',
+        alignItems: 'stretch'
     },
     card: {
         backgroundColor: '#E7F9A9',
@@ -125,8 +154,6 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'stretch',
-        // left: 7,
-        // top: 7,
         padding: 13,
         justifyContent: 'center'
     },
