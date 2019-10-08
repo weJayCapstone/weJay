@@ -20,7 +20,7 @@ export default class SongCard extends Component {
 
     constructor(props){
         super(props);
-        this.state ={
+        this.state = {
             docId: this.props.docId
         }
         this.handleSongSelection = this.handleSongSelection.bind(this)
@@ -43,16 +43,16 @@ export default class SongCard extends Component {
         //roomId and songData
         const songData = this.songDataParser(this.props.item);
         //console.log(songData);
-        try{
+        try {
             await addSongToDB(roomID, songData);
-        }catch(err){
+        } catch (err){
             console.log(err);
         }
     }
 
     render(){
         return (
-    
+
     <TouchableHighlight onPress={this.handleSongSelection}>
         <Card
         style={styles.card}
@@ -60,19 +60,19 @@ export default class SongCard extends Component {
 
             <View>
                 <Image
-                style={{width: 100, height: 100}}
+                style={{width: 75, height: 75}}
                 resizeMode='cover'
                 source={{uri: `${this.props.item.album.images[1].url}`}}
                 />
             </View>
             <View style={styles.songInfo}>
             <View>
-                <Text style={{fontSize: 30}}>{this.props.item.name}</Text>
+                <Text numberOfLines={1} ellipsizeMode='tail' style={{fontSize: 19}}>{this.props.item.name} </Text>
             </View>
 
-            <View style={{top: 5}}>
+            <View style={{top: 10}}>
 
-                <Text style={{fontSize: 18}}>{this.props.item.album.artists[0].name} - {this.props.item.album.name}</Text>
+                <Text numberOfLines={1} ellipsizeMode='tail' style={{fontSize: 15}}>{this.props.item.album.artists[0].name} - {this.props.item.album.name}</Text>
 
             </View>
             </View>
@@ -96,16 +96,17 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         borderWidth: 2.5,
-        borderColor: 'white'
+        borderColor: 'white',
+        padding: 4
     },
     songInfo: {
         display: 'flex',
         flexDirection: 'column',
+        flexWrap: 'wrap',
         alignItems: 'stretch',
-        // left: 7,
-        // top: 7,
+        flex: 1,
         padding: 13,
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     searchBar: {
         backgroundColor: '#d6c2c0'

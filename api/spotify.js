@@ -126,10 +126,13 @@ export const addSong = async (roomData, songData) => {
       }
     );
     const songJSON = await song.json();
+    console.log('this is songJSON ', songJSON);
+    //if this succeeds add to database
   } catch (err) {
     console.log(err);
   }
 };
+
 export async function refreshTokens(refreshToken) {
   try {
     const ClientID = process.env.SPOTIFY_CLIENT_ID;
@@ -146,7 +149,6 @@ export async function refreshTokens(refreshToken) {
     });
 
     const responseJSON = await response.json();
-    console.log('JSON', responseJSON);
     return responseJSON;
     // if (responseJSON.error){
     //     await getTokens()
@@ -168,6 +170,25 @@ export async function refreshTokens(refreshToken) {
     //     await setUserData('expirationTime', expirationTime.toString())
 
     // }
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export async function setUserData(key, value) {
+  try {
+    await AsyncStorage.setItem(key, value);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export async function getUserData(key) {
+  try {
+    const value = await AsyncStorage.getItem(key);
+    if (value !== null) {
+      return value;
+    }
   } catch (e) {
     console.log(e);
   }

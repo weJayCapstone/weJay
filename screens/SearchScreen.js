@@ -13,6 +13,7 @@ import {
   SafeAreaView
 } from 'react-native';
 import { SearchBar } from 'react-native-elements';
+import { SearchBar, Button } from 'react-native-elements';
 import {
   Container,
   Header,
@@ -40,20 +41,20 @@ export default function SearchScreen(props) {
   let [results, setResults] = useState({});
   let [docId, setDocId] = useState(props.navigation.state.params.docId);
   let [accessToken, setAccessToken] = useState('');
+
   const accountInitialize = async () => {
     try {
-      console.log('docId', props.navigation.state.params.docId);
       let result = await refreshRoomToken(docId);
-      console.log('result', result);
-
       setAccessToken(result.accessToken);
     } catch (e) {
       console.log(e);
     }
   };
+
   useEffect(() => {
     accountInitialize();
   }, []);
+
   const searchHandler = async () => {
     const q = encodeURIComponent(search);
     const response = await fetch(
@@ -69,6 +70,7 @@ export default function SearchScreen(props) {
     setResults(searchJSON);
     setSearch('');
   };
+
   return (
     <Container style={styles.mainView}>
       <View style={{ height: 13 }} />
@@ -78,11 +80,9 @@ export default function SearchScreen(props) {
           placeholder="Search"
           onChangeText={text => setSearch(text)}
           value={search}
+          onSubmitEditing={searchHandler}
+          returnKeyType="search"
         />
-
-        <TouchableHighlight style={styles.button} onPress={searchHandler}>
-          <Text style={styles.text}>Search</Text>
-        </TouchableHighlight>
 
         <ScrollView style={{ top: 10 }}>
           {results.tracks ? (
@@ -96,48 +96,28 @@ export default function SearchScreen(props) {
           )}
         </ScrollView>
       </Content>
+
+      <Footer>
+        <Card
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'white'
+          }}
+        >
+          <CardButton
+            title="ADD"
+            color="yellow"
+            style={{
+              backgroundColor: 'green',
+              alignSelf: 'stretch',
+              right: 4
+            }}
+          />
+        </Card>
+      </Footer>
     </Container>
-
-    // <ScrollView style={styles.container}>
-    //     <Text>Search View</Text>
-    //     <SearchBar
-    //     placeholder='Search'
-    //     onChangeText={this.updateSearch}
-    //     value={search}
-    //     />
-
-    //     <TouchableHighlight
-    //         style={styles.button}
-    //         onPress={this.search}
-    //     >
-    //     <Text style={styles.text}>Search</Text>
-    //     </TouchableHighlight>
-
-    //     {this.state.results ?
-    //     <FlatList
-    //     data={this.state.results.tracks.items}
-    //     renderItem={({item}) => <SongCard item={item} />}
-    //     keyExtractor={item => item.id}
-    //     />
-    //     :
-    //     <Text>''</Text>}
-
-    // </ScrollView>
-  );
-}
-
-function ListCard({ item }) {
-  return (
-    <View>
-      <Text>Song: {item.name}</Text>
-      <Text>Album: {item.album.name}</Text>
-      <Text>Artist: {item.album.artists[0].name}</Text>
-      <Image
-        style={{ width: 64, height: 64 }}
-        source={{ uri: `${item.album.images[2]}` }}
-        // source={{uri: 'https://i.scdn.co/image/ab67616d000048518074759e322b06e493cbe154'}}
-      />
-    </View>
   );
 }
 
@@ -154,7 +134,9 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   mainView: {
-    backgroundColor: 'grey'
+    backgroundColor: '#343434',
+    display: 'flex',
+    alignItems: 'stretch'
   },
   card: {
     backgroundColor: '#E7F9A9',
@@ -168,8 +150,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'stretch',
-    // left: 7,
-    // top: 7,
     padding: 13,
     justifyContent: 'center'
   },
