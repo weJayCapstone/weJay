@@ -27,7 +27,7 @@ export default class SongCard extends Component {
     }
     songDataParser = (data) => {
         let result  = {
-            mame: data.name,
+            name: data.name,
             id: data.id,
             href: data.href,
             uri: data.uri,
@@ -65,7 +65,6 @@ export default class SongCard extends Component {
                 source={{uri: `${this.props.item.album.images[1].url}`}}
                 />
             </View>
-
             <View style={styles.songInfo}>
             <View>
                 <Text style={{fontSize: 30}}>{this.props.item.name}</Text>
@@ -112,13 +111,3 @@ const styles = StyleSheet.create({
         backgroundColor: '#d6c2c0'
     }
 })
-
-{/* <Card style={styles.card}>
-<CardImage source={{uri: `${this.props.item.album.images[1].url}`}} />
-<CardContent>
-    <CardTitle title ={this.props.item.name} />
-    <Text>Artist: {this.props.item.album.artists[0].name}</Text>
-    <Text>Album: {this.props.item.album.name}</Text>
-</CardContent>
-<CardButton title='Add!' />
-</Card> */}
