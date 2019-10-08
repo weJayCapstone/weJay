@@ -32,9 +32,7 @@ export default function TestRoom(props) {
       .then(result => setRoomData(result))
       .catch(err => console.log(err))
   }, []);
-    console.log(roomData)
-    addSong(roomData.accessToken, roomData.playlistID, songData)
-    addSongToDB(docId, songData);
+    addSongToDB(docId)
   return (
     <ScrollView>
         <View style={styles.container}>

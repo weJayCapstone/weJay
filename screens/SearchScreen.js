@@ -1,4 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component, useState, useEffect } from 'react';
+import { AuthSession } from 'expo';
+import { encode as btoa } from 'base-64';
 import {
   Text,
   View,
@@ -7,98 +9,118 @@ import {
   StyleSheet,
   ScrollView,
   TouchableHighlight,
-  AsyncStorage
+  AsyncStorage,
+  SafeAreaView
 } from 'react-native';
 import { SearchBar } from 'react-native-elements';
-import { Container, Content } from 'native-base';
+import {
+  Container,
+  Header,
+  Content,
+  Footer,
+  Title,
+  InputGroup,
+  Input,
+  Icon
+} from 'native-base';
 require('../secrets');
+import {
+  Card,
+  CardTitle,
+  CardContent,
+  CardAction,
+  CardButton,
+  CardImage
+} from 'react-native-cards';
 import SongCard from '../screens/SongCard.js';
-import { getTokens } from '../api/spotify';
+import { refreshRoomToken, getRoomData } from '../firebase/index';
 
-export default class SearchScreen extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      search: ''
-    };
-    this.updateSearch = this.updateSearch.bind(this);
-    this.accountInitialize = this.accountInitialize.bind(this);
-  }
-
-  componentDidMount() {
-    this.accountInitialize();
-  }
-
-  updateSearch(search) {
-    this.setState({ search });
-  }
-
-  search = async () => {
-    console.log('THIS IS ACCESS TOKEN', this.state.accessToken);
-    const q = encodeURIComponent(this.state.search);
-    console.log('q', q);
-
-    const search = await fetch(
-      `https://api.spotify.com/v1/search?type=track&limit=10&market=US&q=${q}`,
-      {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${this.state.accessToken}`
-        }
-      }
-    );
-
-    const searchJSON = await search.json();
-
-    this.setState({ results: searchJSON });
-
-    this.setState({ search: '' });
-  };
-
-  accountInitialize = async () => {
+export default function SearchScreen(props) {
+  let [search, setSearch] = useState('');
+  let [results, setResults] = useState({});
+  let [docId, setDocId] = useState(props.navigation.state.params.docId);
+  let [accessToken, setAccessToken] = useState('');
+  const accountInitialize = async () => {
     try {
-      let result = await getTokens();
-      this.setState({
-        accessToken: result.access_token
-      });
+      let result = await refreshRoomToken(docId);
+      setAccessToken(result.accessToken);
     } catch (e) {
       console.log(e);
     }
   };
-
-  render() {
-    const { search } = this.state;
-
-    return (
-      <Container style={styles.mainView}>
-        <View style={{ height: 13 }} />
-
-        <Content>
-          <SearchBar
-            placeholder="Search"
-            onChangeText={this.updateSearch}
-            value={search}
-          />
-
-          <TouchableHighlight style={styles.button} onPress={this.search}>
-            <Text style={styles.text}>Search</Text>
-          </TouchableHighlight>
-
-          <ScrollView style={{ top: 10 }}>
-            {this.state.results ? (
-              <FlatList
-                data={this.state.results.tracks.items}
-                renderItem={({ item }) => <SongCard item={item} />}
-                keyExtractor={item => item.id}
-              />
-            ) : (
-              <Text>Search We-J for a Song!</Text>
-            )}
-          </ScrollView>
-        </Content>
-      </Container>
+  useEffect(() => {
+    accountInitialize();
+  }, []);
+  const searchHandler = async () => {
+    const q = encodeURIComponent(search);
+    const response = await fetch(
+      `https://api.spotify.com/v1/search?type=track&limit=10&market=US&q=${q}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      }
     );
-  }
+    const searchJSON = await response.json();
+    setResults(searchJSON);
+    setSearch('');
+  };
+  return (
+    <Container style={styles.mainView}>
+      <View style={{ height: 13 }} />
+
+      <Content>
+        <SearchBar
+          placeholder="Search"
+          onChangeText={text => setSearch(text)}
+          value={search}
+        />
+
+        <TouchableHighlight style={styles.button} onPress={searchHandler}>
+          <Text style={styles.text}>Search</Text>
+        </TouchableHighlight>
+
+        <ScrollView style={{ top: 10 }}>
+          {results.tracks ? (
+            <FlatList
+              data={results.tracks.items}
+              renderItem={({ item }) => <SongCard item={item} docId={docId} />}
+              keyExtractor={item => item.id}
+            />
+          ) : (
+            <Text>Search We-J for a Song!</Text>
+          )}
+        </ScrollView>
+      </Content>
+    </Container>
+
+    // <ScrollView style={styles.container}>
+    //     <Text>Search View</Text>
+    //     <SearchBar
+    //     placeholder='Search'
+    //     onChangeText={this.updateSearch}
+    //     value={search}
+    //     />
+
+    //     <TouchableHighlight
+    //         style={styles.button}
+    //         onPress={this.search}
+    //     >
+    //     <Text style={styles.text}>Search</Text>
+    //     </TouchableHighlight>
+
+    //     {this.state.results ?
+    //     <FlatList
+    //     data={this.state.results.tracks.items}
+    //     renderItem={({item}) => <SongCard item={item} />}
+    //     keyExtractor={item => item.id}
+    //     />
+    //     :
+    //     <Text>''</Text>}
+
+    // </ScrollView>
+  );
 }
 
 function ListCard({ item }) {
@@ -116,26 +138,18 @@ function ListCard({ item }) {
   );
 }
 
-async function setUserData(key, value) {
-  try {
-    await AsyncStorage.setItem(key, value);
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-async function getUserData(key) {
-  try {
-    const value = await AsyncStorage.getItem(key);
-    if (value !== null) {
-      return value;
-    }
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 const styles = StyleSheet.create({
+  button: {
+    padding: 10,
+    margin: 1,
+    borderRadius: 25,
+    borderWidth: 1,
+    borderColor: '#fff'
+  },
+  text: {
+    fontSize: 20,
+    textAlign: 'center'
+  },
   mainView: {
     backgroundColor: 'grey'
   },
@@ -151,6 +165,8 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'stretch',
+    // left: 7,
+    // top: 7,
     padding: 13,
     justifyContent: 'center'
   },

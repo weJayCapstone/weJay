@@ -3,7 +3,6 @@ import { encode as btoa } from 'base-64';
 import { AsyncStorage } from 'react-native';
 require('../secrets');
 //need to writ/read accessToken, refreshToken, expirationtime to firestore
-
 //need all spotify requests in this file
 
 export async function logIn() {
@@ -113,38 +112,29 @@ export const makeNewPlaylist = async (accessToken, playListName) => {
   }
 };
 
-export const addSong = async (accessToken, playlistID) => {
+export const addSong = async (roomData, songData) => {
   try {
     const song = await fetch(
-      `https://api.spotify.com/v1/playlists/${playlistID}/tracks`,
+      `https://api.spotify.com/v1/playlists/${roomData.playlistID}/tracks`,
       {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${roomData.accessToken}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          uris: [
-            'spotify:track:4qsAYBCJnu2OkTKUVbbOF1',
-            'spotify:track:7e89621JPkKaeDSTQ3avtg'
-          ]
-        })
+        body: JSON.stringify({ uris: [songData.uri] })
       }
     );
-
     const songJSON = await song.json();
-    console.log('this is songJSON ', songJSON);
   } catch (err) {
     console.log(err);
   }
 };
-
-export async function refreshTokens() {
+export async function refreshTokens(refreshToken) {
   try {
     const ClientID = process.env.SPOTIFY_CLIENTID;
     const ClientSecret = process.env.SPOTIFY;
     const credsB64 = btoa(`${ClientID}:${ClientSecret}`);
-    const refreshToken = await getUserData('refreshToken');
 
     const response = await fetch('https://accounts.spotify.com/api/token', {
       method: 'POST',
@@ -156,33 +146,27 @@ export async function refreshTokens() {
     });
 
     const responseJSON = await response.json();
-    // return responseJSON;
+    return responseJSON;
+    // if (responseJSON.error){
+    //     await getTokens()
+    // }
+    // else {
+    //     const {
+    //         access_token: newAccessToken,
+    //         refresh_token: newRefreshToken,
+    //         expires_in: expiresIn,
+    //     } = responseJSON
 
-    await setUserData('accesssToken', newAccessToken);
+    //     const expirationTime = new Date().getTime() + expiresIn * 1000;
 
-    if (newRefreshToken) {
-      await setUserData('refreshToken', newRefreshToken);
-    }
-    await setUserData('expirationTime', expirationTime.toString());
-  } catch (err) {
-    console.log(err);
-  }
-}
+    //     await setUserData('accesssToken', newAccessToken)
 
-export async function setUserData(key, value) {
-  try {
-    await AsyncStorage.setItem(key, value);
-  } catch (e) {
-    console.log(e);
-  }
-}
+    //     if (newRefreshToken){
+    //         await setUserData('refreshToken', newRefreshToken)
+    //     }
+    //     await setUserData('expirationTime', expirationTime.toString())
 
-export async function getUserData(key) {
-  try {
-    const value = await AsyncStorage.getItem(key);
-    if (value !== null) {
-      return value;
-    }
+    // }
   } catch (e) {
     console.log(e);
   }

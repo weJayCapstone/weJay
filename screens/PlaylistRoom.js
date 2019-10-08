@@ -12,17 +12,14 @@ import { getPlaylist, getRoom } from '../firebase/index';
 
 export default function PlaylistRoom(props) {
   let playlist = {};
-
+  const docId = props.navigation.state.params.docId;
   let [songs, setSongs] = useState([]);
 
   useEffect(() => {
-    getPlaylist('Test-Room')
+    getPlaylist(docId)
       .then(data => setSongs(data))
       .catch(err => console.log(err));
   }, []);
-
-  console.log(songs);
-
   return (
     <ScrollView>
       <LinearGradient
@@ -41,9 +38,10 @@ export default function PlaylistRoom(props) {
           }}
         />
         {songs.map(song => (
-          <View key={song.title} style={styles.songContainer}>
-            <Text style={{ color: '#ffffff' }}>{song.title}</Text>
-            <Text style={{ color: '#ffffff' }}>{song.title}</Text>
+          <View key={song.name} style={styles.songContainer}>
+            <Text style={{ color: '#ffffff' }}>{song.name}</Text>
+            <Text style={{ color: '#ffffff' }}>{song.artist}</Text>
+            <Text style={{ color: '#ffffff' }}>{song.albumName}</Text>
             <TouchableOpacity style={{ justifyContent: 'flex-end' }}>
               <Feather name="chevron-up" size={20} color="white" />
               <Feather name="chevron-down" size={20} color="white" />
@@ -52,11 +50,24 @@ export default function PlaylistRoom(props) {
         ))
       }
       </LinearGradient>
+      <TouchableOpacity
+        style= {styles.button}
+        onPress={() => props.navigation.navigate('SearchScreen', {docId})}
+      >
+          <Text>Add A Song</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+   button: {
+    padding: 10, 
+    borderWidth: 1, 
+    borderColor: '#000',
+    borderRadius: 25,
+    width: 150
+  },
   container: {
     flex: 1,
     alignItems: 'center',
