@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
   View,
   ScrollView,
   TouchableOpacity
-} from "react-native";
-import { TextInput } from "react-native-gesture-handler";
-import { getTokens, logIn, makeNewPlaylist } from "../api/spotify";
-import { createRoom } from "../firebase/index";
+} from 'react-native';
+import { TextInput } from 'react-native-gesture-handler';
+import { getTokens, logIn, makeNewPlaylist } from '../api/spotify';
+import { createRoom } from '../firebase/index';
 
 export default function CreatePlaylistForm(props) {
   const [roomData, setRoomData] = useState({
-    title: "",
-    hostName: "",
+    title: '',
+    hostName: '',
     passcode: null
   });
   const handleSubmit = async formData => {
@@ -30,7 +30,7 @@ export default function CreatePlaylistForm(props) {
       );
       let docId = await createRoom(formData);
       if (formData.accessToken) {
-        props.navigation.navigate("PlaylistRoom",{ docId: docId });
+        props.navigation.navigate('PlaylistRoom', { docId: docId });
       }
     } catch (err) {
       console.log(err);
@@ -76,13 +76,12 @@ export default function CreatePlaylistForm(props) {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop:80
+    backgroundColor: '#F5FCFF'
   },
   header: {
     fontSize: 25,
-    textAlign: "center",
-    fontWeight: "bold",
-    color: '#FF5857',
+    textAlign: 'center',
+    fontWeight: 'bold'
   },
   inputContainer: {
     paddingTop: 15,

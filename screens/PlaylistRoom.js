@@ -4,9 +4,10 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
+  Image
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { Card } from 'react-native-elements';
 import { Feather } from '@expo/vector-icons';
 import db from '../firebase/index';
 
@@ -22,35 +23,60 @@ export default function PlaylistRoom(props) {
             setSongs(items);
         });
   }, []);
+
   return (
     <ScrollView>
-      <LinearGradient
-        colors={['#000000', '#666666', '#AAAAAA']}
-        style={{ padding: 15, borderRadius: 5 }}
-      >
-        <Text
-          style={{
-            backgroundColor: 'transparent',
-            fontSize: 20,
-            alignContent: 'center',
-            marginBottom: 10,
-            fontWeight: 'bold',
-            color: '#fff',
-            textAlign: 'center'
-          }}
-        />
-        {songs.map(song => (
-          <View key={song.id} style={styles.songContainer}>
-            <Text style={{ color: '#ffffff' }}>{song.name}</Text>
-            <Text style={{ color: '#ffffff' }}>{song.artist}</Text>
-            <Text style={{ color: '#ffffff' }}>{song.albumName}</Text>
-            <TouchableOpacity style={{ justifyContent: 'flex-end' }}>
-              <Feather name="chevron-up" size={20} color="white" />
-              <Feather name="chevron-down" size={20} color="white" />
-            </TouchableOpacity>
+      {songs &&
+        songs.map(song => (
+          <View key={song.id}>
+            <Card style={styles.card}>
+              <View style={styles.songContainer}>
+                <Image
+                  style={{ width: 80, height: 80 }}
+                  resizeMode="cover"
+                  source={{
+                    uri: song.imageUrl
+                  }}
+                />
+                <View style={{ paddingLeft: 10 }}>
+                  <Text
+                    style={{
+                      paddingTop: 25,
+                      fontWeight: 'bold',
+                      fontSize: 14
+                    }}
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                  >
+                    {song.name}
+                  </Text>
+                  <Text style={{ fontSize: 12 }}>{song.artist}</Text>
+                  <Text
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                    style={{ fontSize: 12 }}
+                  >
+                    {song.albumName}
+                  </Text>
+                </View>
+                <View style={{ marginLeft: 'auto' }}>
+                  <Feather name="chevron-up" size={30} color="black" />
+                  <Text
+                    style={{
+                      fontWeight: 'bold',
+                      marginLeft: 'auto',
+                      paddingRight: 10
+                    }}
+                  >
+                    votes
+                  </Text>
+                  <Feather name="chevron-down" size={30} color="black" />
+                </View>
+              </View>
+            </Card>
           </View>
         ))}
-      </LinearGradient>
+
       <TouchableOpacity
         style={styles.button}
         onPress={() => props.navigation.navigate('SearchScreen', { docId })}
@@ -62,22 +88,21 @@ export default function PlaylistRoom(props) {
 }
 
 const styles = StyleSheet.create({
+  songContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap'
+  },
+  card: {},
   button: {
     padding: 10,
     borderWidth: 1,
     borderColor: '#000',
     borderRadius: 25,
-    width: 150
-  },
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  songContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 10
+    width: 150,
+    marginBottom: 100,
+    marginTop: 25,
+    marginLeft: 10,
+    textAlign: 'center'
   }
 });
