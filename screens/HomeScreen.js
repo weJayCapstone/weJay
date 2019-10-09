@@ -48,12 +48,12 @@ export default class HomeScreen extends React.Component {
             <Text style={styles.text}>Join Playlist</Text>
           </TouchableOpacity>
 
-          <TouchableHighlight
+          {/* <TouchableHighlight
             style={styles.button}
             onPress={() => this.props.navigation.navigate('SearchScreen')}
           >
             <Text style={styles.text}>Search Screen Component (Gus)</Text>
-          </TouchableHighlight>
+          </TouchableHighlight> */}
         </View>
       </ScrollView>
     );
@@ -63,7 +63,10 @@ export default class HomeScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
+    marginTop: 150,
+    marginLeft: 60,
+    width: 200
   },
   text: {
     fontSize: 24,
@@ -84,10 +87,10 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 10
-  }
-  // contentContainer: {
-  //   paddingTop: 30
-  // },
+  },
+  contentContainer: {
+    justifyContent:'center'
+  },
   // welcomeContainer: {
   //   alignItems: 'center',
   //   marginTop: 100,

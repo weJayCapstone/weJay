@@ -8,17 +8,21 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Feather } from '@expo/vector-icons';
-import { getPlaylist, getRoom } from '../firebase/index';
+import db, { getPlaylist, getRoom } from '../firebase/index';
+import { useCollection } from 'react-firebase-hooks/firestore';
 
 export default function PlaylistRoom(props) {
   let playlist = {};
   const docId = props.navigation.state.params.docId;
   let [songs, setSongs] = useState([]);
-
   useEffect(() => {
-    getPlaylist(docId)
-      .then(data => setSongs(data))
-      .catch(err => console.log(err));
+    let roomRef = db.collection('Rooms').doc(docId);
+    roomRef
+        .collection('Playlist')
+        .onSnapshot((snapshot)=> {
+            const items = snapshot.docs.map(doc => doc.data());
+            setSongs(items);
+        });
   }, []);
   return (
     <ScrollView>

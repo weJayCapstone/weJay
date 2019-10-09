@@ -40,7 +40,7 @@ export async function getTokens() {
     const ClientID = process.env.SPOTIFY_CLIENT_ID; //replace with your client Id from spotify
     const ClientSecret = process.env.SPOTIFY; //replace with your own secret
     const redirect = AuthSession.getRedirectUrl();
-    //add variables to secrets file
+    console.log(redirect);
     const encodedRedirect = encodeURIComponent(redirect);
     const credsB64 = btoa(`${ClientID}:${ClientSecret}`);
 
@@ -99,8 +99,7 @@ export const makeNewPlaylist = async (accessToken, playListName) => {
         },
         body: JSON.stringify({
           name: playListName,
-          public: false,
-          collaborative: true
+          public: true,
         })
       }
     );
