@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Text,
   ScrollView,
@@ -11,14 +11,8 @@ import {
 import { Feather } from '@expo/vector-icons';
 import { getTokens } from '../api/spotify';
 
-export default class HomeScreen extends React.Component {
-  static navigationOptions = {
-    title: 'WeJay'
-  };
-  // headerLeft: <Feather name="music" size={20} color="black" />,
-  // headerRight: <Feather name="plus-square" size={20} color="black" />
-
-  render() {
+export default function HomeScreen(props){
+  const [docId, setDocId] = useState('')
     return (
       <View
         style={styles.container}
@@ -31,17 +25,23 @@ export default class HomeScreen extends React.Component {
         <View>
           <TouchableHighlight
             style={styles.button}
-            onPress={() => this.props.navigation.navigate('CreatePlaylistForm')}
+            onPress={() => props.navigation.navigate('CreatePlaylistForm')}
           >
             <Text style={styles.text}>Create Playlist</Text>
           </TouchableHighlight>
 
           <TouchableOpacity
             style={styles.button}
-            onPress={() => this.props.navigation.navigate('JoinPlaylistForm')}
+            onPress={() => props.navigation.navigate('JoinPlaylistForm', {docId, setDocId})}
           >
             <Text style={styles.text}>Join Playlist</Text>
           </TouchableOpacity>
+          {docId? <TouchableOpacity
+            style={styles.button}
+            onPress={() => props.navigation.navigate('PlaylistRoom', {docId})}
+          >
+            <Text style={styles.text}>Go To Playlist</Text>
+          </TouchableOpacity>: null}
 
           {/* <TouchableHighlight
             style={styles.button}
@@ -52,7 +52,6 @@ export default class HomeScreen extends React.Component {
         </View>
       </View>
     );
-  }
 }
 
 const styles = StyleSheet.create({

@@ -13,7 +13,6 @@ import { Input } from 'react-native-elements';
 
 export default function JoinPlayListForm(props) {
   const [authData, setAuthData] = useState({});
-  const [room, setRoom] = useState({});
   const handleSubmit = async () => {
     try {
       let result = await enterRoom(
@@ -27,6 +26,8 @@ export default function JoinPlayListForm(props) {
         });
       } else {
         //needs to navigate to the specific playlist room
+        props.navigation.state.params.setDocId(result);
+        console.log(props.navigation.state.params);
         props.navigation.navigate('PlaylistRoom', { docId: result });
       }
     } catch (err) {
