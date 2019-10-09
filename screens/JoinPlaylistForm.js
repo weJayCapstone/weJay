@@ -27,7 +27,6 @@ export default function JoinPlayListForm(props) {
       } else {
         //needs to navigate to the specific playlist room
         props.navigation.state.params.setDocId(result);
-        console.log(props.navigation.state.params);
         props.navigation.navigate('PlaylistRoom', { docId: result });
       }
     } catch (err) {

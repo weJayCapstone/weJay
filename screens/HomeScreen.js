@@ -25,7 +25,7 @@ export default function HomeScreen(props){
         <View>
           <TouchableHighlight
             style={styles.button}
-            onPress={() => props.navigation.navigate('CreatePlaylistForm')}
+            onPress={() => props.navigation.navigate('CreatePlaylistForm', {docId, setDocId})}
           >
             <Text style={styles.text}>Create Playlist</Text>
           </TouchableHighlight>

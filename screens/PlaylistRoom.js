@@ -68,7 +68,7 @@ export default function PlaylistRoom(props) {
                       paddingRight: 10
                     }}
                   >
-                    votes
+                    {song.votes}
                   </Text>
                   <Feather name="chevron-down" size={30} color="black" />
                 </View>

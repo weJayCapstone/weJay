@@ -28,9 +28,10 @@ export default function CreatePlaylistForm(props) {
         formData.accessToken,
         formData.title
       );
-      let docId = await createRoom(formData);
+      let result = await createRoom(formData);
+      props.navigation.state.params.setDocId(result);
       if (formData.accessToken) {
-        props.navigation.navigate('PlaylistRoom', { docId: docId });
+        props.navigation.navigate('PlaylistRoom', { docId: result });
       }
     } catch (err) {
       console.log(err);

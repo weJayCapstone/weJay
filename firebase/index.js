@@ -119,7 +119,9 @@ export async function getPlaylist(roomId) {
     const playlist = db
       .collection('Rooms')
       .doc(roomId)
-      .collection('Playlist');
+      .collection('Playlist')
+      .orderBy('timeAdded')
+      .orderBy('votes', 'desc');
     let allSongs = await playlist.get();
     if (allSongs.empty) {
       return songArr;
