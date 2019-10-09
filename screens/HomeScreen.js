@@ -28,11 +28,14 @@ export default class HomeScreen extends React.Component {
 
   render() {
     return (
-      <ScrollView
+      <View
         style={styles.container}
         contentContainerStyle={styles.contentContainer}
       >
-        <StatusBar barStyle="light-content" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FF5857"/>
+        <View style={styles.header}>
+            <Text style={{fontSize:40, fontWeight:'bold'}}>weJay</Text>
+        </View>
         <View>
           <TouchableHighlight
             style={styles.button}
@@ -55,7 +58,7 @@ export default class HomeScreen extends React.Component {
             <Text style={styles.text}>Search Screen Component (Gus)</Text>
           </TouchableHighlight> */}
         </View>
-      </ScrollView>
+      </View>
     );
   }
 }
@@ -64,18 +67,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    marginTop: 150,
+    marginTop: 100,
     marginLeft: 60,
     width: 200
   },
   text: {
     fontSize: 24,
     textAlign: 'center',
-    color: '#000',
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: '#000',
-    padding: 10
+    fontWeight: 'bold',
+    color: '#fff',
   },
   icon: {
     paddingLeft: 10
@@ -86,11 +86,23 @@ const styles = StyleSheet.create({
     width: 120
   },
   button: {
-    marginTop: 10
+    marginTop: 10,
+    shadowColor: '#999',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    elevation: 1,
+    borderRadius: 25,
+    padding: 10,
+    backgroundColor: '#FF5857'
   },
   contentContainer: {
     justifyContent:'center'
   },
+  header:{
+      paddingBottom: 25,
+      marginLeft: 40,
+  }
   // welcomeContainer: {
   //   alignItems: 'center',
   //   marginTop: 100,

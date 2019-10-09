@@ -33,7 +33,8 @@ export default class SongCard extends Component {
             uri: data.uri,
             artist: data.artists[0].name,
             imageUrl: data.album.images[0].url,
-            albumName: data.album.name
+            albumName: data.album.name,
+            votes: 0
         };
         return result;
     }

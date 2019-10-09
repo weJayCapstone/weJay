@@ -8,11 +8,9 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Feather } from '@expo/vector-icons';
-import db, { getPlaylist, getRoom } from '../firebase/index';
-import { useCollection } from 'react-firebase-hooks/firestore';
+import db from '../firebase/index';
 
 export default function PlaylistRoom(props) {
-  let playlist = {};
   const docId = props.navigation.state.params.docId;
   let [songs, setSongs] = useState([]);
   useEffect(() => {

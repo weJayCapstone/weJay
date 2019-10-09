@@ -37,11 +37,10 @@ export default function CreatePlaylistForm(props) {
     }
   };
   return (
-    <View style={styles.conatiner}>
+    <View style={styles.container}>
       <View>
         <Text style={styles.header}>Create Your Playlist</Text>
       </View>
-      <ScrollView>
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.textInput}
@@ -71,40 +70,56 @@ export default function CreatePlaylistForm(props) {
         >
           <Text style={styles.saveButtonText}>Create Playlist</Text>
         </TouchableOpacity>
-      </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#F5FCFF"
+    marginTop:80
   },
   header: {
     fontSize: 25,
     textAlign: "center",
-    fontWeight: "bold"
+    fontWeight: "bold",
+    color: '#FF5857',
   },
   inputContainer: {
-    paddingTop: 15
+    paddingTop: 15,
+    marginLeft: 40,
   },
   textInput: {
-    borderColor: "#CCCCCC",
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    height: 50,
-    fontSize: 25
+    borderColor: '#fff',
+    backgroundColor: '#fff',
+    borderRadius:30,
+    borderWidth: 1,
+    width:250,
+    fontSize: 18,
+    height:45,
+    textAlign:'center',
+    marginBottom:20,
+    flexDirection: 'row',
+    alignItems:'center',
+    shadowColor: '#999',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    elevation: 1,
   },
   saveButton: {
-    borderWidth: 1,
-    borderColor: "#007BFF",
-    backgroundColor: "#007BFF",
+    backgroundColor: '#FF5857',
     padding: 15,
-    margin: 5
+    borderRadius: 25,
+    width:200,
+    marginLeft: 65,
+    shadowColor: '#999',
+    shadowOffset: { width: 1, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
   },
   saveButtonText: {
-    color: "#FFFFFF",
+    color: '#FFFFFF',
     fontSize: 20,
-    textAlign: "center"
+    textAlign: 'center'
   }
 });
