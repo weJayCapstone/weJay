@@ -1,6 +1,7 @@
 import React, {Component, useState, useEffect} from 'react'
 import {AuthSession} from 'expo'
 import { encode as btoa } from 'base-64'
+import Modal from 'react-native-modal'
 import {
     Text,
     View,
@@ -93,24 +94,6 @@ export default function SearchScreen(props){
                         </ScrollView>
 
                     </Content>
-                <Footer>
-                    <Card style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: 'white',   
-                    }}>
-                        <CardButton
-                        title='ADD'
-                        color='yellow'
-                        style={{
-                            backgroundColor: 'green',
-                            alignSelf: 'stretch',
-                            right: 4
-                        }}
-                        />
-                    </Card>
-                </Footer>
             </Container>
         )
 }
