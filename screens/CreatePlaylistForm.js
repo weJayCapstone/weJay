@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
   View,
   ScrollView,
   TouchableOpacity
-} from "react-native";
-import { TextInput } from "react-native-gesture-handler";
-import { getTokens, logIn, makeNewPlaylist } from "../api/spotify";
-import { createRoom } from "../firebase/index";
+} from 'react-native';
+import { TextInput } from 'react-native-gesture-handler';
+import { getTokens, logIn, makeNewPlaylist } from '../api/spotify';
+import { createRoom } from '../firebase/index';
 
 export default function CreatePlaylistForm(props) {
   const [roomData, setRoomData] = useState({
-    title: "",
-    hostName: "",
+    title: '',
+    hostName: '',
     passcode: null
   });
   const handleSubmit = async formData => {
@@ -30,7 +30,7 @@ export default function CreatePlaylistForm(props) {
       );
       let docId = await createRoom(formData);
       if (formData.accessToken) {
-        props.navigation.navigate("PlaylistRoom",{ docId: docId });
+        props.navigation.navigate('PlaylistRoom', { docId: docId });
       }
     } catch (err) {
       console.log(err);
@@ -78,18 +78,18 @@ export default function CreatePlaylistForm(props) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#F5FCFF"
+    backgroundColor: '#F5FCFF'
   },
   header: {
     fontSize: 25,
-    textAlign: "center",
-    fontWeight: "bold"
+    textAlign: 'center',
+    fontWeight: 'bold'
   },
   inputContainer: {
     paddingTop: 15
   },
   textInput: {
-    borderColor: "#CCCCCC",
+    borderColor: '#CCCCCC',
     borderTopWidth: 1,
     borderBottomWidth: 1,
     height: 50,
@@ -97,14 +97,14 @@ const styles = StyleSheet.create({
   },
   saveButton: {
     borderWidth: 1,
-    borderColor: "#007BFF",
-    backgroundColor: "#007BFF",
+    borderColor: '#007BFF',
+    backgroundColor: '#007BFF',
     padding: 15,
     margin: 5
   },
   saveButtonText: {
-    color: "#FFFFFF",
+    color: '#FFFFFF',
     fontSize: 20,
-    textAlign: "center"
+    textAlign: 'center'
   }
 });

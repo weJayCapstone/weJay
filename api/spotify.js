@@ -89,7 +89,7 @@ export const makeNewPlaylist = async (accessToken, playListName) => {
     //console.log('user object, ', userJSON)
     //console.log('this is userId? ', userJSON.id)
     const userID = userJSON.id;
-    console.log(userID)
+    console.log(userID);
     const playlist = await fetch(
       `https://api.spotify.com/v1/users/${userID}/playlists`,
       {
@@ -98,7 +98,11 @@ export const makeNewPlaylist = async (accessToken, playListName) => {
           Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ name: playListName, public: false, collaborative: true })
+        body: JSON.stringify({
+          name: playListName,
+          public: false,
+          collaborative: true
+        })
       }
     );
 
@@ -107,6 +111,7 @@ export const makeNewPlaylist = async (accessToken, playListName) => {
     //console.log('this is playlist, ', playlistJSON)
     console.log('this is playlistID', playlistID);
     console.log('Youve made a playlist!');
+    console.log('playlist', playlistJSON);
     return playlistID;
   } catch (e) {
     console.log(e);
@@ -174,26 +179,37 @@ export async function refreshTokens(refreshToken){
         console.log(e)
     }
 
+    const response = await fetch('https://accounts.spotify.com/api/token', {
+      method: 'POST',
+      headers: {
+        Authorization: `Basic ${credsB64}`,
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: `grant_type=refresh_token&refresh_token=${refreshToken}`
+    });
+
+    const responseJSON = await response.json();
+    return responseJSON;
+  } catch (e) {
+    console.log(e);
+  }
 }
 
-export async function setUserData(key, value){
-
-    try {
-        await AsyncStorage.setItem(key, value)
-    }
-    catch (e){
-        console.log(e)
-    }
+export async function setUserData(key, value) {
+  try {
+    await AsyncStorage.setItem(key, value);
+  } catch (e) {
+    console.log(e);
+  }
 }
 
-export async function getUserData(key){
-    try {
-        const value = await AsyncStorage.getItem(key)
-        if (value !== null){
-            return value
-        }
+export async function getUserData(key) {
+  try {
+    const value = await AsyncStorage.getItem(key);
+    if (value !== null) {
+      return value;
     }
-    catch (e){
-        console.log(e)
-    }
+  } catch (e) {
+    console.log(e);
+  }
 }

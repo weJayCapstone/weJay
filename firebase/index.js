@@ -1,6 +1,6 @@
 import * as firebase from 'firebase';
 import firestore from 'firebase/firestore';
-import {refreshTokens, addSong} from '../api/spotify'
+import { refreshTokens, addSong } from '../api/spotify';
 // Initialize Firebase
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -42,6 +42,7 @@ export async function getRoom(passcode, hostName) {
     console.log(err);
   }
 }
+
 export async function enterRoom(passcode, roomName, userName) {
   let result = {};
   try {
@@ -69,61 +70,67 @@ export async function enterRoom(passcode, roomName, userName) {
 }
 
 //getRoom data
-export const getRoomData = async (docId) => {
-    let roomRef = db.collection('Rooms').doc(docId);
-    try{
-        let result = await roomRef.get();
-        return result.data();
-    }catch(err){
-        console.log(err)
-    }
-}
+export const getRoomData = async docId => {
+  let roomRef = db.collection('Rooms').doc(docId);
+  try {
+    let result = await roomRef.get();
+    return result.data();
+  } catch (err) {
+    console.log(err);
+  }
+};
 //get token
-export async function refreshRoomToken(docId){
-    try{
-        let currentRoomData = await getRoomData(docId);
-        let result = await refreshTokens(currentRoomData.refreshToken);
-        currentRoomData.accessToken = result.access_token;
-        currentRoomData.expiresIn = result.expires_in;
-        //update room data
-        let roomRef = db.collection('Rooms').doc(docId);
-        roomRef.update(currentRoomData)
-        return currentRoomData;
-    }catch(err){
-        console.log(err)
-    }
+export async function refreshRoomToken(docId) {
+  try {
+    let currentRoomData = await getRoomData(docId);
+    let result = await refreshTokens(currentRoomData.refreshToken);
+    currentRoomData.accessToken = result.access_token;
+    currentRoomData.expiresIn = result.expires_in;
+    //update room data
+    let roomRef = db.collection('Rooms').doc(docId);
+    roomRef.update(currentRoomData);
+    return currentRoomData;
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 export async function addSongToDB(roomId, songData) {
-    try{
-        let result = await refreshRoomToken(roomId);
-        //add song to spotify playlist
-        await addSong(result, songData)
-        const playlist = db.collection('Rooms').doc(roomId).collection('Playlist');
-        await playlist.add(songData)
-        console.log('song was added!')
-        //return newPlaylist?
-    }catch(err){
-        console.log(err)
-    }
+  try {
+    let result = await refreshRoomToken(roomId);
+    //add song to spotify playlist
+    await addSong(result, songData);
+    const playlist = db
+      .collection('Rooms')
+      .doc(roomId)
+      .collection('Playlist');
+    await playlist.add(songData);
+    console.log('song was added!');
+    //return newPlaylist?
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 //get playlist return array of song objects (ideally?)
-export async function getPlaylist(roomId){
-    let songArr = [];
-    try{
-        const playlist = db.collection('Rooms').doc(roomId).collection('Playlist');
-        let allSongs = await playlist.get();
-        if(allSongs.empty){
-            return songArr;
-        }
-        allSongs.forEach(song => {
-            songArr.push(song.data())
-        })
-        return songArr;
-    }catch(err){
-        console.log(err)
+export async function getPlaylist(roomId) {
+  let songArr = [];
+  try {
+    const playlist = db
+      .collection('Rooms')
+      .doc(roomId)
+      .collection('Playlist');
+    let allSongs = await playlist.get();
+    if (allSongs.empty) {
+      return songArr;
     }
+    allSongs.forEach(song => {
+      songArr.push(song.data());
+    });
+    return songArr;
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 //join playlist route given passcode, roomname,username
