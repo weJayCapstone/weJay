@@ -57,7 +57,7 @@ export async function enterRoom(passcode, roomName, userName) {
       return 'Invalid credentials';
     } else {
       query.forEach(doc => {
-        roomRef.doc(doc.id).update({ userName });
+        db.collection('Users').add({userName});
         result = doc.id;
       });
       console.log('You are in the room!');

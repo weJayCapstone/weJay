@@ -125,7 +125,7 @@ export const addSong = async(roomData, songData) => {
         })
         const songJSON = await song.json();
         if(songJSON.snapshot_id){
-            console.log('Youve added a song!')
+            console.log('You added a song!')
         }else {
             console.log('something went wrong in Spotify :(');
         }

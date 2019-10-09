@@ -13,21 +13,28 @@ import db from '../firebase/index';
 
 export default function PlaylistRoom(props) {
   const docId = props.navigation.state.params.docId;
+  const userName = props.navigation.state.params.userName;
   let [songs, setSongs] = useState([]);
+  let [loading, setLoading] = useState(true);
+//   let [downvote, setDownvote] = useState(false);
   useEffect(() => {
     let roomRef = db.collection('Rooms').doc(docId);
     roomRef
         .collection('Playlist')
         .onSnapshot((snapshot)=> {
-            const items = snapshot.docs.map(doc => doc.data());
-            setSongs(items);
+            const songArr =[];
+            snapshot.forEach(doc => {
+                songArr.push(doc.data())
+            });
+            setLoading(false);
+            setSongs(songArr);
         });
-  }, []);
-
+  }, [docId]);
   return (
     <ScrollView>
-      {songs &&
-        songs.map(song => (
+      {(songs) &&
+        songs.map(song => {
+        return(
           <View key={song.id}>
             <Card style={styles.card}>
               <View style={styles.songContainer}>
@@ -60,7 +67,12 @@ export default function PlaylistRoom(props) {
                   </Text>
                 </View>
                 <View style={{ marginLeft: 'auto' }}>
-                  <Feather name="chevron-up" size={30} color="black" />
+                    <TouchableOpacity
+                        // onPress= {() => setUpvote(true)}
+                       
+                    >
+                        <Feather  style ={song.users[(userName.toLowerCase())] === 'up'? styles.voteHighlight: styles.vote } name="chevron-up" size={30} color="black" />
+                    </TouchableOpacity>
                   <Text
                     style={{
                       fontWeight: 'bold',
@@ -70,12 +82,17 @@ export default function PlaylistRoom(props) {
                   >
                     {song.votes}
                   </Text>
-                  <Feather name="chevron-down" size={30} color="black" />
+                  <TouchableOpacity
+                    // onPress={setDownvote(true)}
+                  >
+                    <Feather name="chevron-down" size={30} color="black" />
+                  </TouchableOpacity>
                 </View>
               </View>
             </Card>
-          </View>
-        ))}
+
+          </View>)
+      })}
 
       <TouchableOpacity
         style={styles.button}
@@ -104,5 +121,11 @@ const styles = StyleSheet.create({
     marginTop: 25,
     marginLeft: 10,
     textAlign: 'center'
+  },
+  vote: {
+      color: '#000'
+  },
+  voteHighlight: {
+      color:'#FF5857'
   }
 });
