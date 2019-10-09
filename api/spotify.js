@@ -5,26 +5,63 @@ require('../secrets');
 //need to writ/read accessToken, refreshToken, expirationtime to firestore
 //need all spotify requests in this file
 
-export async function logIn(){
+export async function logIn() {
+  try {
+    const redirect = AuthSession.getRedirectUrl();
+    const encodedRedirect = encodeURIComponent(redirect);
+    const ClientID = process.env.SPOTIFY_CLIENT_ID;
+    const scopesArr = [
+      'playlist-modify-public',
+      'playlist-modify-private',
+      'user-modify-playback-state',
+      'user-read-private',
+      'user-read-email'
+    ];
+    const scopes = encodeURIComponent(scopesArr.join(' '));
 
-    try {
-        const redirect = AuthSession.getRedirectUrl();
-        const encodedRedirect = encodeURIComponent(redirect)
-        const ClientID = process.env.SPOTIFY_CLIENT_ID;
-        const scopesArr = ['playlist-modify-public', 'playlist-modify-private', 'user-modify-playback-state', 'user-read-private', 'user-read-email']
-        const scopes = encodeURIComponent(scopesArr.join(' '))
+    const result = await AuthSession.startAsync({
+      authUrl:
+        'https://accounts.spotify.com/authorize' +
+        '?client_id=' +
+        ClientID +
+        '&response_type=code' +
+        '&redirect_uri=' +
+        encodedRedirect +
+        (scopes ? '&scope=' + scopes : '')
+    });
+    return result.params.code;
+  } catch (err) {
+    console.log(err);
+  }
+}
 
-        const result = await AuthSession.startAsync({
-            authUrl:
-            'https://accounts.spotify.com/authorize' +
-            '?client_id=' +
-            ClientID +
-            '&response_type=code' +
-            '&redirect_uri=' +
-            encodedRedirect +
-            (scopes ? '&scope=' + scopes : '')
-        })
-        return result.params.code;
+export async function getTokens() {
+  try {
+    const authorizationCode = await logIn();
+    const ClientID = process.env.SPOTIFY_CLIENT_ID; //replace with your client Id from spotify
+    const ClientSecret = process.env.SPOTIFY; //replace with your own secret
+    const redirect = AuthSession.getRedirectUrl();
+    console.log(redirect);
+    const encodedRedirect = encodeURIComponent(redirect);
+    const credsB64 = btoa(`${ClientID}:${ClientSecret}`);
+
+    const response = await fetch('https://accounts.spotify.com/api/token', {
+      method: 'POST',
+      headers: {
+        Authorization: `Basic ${credsB64}`,
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: `grant_type=authorization_code&code=${authorizationCode}&redirect_uri=${encodedRedirect}`
+    });
+
+    const responseJSON = await response.json();
+    console.log('responseJSON', responseJSON);
+    return responseJSON;
+    // const {
+    //     access_token: accessToken,
+    //     refresh_token: refreshToken,
+    //     expires_in: expiresIn
+    // } = responseJSON
 
     }
     catch (err){
@@ -32,45 +69,6 @@ export async function logIn(){
     }
 }
 
-export async function getTokens(){
-
-    try {
-        const authorizationCode = await logIn()
-        const ClientID = process.env.SPOTIFY_CLIENT_ID; //replace with your client Id from spotify
-        const ClientSecret = process.env.SPOTIFY; //replace with your own secret
-        const redirect = AuthSession.getRedirectUrl()
-        //add variables to secrets file
-        const encodedRedirect = encodeURIComponent(redirect)
-        const credsB64 = btoa(`${ClientID}:${ClientSecret}`)
-
-        const response = await fetch('https://accounts.spotify.com/api/token', {
-                method: 'POST',
-                headers: {
-                    Authorization: `Basic ${credsB64}`,
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `grant_type=authorization_code&code=${authorizationCode}&redirect_uri=${encodedRedirect}`,
-            })
-
-        const responseJSON = await response.json()
-        console.log(responseJSON)
-        return responseJSON;
-        // const {
-        //     access_token: accessToken,
-        //     refresh_token: refreshToken,
-        //     expires_in: expiresIn
-        // } = responseJSON
-
-        //const expirationTime = new Date().getTime() + expiresIn * 1000;
-
-        // await setUserData('accessToken', accessToken)
-        // await setUserData('refreshToken', refreshToken)
-        // await setUserData('expirationTime', expirationTime.toString())
-    }
-    catch (e){
-        console.log(e)
-    }
-}
 export const makeNewPlaylist = async (accessToken, playListName) => {
   try {
     //const code = await getUserData('accessToken')
@@ -100,8 +98,7 @@ export const makeNewPlaylist = async (accessToken, playListName) => {
         },
         body: JSON.stringify({
           name: playListName,
-          public: false,
-          collaborative: true
+          public: true,
         })
       }
     );

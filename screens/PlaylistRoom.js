@@ -9,16 +9,19 @@ import {
 } from 'react-native';
 import { Card } from 'react-native-elements';
 import { Feather } from '@expo/vector-icons';
-import { getPlaylist } from '../firebase/index';
+import db from '../firebase/index';
 
 export default function PlaylistRoom(props) {
   const docId = props.navigation.state.params.docId;
   let [songs, setSongs] = useState([]);
-
   useEffect(() => {
-    getPlaylist(docId)
-      .then(data => setSongs(data))
-      .catch(err => console.log(err));
+    let roomRef = db.collection('Rooms').doc(docId);
+    roomRef
+        .collection('Playlist')
+        .onSnapshot((snapshot)=> {
+            const items = snapshot.docs.map(doc => doc.data());
+            setSongs(items);
+        });
   }, []);
 
   return (

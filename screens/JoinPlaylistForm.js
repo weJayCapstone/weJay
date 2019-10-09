@@ -13,7 +13,6 @@ import { Input } from 'react-native-elements';
 
 export default function JoinPlayListForm(props) {
   const [authData, setAuthData] = useState({});
-  const [room, setRoom] = useState({});
   const handleSubmit = async () => {
     try {
       let result = await enterRoom(
@@ -27,6 +26,8 @@ export default function JoinPlayListForm(props) {
         });
       } else {
         //needs to navigate to the specific playlist room
+        props.navigation.state.params.setDocId(result);
+        console.log(props.navigation.state.params);
         props.navigation.navigate('PlaylistRoom', { docId: result });
       }
     } catch (err) {
@@ -34,7 +35,7 @@ export default function JoinPlayListForm(props) {
     }
   };
   return (
-    <ScrollView>
+    <ScrollView style={styles.scrollview}>
       <View style={styles.conatiner}>
         <View>
           <Text style={styles.header}>Join A Playlist</Text>
@@ -71,13 +72,19 @@ export default function JoinPlayListForm(props) {
 }
 
 const styles = StyleSheet.create({
+  scrollview: {
+    marginTop:80
+  },
   container: {
-    backgroundColor: '#F5FCFF'
+    backgroundColor: '#F5FCFF',
+    justifyContent:'center',
+    flexDirection:'column'
   },
   header: {
     fontSize: 25,
     textAlign: 'center',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    color: '#FF5857'
   },
   inputContainer: {
     paddingTop: 15,
@@ -86,23 +93,33 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   textInput: {
-      borderColor: 'lightgray',
-      backgroundColor: '#fff',
-      borderRadius:30,
-      borderWidth: 1,
-      width:250,
-      fontSize: 18,
-      height:45,
-      marginBottom:20,
-      flexDirection: 'row',
-      alignItems:'center'
+    borderColor: '#fff',
+    backgroundColor: '#fff',
+    borderRadius:30,
+    borderWidth: 1,
+    width:250,
+    fontSize: 18,
+    height:45,
+    textAlign:'center',
+    marginBottom:20,
+    flexDirection: 'row',
+    alignItems:'center',
+    shadowColor: '#999',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    elevation: 1,
   },
   saveButton: {
-    borderWidth: 1,
-    borderColor: '#007BFF',
-    backgroundColor: '#007BFF',
+    backgroundColor: '#FF5857',
     padding: 15,
-    margin: 5
+    borderRadius: 25,
+    width:200,
+    marginLeft: 65,
+    shadowColor: '#999',
+    shadowOffset: { width: 1, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
   },
   saveButtonText: {
     color: '#FFFFFF',

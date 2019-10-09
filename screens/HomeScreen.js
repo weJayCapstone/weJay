@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Text,
   ScrollView,
@@ -11,66 +11,62 @@ import {
 import { Feather } from '@expo/vector-icons';
 import { getTokens } from '../api/spotify';
 
-export default class HomeScreen extends React.Component {
-  static navigationOptions = {
-    title: 'WeJay'
-  };
-  // headerLeft: <Feather name="music" size={20} color="black" />,
-  // headerRight: <Feather name="plus-square" size={20} color="black" />
-
-  render() {
+export default function HomeScreen(props){
+  const [docId, setDocId] = useState('')
     return (
-      <ScrollView
+      <View
         style={styles.container}
         contentContainerStyle={styles.contentContainer}
       >
-        <StatusBar barStyle="light-content" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FF5857"/>
+        <View style={styles.header}>
+            <Text style={{fontSize:40, fontWeight:'bold'}}>weJay</Text>
+        </View>
         <View>
           <TouchableHighlight
             style={styles.button}
-            onPress={() => this.props.navigation.navigate('CreatePlaylistForm')}
+            onPress={() => props.navigation.navigate('CreatePlaylistForm')}
           >
             <Text style={styles.text}>Create Playlist</Text>
           </TouchableHighlight>
 
           <TouchableOpacity
             style={styles.button}
-            onPress={() => this.props.navigation.navigate('JoinPlaylistForm')}
+            onPress={() => props.navigation.navigate('JoinPlaylistForm', {docId, setDocId})}
           >
             <Text style={styles.text}>Join Playlist</Text>
           </TouchableOpacity>
+          {docId? <TouchableOpacity
+            style={styles.button}
+            onPress={() => props.navigation.navigate('PlaylistRoom', {docId})}
+          >
+            <Text style={styles.text}>Go To Playlist</Text>
+          </TouchableOpacity>: null}
 
-          <TouchableHighlight
+          {/* <TouchableHighlight
             style={styles.button}
             onPress={() => this.props.navigation.navigate('SearchScreen')}
           >
             <Text style={styles.text}>Search Screen Component (Gus)</Text>
-          </TouchableHighlight>
-          <TouchableHighlight
-            style={styles.button}
-            onPress={() => this.props.navigation.navigate('SingleSong')}
-          >
-            <Text style={styles.text}>Single Song</Text>
-          </TouchableHighlight>
+          </TouchableHighlight> */}
         </View>
-      </ScrollView>
+      </View>
     );
-  }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000'
+    backgroundColor: '#fff',
+    marginTop: 100,
+    marginLeft: 60,
+    width: 200
   },
   text: {
     fontSize: 24,
     textAlign: 'center',
+    fontWeight: 'bold',
     color: '#fff',
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: '#fff',
-    padding: 10
   },
   icon: {
     paddingLeft: 10
@@ -81,7 +77,22 @@ const styles = StyleSheet.create({
     width: 120
   },
   button: {
-    marginTop: 10
+    marginTop: 10,
+    shadowColor: '#999',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    elevation: 1,
+    borderRadius: 25,
+    padding: 10,
+    backgroundColor: '#FF5857'
+  },
+  contentContainer: {
+    justifyContent:'center'
+  },
+  header:{
+      paddingBottom: 25,
+      marginLeft: 40,
   }
   // contentContainer: {
   //   paddingTop: 30
