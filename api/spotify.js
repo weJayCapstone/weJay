@@ -190,9 +190,6 @@ export async function refreshTokens(refreshToken){
 
     const responseJSON = await response.json();
     return responseJSON;
-  } catch (e) {
-    console.log(e);
-  }
 }
 
 export async function setUserData(key, value) {
