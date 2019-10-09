@@ -5,72 +5,71 @@ require('../secrets');
 //need to writ/read accessToken, refreshToken, expirationtime to firestore
 //need all spotify requests in this file
 
-export async function logIn() {
-  try {
-    const redirect = AuthSession.getRedirectUrl();
-    const encodedRedirect = encodeURIComponent(redirect);
-    const ClientID = process.env.SPOTIFY_CLIENT_ID;
-    const scopesArr = [
-      'playlist-modify-public',
-      'playlist-modify-private',
-      'user-modify-playback-state',
-      'user-read-private',
-      'user-read-email'
-    ];
-    const scopes = encodeURIComponent(scopesArr.join(' '));
+export async function logIn(){
 
-    const result = await AuthSession.startAsync({
-      authUrl:
-        'https://accounts.spotify.com/authorize' +
-        '?client_id=' +
-        ClientID +
-        '&response_type=code' +
-        '&redirect_uri=' +
-        encodedRedirect +
-        (scopes ? '&scope=' + scopes : '')
-    });
-    return result.params.code;
-  } catch (err) {
-    console.log(err);
-  }
+    try {
+        const redirect = AuthSession.getRedirectUrl();
+        const encodedRedirect = encodeURIComponent(redirect)
+        const ClientID = process.env.SPOTIFY_CLIENT_ID;
+        const scopesArr = ['playlist-modify-public', 'playlist-modify-private', 'user-modify-playback-state', 'user-read-private', 'user-read-email']
+        const scopes = encodeURIComponent(scopesArr.join(' '))
+
+        const result = await AuthSession.startAsync({
+            authUrl:
+            'https://accounts.spotify.com/authorize' +
+            '?client_id=' +
+            ClientID +
+            '&response_type=code' +
+            '&redirect_uri=' +
+            encodedRedirect +
+            (scopes ? '&scope=' + scopes : '')
+        })
+        return result.params.code;
+
+    }
+    catch (err){
+        console.log(err)
+    }
 }
 
-export async function getTokens() {
-  try {
-    const authorizationCode = await logIn();
-    const ClientID = process.env.SPOTIFY_CLIENT_ID; //replace with your client Id from spotify
-    const ClientSecret = process.env.SPOTIFY; //replace with your own secret
-    const redirect = AuthSession.getRedirectUrl();
-    //add variables to secrets file
-    const encodedRedirect = encodeURIComponent(redirect);
-    const credsB64 = btoa(`${ClientID}:${ClientSecret}`);
+export async function getTokens(){
 
-    const response = await fetch('https://accounts.spotify.com/api/token', {
-      method: 'POST',
-      headers: {
-        Authorization: `Basic ${credsB64}`,
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      body: `grant_type=authorization_code&code=${authorizationCode}&redirect_uri=${encodedRedirect}`
-    });
+    try {
+        const authorizationCode = await logIn()
+        const ClientID = process.env.SPOTIFY_CLIENT_ID; //replace with your client Id from spotify
+        const ClientSecret = process.env.SPOTIFY; //replace with your own secret
+        const redirect = AuthSession.getRedirectUrl()
+        //add variables to secrets file
+        const encodedRedirect = encodeURIComponent(redirect)
+        const credsB64 = btoa(`${ClientID}:${ClientSecret}`)
 
-    const responseJSON = await response.json();
-    console.log('responseJSON', responseJSON);
-    return responseJSON;
-    // const {
-    //     access_token: accessToken,
-    //     refresh_token: refreshToken,
-    //     expires_in: expiresIn
-    // } = responseJSON
+        const response = await fetch('https://accounts.spotify.com/api/token', {
+                method: 'POST',
+                headers: {
+                    Authorization: `Basic ${credsB64}`,
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `grant_type=authorization_code&code=${authorizationCode}&redirect_uri=${encodedRedirect}`,
+            })
 
-    //const expirationTime = new Date().getTime() + expiresIn * 1000;
+        const responseJSON = await response.json()
+        console.log(responseJSON)
+        return responseJSON;
+        // const {
+        //     access_token: accessToken,
+        //     refresh_token: refreshToken,
+        //     expires_in: expiresIn
+        // } = responseJSON
 
-    // await setUserData('accessToken', accessToken)
-    // await setUserData('refreshToken', refreshToken)
-    // await setUserData('expirationTime', expirationTime.toString())
-  } catch (e) {
-    console.log(e);
-  }
+        //const expirationTime = new Date().getTime() + expiresIn * 1000;
+
+        // await setUserData('accessToken', accessToken)
+        // await setUserData('refreshToken', refreshToken)
+        // await setUserData('expirationTime', expirationTime.toString())
+    }
+    catch (e){
+        console.log(e)
+    }
 }
 export const makeNewPlaylist = async (accessToken, playListName) => {
   try {
@@ -119,32 +118,66 @@ export const makeNewPlaylist = async (accessToken, playListName) => {
   }
 };
 
-export const addSong = async (roomData, songData) => {
-  try {
-    const song = await fetch(
-      `https://api.spotify.com/v1/playlists/${roomData.playlistID}/tracks`,
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${roomData.accessToken}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ uris: [songData.uri] })
-      }
-    );
-    const songJSON = await song.json();
-    console.log('this is songJSON ', songJSON);
-    //if this succeeds add to database
-  } catch (err) {
-    console.log(err);
-  }
-};
+export const addSong = async(roomData, songData) => {
+    try {
+        const song = await fetch(`https://api.spotify.com/v1/playlists/${roomData.playlistID}/tracks`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${roomData.accessToken}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({uris: [songData.uri]})
+        })
+        const songJSON = await song.json();
+        console.log('this is songJSON ', songJSON)
+        //if this succeeds add to database
+    } catch (err){
+        console.log(err)
+    }
+}
 
-export async function refreshTokens(refreshToken) {
-  try {
-    const ClientID = process.env.SPOTIFY_CLIENT_ID;
-    const ClientSecret = process.env.SPOTIFY;
-    const credsB64 = btoa(`${ClientID}:${ClientSecret}`);
+export async function refreshTokens(refreshToken){
+
+    try {
+        const ClientID = process.env.SPOTIFY_CLIENT_ID;
+        const ClientSecret = process.env.SPOTIFY;
+        const credsB64 = btoa(`${ClientID}:${ClientSecret}`)
+
+        const response = await fetch('https://accounts.spotify.com/api/token', {
+            method: 'POST',
+            headers: {
+                Authorization: `Basic ${credsB64}`,
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `grant_type=refresh_token&refresh_token=${refreshToken}`
+        });
+
+        const responseJSON = await response.json();
+        return responseJSON;
+        // if (responseJSON.error){
+        //     await getTokens()
+        // }
+        // else {
+        //     const {
+        //         access_token: newAccessToken,
+        //         refresh_token: newRefreshToken,
+        //         expires_in: expiresIn,
+        //     } = responseJSON
+
+        //     const expirationTime = new Date().getTime() + expiresIn * 1000;
+
+        //     await setUserData('accesssToken', newAccessToken)
+
+        //     if (newRefreshToken){
+        //         await setUserData('refreshToken', newRefreshToken)
+        //     }
+        //     await setUserData('expirationTime', expirationTime.toString())
+
+        // }
+    }
+    catch (e){
+        console.log(e)
+    }
 
     const response = await fetch('https://accounts.spotify.com/api/token', {
       method: 'POST',
@@ -157,9 +190,6 @@ export async function refreshTokens(refreshToken) {
 
     const responseJSON = await response.json();
     return responseJSON;
-  } catch (e) {
-    console.log(e);
-  }
 }
 
 export async function setUserData(key, value) {
