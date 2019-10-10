@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { Card, Tile } from 'react-native-elements';
 import { Feather } from '@expo/vector-icons';
-import db, { getRoomData } from '../firebase/index'
+import db, { getRoomData, subToPlaylist, getPlaylist } from '../firebase/index'
 import PlaybackClass from './PlaybackClass'
 import SingleSong from './SingleSong'
 
@@ -18,24 +18,16 @@ export default function PlaylistRoom(props) {
   const docId = props.navigation.state.params.docId;
   const userName = props.navigation.state.params.userName;
   let [songs, setSongs] = useState([]);
-  let [loading, setLoading] = useState(true);
+//   let [loading, setLoading] = useState(true);
 //   let [downvote, setDownvote] = useState(false);
   useEffect(() => {
+    console.log(docId);
     let roomRef = db.collection('Rooms').doc(docId);
     roomRef
         .collection('Playlist')
         .orderBy('timeAdded')
-        //.orderBy('votes', 'desc')
         .onSnapshot((snapshot) => {
             const songArr = snapshot.docs.map(doc => doc.data());
-            snapshot.forEach(doc =>
-                roomRef.collection('Playlist').doc(doc.id).set({
-                users: {
-                    [userName]: null
-                }
-              }, {merge: true}));
-            setLoading(false);
-            console.log('song arr in pl room', songArr)
             setSongs(songArr);
         });
   }, [docId]);

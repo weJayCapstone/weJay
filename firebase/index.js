@@ -110,7 +110,30 @@ export async function addSongToDB(roomId, songData) {
     console.log(err);
   }
 }
-
+export function subToPlaylist(roomId, userName) {
+    try{
+        let songArr =[];
+        let roomRef = db.collection('Rooms').doc(roomId);
+        let unsub =
+        roomRef
+            .collection('Playlist')
+            .orderBy('timeAdded')
+            .onSnapshot((snapshot) => {
+                snapshot.forEach(doc => {
+                    songArr.push(doc.data())
+                });
+                snapshot.forEach(doc =>
+                    roomRef.collection('Playlist').doc(doc.id).set({
+                    users: {
+                        [userName]: null
+                    }
+                  }, {merge: true}));
+                });
+            return songArr;
+    }catch(err){
+        console.log(err);
+    }
+}
 //get playlist return array of song objects (ideally?)
 export async function getPlaylist(roomId) {
   let songArr = [];
@@ -120,18 +143,53 @@ export async function getPlaylist(roomId) {
       .doc(roomId)
       .collection('Playlist')
       .orderBy('timeAdded')
-      .orderBy('votes', 'desc');
+    //   .orderBy('votes', 'desc');
     let allSongs = await playlist.get();
     if (allSongs.empty) {
+      console.log('in empty getplaylist',songArr)
       return songArr;
     }
     allSongs.forEach(song => {
       songArr.push(song.data());
     });
+    console.log('in getplaylist',songArr)
     return songArr;
   } catch (err) {
     console.log(err);
   }
+}
+
+export async function updateVote(songName, vote, userName, docId){
+    let songsRef = db.collection('Rooms').doc(docId).collection('Playlist');
+    try{
+        let query = await songsRef.where('name', '==', songName).get();
+        if (query.empty) {
+            console.log("something went wrong");
+          } 
+        else {
+              console.log('maybe it works');
+            query.forEach(doc => {
+                let songRef = songsRef.doc(doc.id);
+                songRef.update({['users.' + userName]: vote});
+                if(vote === 'up'){
+                    //increment vote
+                    songRef.update({
+                        votes: firebase.firestore.FieldValue.increment(1)
+                    });
+                }else {
+                    //decrease vote 
+                    songRef.update({
+                        votes: firebase.firestore.FieldValue.increment(-1)
+                    });
+                }
+        });
+          }
+        //   let songRef = db.collection('Rooms').doc(docId).collection('Playlist')
+        // .doc('xTV5Q653FCnHg3JzSdzZ');
+        // songRef.update({['users.' + userName]: vote});
+    }catch(err){
+        console.log(err)
+    }
 }
 
 //add users to playlist
