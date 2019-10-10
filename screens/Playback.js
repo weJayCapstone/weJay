@@ -1,117 +1,77 @@
-import React, { useState, useEffect } from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  Image
-} from 'react-native';
-import db, { getRoomData } from '../firebase/index'
-import { play, next, pause, currentTrack, getPlaylistTracks } from '../api/spotify'
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, StatusBar } from 'react-native';
+import { Card, Image, ListItem } from 'react-native-elements';
+import { Feather } from '@expo/vector-icons';
 
-export default function Playback(props){
-  
-
-//roomData.playlistID will only show up when song is added
-
-  let [currentSong, setCurrentSong] = useState({})
-  let [songs, setSongs] = useState([])
-
-    useEffect(() => {
-
-        const fetchRoomData = async () => {
-            let roomData = await getRoomData(props.docId)
-            let playing = await currentTrack(roomData)
-            setCurrentSong(playing)
-        }
-
-        // const fetchSongs = async () => {
-            // let roomData = await getRoomData(props.docId)
-            // let tracks = await getPlaylistTracks(roomData)
-        //     let tracksArr = []
-
-        //     if (tracks.length){
-        //         tracks.items.forEach(function(el){
-        //             tracksArr.push(el.track.uri)
-        //         })
-        //     }
-
-        //     console.log('this is tracksArr', tracks)
-        //     setSongs(tracks)
-        // }
-
-        fetchRoomData()
-        //fetchSongs()
-        console.log('state songs: ', songs)
-
-  }, [])
-
-    const fetchSongs = async () => {
-        let roomData = await getRoomData(props.docId)
-        let tracks = await getPlaylistTracks(roomData)
-        let tracksArr = []
-
-        if (tracks.length){
-            tracks.items.forEach(function(el){
-                tracksArr.push(el.track.uri)
-            })
-        }
-
-        console.log('this is tracksArr', tracksArr)
-        setSongs(tracksArr)
-    }
-
-  async function playSong (){
-
-    await fetchSongs();
-
-    console.log('state songs in play song, ', songs)
-    let song = songs[0]
-    console.log('this is song in playsong', song)
-    let roomData = await getRoomData(props.docId)
-
-    await play(roomData, song)
-
+const dummySongs = [
+  {
+    id: 1,
+    imageUrl:
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT77F0HHO8TgKU4y94P4PkYmgYgZrlmv_PaS_dEGBeetbsp5_7B',
+    name: 'Bye Bye Bye',
+    artist: 'NSYNC',
+    upvote: false,
+    downvote: false
   }
+];
 
-  async function nextSong (){
-
-    let roomData = await getRoomData(props.docId)
-    console.log('you are in nextSong function')
-    await next(roomData)
-    let playing = await currentTrack(roomData)
-    setCurrentSong(playing)
-  }
-
-  async function pauseSong (){
-    let roomData = await getRoomData(props.docId)
-    console.log('you are in pause function')
-    await pause(roomData)
-  }
-
-
-    return (
-    <View style={{display: 'flex', justifyContent: 'center', alignItems: 'center', bottom: 100}}>
-      <TouchableOpacity onPress={() => playSong()}>
-        <View>
-            <Text>Play</Text>
-        </View>
-      </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => pauseSong()}>
+export default function SingleSong() {
+  return (
+    <View style={styles.container}>
+      {/* <StatusBar hidden /> */}
+      {dummySongs.map(song => {
+        return (
+          <View key={song.id}>
+            <Image
+              style={styles.image}
+              resizeMode="cover"
+              source={{
+                uri: song.imageUrl
+              }}
+            />
             <View>
-                <Text>Pause</Text>
+              <Text style={styles.songName}>{song.name}</Text>
+              <Text style={styles.songArtist}>{song.artist}</Text>
             </View>
-        </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => nextSong()}>
-            <View>
-                <Text>Skip</Text>
+            <View style={styles.icons}>
+              <Feather name="pause" size={50} color="#FF5857" />
+              <Feather name="play" size={50} color="#FF5857" />
+              <Feather name="skip-forward" size={50} color="#FF5857" />
             </View>
-        </TouchableOpacity>
+          </View>
+        );
+      })}
     </View>
-    )
-
+  );
 }
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    flexDirection: 'column',
+    backgroundColor: '#F4F8FF',
+    alignItems: 'center'
+  },
+  image: {
+    width: 300,
+    height: 300
+  },
+  songName: {
+    fontWeight: 'bold',
+    fontSize: 25,
+    paddingBottom: 15,
+    paddingTop: 15,
+    alignSelf: 'center'
+  },
+  songArtist: {
+    fontSize: 20,
+    alignSelf: 'center'
+  },
+  icons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 50
+  }
+});

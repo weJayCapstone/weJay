@@ -7,7 +7,7 @@ import {
   View,
   Image
 } from 'react-native';
-import { Card } from 'react-native-elements';
+import { Card, Tile } from 'react-native-elements';
 import { Feather } from '@expo/vector-icons';
 import { play, next, pause } from '../api/spotify'
 import db, { getRoomData } from '../firebase/index'
@@ -19,12 +19,11 @@ export default function PlaylistRoom(props) {
   let [songs, setSongs] = useState([]);
   useEffect(() => {
     let roomRef = db.collection('Rooms').doc(docId);
-    roomRef
-        .collection('Playlist')
-        .onSnapshot((snapshot)=> {
-            const items = snapshot.docs.map(doc => doc.data());
-            setSongs(items);
-        });
+    console.log('playlist title', props);
+    roomRef.collection('Playlist').onSnapshot(snapshot => {
+      const items = snapshot.docs.map(doc => doc.data());
+      setSongs(items);
+    });
   }, []);
 
   async function playSong(songID){
@@ -52,103 +51,119 @@ export default function PlaylistRoom(props) {
   }
 
   return (
-    <ScrollView>
-      {songs &&
-        songs.map(song => (
-          <View key={song.id} >
-            {/* <TouchableOpacity onPress={() => playSong(song.id)}> */}
-            <TouchableOpacity>
-            <Card style={styles.card} >
-              <View style={styles.songContainer}>
-                <Image
-                  style={{ width: 80, height: 80 }}
-                  resizeMode="cover"
-                  source={{
-                    uri: song.imageUrl
-                  }}
-                />
-                <View style={{ paddingLeft: 10 }}>
-                  <Text
-                    style={{
-                      paddingTop: 25,
-                      fontWeight: 'bold',
-                      fontSize: 14
+    <>
+      <ScrollView>
+        <Tile
+          imageSrc={require('../weJayGradient.png')}
+          title="Welcome, DJ"
+          featured
+          caption="Add a Song Below"
+          height={200}
+        />
+        {songs &&
+          songs.map(song => (
+            <View key={song.id} style={styles.background}>
+              <Card style={styles.containerStyle}>
+                <View style={styles.songContainer}>
+                  <Image
+                    style={{ width: 80, height: 80 }}
+                    resizeMode="cover"
+                    source={{
+                      uri: song.imageUrl
                     }}
-                    numberOfLines={1}
-                    ellipsizeMode="tail"
-                  >
-                    {song.name}
-                  </Text>
-                  <Text style={{ fontSize: 12 }}>{song.artist}</Text>
-                  <Text
-                    numberOfLines={1}
-                    ellipsizeMode="tail"
-                    style={{ fontSize: 12 }}
-                  >
-                    {song.albumName}
-                  </Text>
+                  />
+                  <View style={{ paddingLeft: 10 }}>
+                    <Text
+                      ellipsizeMode="tail"
+                      numberOfLines={1}
+                      style={{
+                        paddingTop: 25,
+                        fontWeight: 'bold',
+                        fontSize: 14,
+                        width: 150
+                      }}
+                    >
+                      {song.name}
+                    </Text>
+                    <Text
+                      ellipsizeMode="tail"
+                      numberOfLines={1}
+                      style={{ fontSize: 12, width: 150 }}
+                    >
+                      {song.artist}
+                    </Text>
+                    <Text
+                      ellipsizeMode="tail"
+                      numberOfLines={1}
+                      style={{ fontSize: 12, width: 150 }}
+                    >
+                      {song.albumName}
+                    </Text>
+                  </View>
+                  <View style={styles.feather}>
+                    <Feather name="chevron-up" size={30} color="black" />
+                    <Text
+                      style={{
+                        fontWeight: 'bold',
+                        marginLeft: 'auto',
+                        paddingRight: 10
+                      }}
+                    >
+                      votes
+                    </Text>
+                    <Feather name="chevron-down" size={30} color="black" />
+                  </View>
                 </View>
-                <View style={{ marginLeft: 'auto' }}>
-                  <Feather name="chevron-up" size={30} color="black" />
-                  <Text
-                    style={{
-                      fontWeight: 'bold',
-                      marginLeft: 'auto',
-                      paddingRight: 10
-                    }}
-                  >
-                    votes
-                  </Text>
-                  <Feather name="chevron-down" size={30} color="black" />
-                </View>
-              </View>
-            </Card>
-            </TouchableOpacity>
-          </View>
-        ))}
-
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => props.navigation.navigate('SearchScreen', { docId })}
-      >
-        <Text>Add A Song</Text>
-      </TouchableOpacity>
-
-      {/* <TouchableOpacity
-        style={styles.button}
-        onPress={() => nextSong()}
-      >
-        <Text>Next</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => pauseSong()}
-      >
-        <Text>Pause</Text>
-      </TouchableOpacity> */}
-      <PlaybackClass docId={docId} />
-
-    </ScrollView>
+              </Card>
+            </View>
+          ))}
+      </ScrollView>
+      <View style={styles.buttonBackground}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => props.navigation.navigate('SearchScreen', { docId })}
+        >
+          <Text style={styles.buttonText}>Add A Song</Text>
+        </TouchableOpacity>
+      </View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
+  background: {
+    backgroundColor: '#F4F8FF'
+  },
   songContainer: {
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap'
   },
-  card: {},
+  containerStyle: {
+    display: 'flex',
+    flexDirection: 'row'
+  },
+  feather: { marginLeft: 'auto' },
   button: {
-    padding: 10,
-    borderWidth: 1,
-    borderColor: '#000',
+    padding: 15,
+    backgroundColor: '#FF5857',
     borderRadius: 25,
-    width: 150,
-    marginBottom: 100,
-    marginTop: 25,
-    marginLeft: 10,
+    width: 200,
+    marginBottom: 25,
+    marginTop: 20,
+    margin: 'auto',
+    shadowColor: '#999',
+    shadowOffset: { width: 1, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    alignSelf: 'center'
+  },
+  buttonText: {
+    color: '#FFFFFF',
+    fontSize: 20,
     textAlign: 'center'
   }
+  // buttonBackground: {
+  //   backgroundColor: '#C9DDFF'
+  // }
 });

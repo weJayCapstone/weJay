@@ -1,80 +1,86 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   Text,
-  ScrollView,
   StyleSheet,
   TouchableHighlight,
   TouchableOpacity,
   View,
   StatusBar
 } from 'react-native';
-import { Feather } from '@expo/vector-icons';
-import { getTokens } from '../api/spotify';
 
-export default function HomeScreen(props){
-  const [docId, setDocId] = useState('')
-    return (
-      <View
-        style={styles.container}
-        contentContainerStyle={styles.contentContainer}
-      >
-        <StatusBar barStyle="dark-content" backgroundColor="#FF5857"/>
-        <View style={styles.header}>
-            <Text style={{fontSize:40, fontWeight:'bold'}}>weJay</Text>
-        </View>
-        <View>
-          <TouchableHighlight
-            style={styles.button}
-            onPress={() => props.navigation.navigate('CreatePlaylistForm')}
-          >
-            <Text style={styles.text}>Create Playlist</Text>
-          </TouchableHighlight>
+export default function HomeScreen(props) {
+  const [docId, setDocId] = useState('');
+  return (
+    <View style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#FF5857" />
+      <View style={styles.header}>
+        <Text style={{ fontSize: 40, fontWeight: 'bold', alignSelf: 'center' }}>
+          weJay
+        </Text>
+      </View>
+      <View>
+        <TouchableHighlight
+          style={styles.button}
+          onPress={() =>
+            props.navigation.navigate('CreatePlaylistForm', {
+              otherParam: 'Create a Playlist'
+            })
+          }
+        >
+          <Text style={styles.text}>Create Playlist</Text>
+        </TouchableHighlight>
 
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() =>
+            props.navigation.navigate('JoinPlaylistForm', {
+              docId,
+              setDocId,
+              otherParam: 'Join A Playlist'
+            })
+          }
+        >
+          <Text style={styles.text}>Join Playlist</Text>
+        </TouchableOpacity>
+        {docId ? (
           <TouchableOpacity
             style={styles.button}
-            onPress={() => props.navigation.navigate('JoinPlaylistForm', {docId, setDocId})}
-          >
-            <Text style={styles.text}>Join Playlist</Text>
-          </TouchableOpacity>
-          {docId? <TouchableOpacity
-            style={styles.button}
-            onPress={() => props.navigation.navigate('PlaylistRoom', {docId})}
+            onPress={() => props.navigation.navigate('PlaylistRoom', { docId })}
           >
             <Text style={styles.text}>Go To Playlist</Text>
-          </TouchableOpacity>: null}
+          </TouchableOpacity>
+        ) : null}
 
-          {/* <TouchableHighlight
-            style={styles.button}
-            onPress={() => this.props.navigation.navigate('SearchScreen')}
-          >
-            <Text style={styles.text}>Search Screen Component (Gus)</Text>
-          </TouchableHighlight> */}
-        </View>
+        {/* NEED THIS TO TEST, WILL REMOVE AFTER TESTING */}
+
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => props.navigation.navigate('Playback')}
+        >
+          <Text style={styles.text}>Playback (TEST)</Text>
+        </TouchableOpacity>
       </View>
-    );
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    marginTop: 100,
-    marginLeft: 60,
-    width: 200
+    justifyContent: 'flex-start',
+    flexDirection: 'column',
+    alignItems: 'center',
+    backgroundColor: '#F4F8FF'
+  },
+  header: {
+    paddingBottom: 25,
+    marginTop: 80
   },
   text: {
     fontSize: 24,
     textAlign: 'center',
     fontWeight: 'bold',
-    color: '#fff',
-  },
-  icon: {
-    paddingLeft: 10
-  },
-  iconContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    width: 120
+    color: '#fff'
   },
   button: {
     marginTop: 10,
@@ -85,16 +91,7 @@ const styles = StyleSheet.create({
     elevation: 1,
     borderRadius: 25,
     padding: 10,
-    backgroundColor: '#FF5857'
-  },
-  contentContainer: {
-    justifyContent:'center'
-  },
-  header:{
-      paddingBottom: 25,
-      marginLeft: 40,
+    backgroundColor: '#FF5857',
+    width: 300
   }
-  // contentContainer: {
-  //   paddingTop: 30
-  // },
 });

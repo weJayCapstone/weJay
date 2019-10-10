@@ -9,7 +9,7 @@ import {
   createSwitchNavigator
 } from 'react-navigation';
 import { DrawerActions } from 'react-navigation-drawer';
-import { TouchableOpacity, StyleSheet } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 
 //screens
@@ -20,7 +20,7 @@ import PlaylistRoom from './screens/PlaylistRoom';
 import SearchScreen from './screens/SearchScreen';
 import CleanSearch from './screens/CleanSearch';
 import TestRoom from './screens/TestRoom';
-import SingleSong from './screens/SingleSong';
+import Playback from './screens/Playback';
 require('./secrets');
 
 export default class ReactNav extends Component {
@@ -33,19 +33,28 @@ const DrawerNav = createDrawerNavigator({
   Home: {
     screen: HomeScreen,
     navigationOptions: {
-      title: 'Home'
+      title: 'weJay'
+      // headerStyle: {
+      //   backgroundColor: '#F4F8FF'
+      // }
     }
   },
   CreatePlaylistForm: {
     screen: CreatePlaylistForm,
     navigationOptions: {
-      title: 'Create a Playlist'
+      title: 'Create Playlist'
+      // headerStyle: {
+      //   backgroundColor: '#F4F8FF'
+      // }
     }
   },
   JoinPlaylistForm: {
     screen: JoinPlaylistForm,
     navigationOptions: {
-      title: 'Join a Playlist'
+      title: 'Join Playlist'
+      // headerStyle: {
+      //   backgroundColor: '#F4F8FF'
+      // }
     }
   }
 });
@@ -58,29 +67,44 @@ const StackNav = createStackNavigator({
 
       if (state.isDrawerOpen) {
         return {
-          title: null,
+          // title: 'wejay',
+          // headerStyle: {
+          //   backgroundColor: '#F4F8FF'
+          // },
           headerLeft: (
             <TouchableOpacity
               onPress={() => {
                 navigation.dispatch(DrawerActions.toggleDrawer());
               }}
             >
-              <Feather name="menu" size={32} color="black" />
+              <Feather name="menu" size={32} color="#4392F1" />
             </TouchableOpacity>
           )
         };
       } else {
         return {
-          title: null,
+          // title: 'weJay',
+          // headerStyle: {
+          //   backgroundColor: '#F4F8FF'
+          // },
           headerLeft: (
             <TouchableOpacity
               onPress={() => {
                 navigation.dispatch(DrawerActions.toggleDrawer());
               }}
             >
-              <Feather name="menu" size={32} color="black" />
+              <Feather name="menu" size={32} color="#4392F1" />
             </TouchableOpacity>
           )
+          // headerRight: (
+          //   <TouchableOpacity
+          //     onPress={() => {
+          //       navigation.dispatch('HomeScreen');
+          //     }}
+          //   >
+          //     <Feather name="home" size={32} color="#4392F1" />
+          //   </TouchableOpacity>
+          // )
         };
       }
     }
@@ -88,11 +112,15 @@ const StackNav = createStackNavigator({
   Home: { screen: HomeScreen },
   CreatePlaylistForm: { screen: CreatePlaylistForm },
   JoinPlaylistForm: { screen: JoinPlaylistForm },
-  PlaylistRoom: { screen: PlaylistRoom },
+  PlaylistRoom: {
+    screen: PlaylistRoom
+  },
   SearchScreen: { screen: SearchScreen },
   TestRoom: { screen: TestRoom },
   CleanSearch: { screen: CleanSearch },
-  SingleSong: { screen: SingleSong }
+  Playback: {
+    screen: Playback
+  }
 });
 
 const MainNav = createSwitchNavigator({
