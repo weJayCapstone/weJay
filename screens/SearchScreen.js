@@ -56,6 +56,9 @@ export default function SearchScreen(props) {
           value={search}
           onSubmitEditing={searchHandler}
           returnKeyType="search"
+          inputStyle={{backgroundColor: 'white'}}
+          containerStyle={{backgroundColor: 'white', borderWidth: 1, borderRadius: 40, borderColor: 'black'}}
+          inputContainerStyle={{backgroundColor: 'white', borderColor: 'black'}}
         />
 
         <ScrollView style={{ top: 10 }}>
@@ -88,17 +91,17 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   mainView: {
-    backgroundColor: '#343434',
+    backgroundColor: 'white',
     display: 'flex',
     alignItems: 'stretch'
   },
   card: {
-    backgroundColor: '#E7F9A9',
+    backgroundColor: 'white',
     color: '#E7F9A9',
     display: 'flex',
     flexDirection: 'row',
     borderWidth: 2.5,
-    borderColor: 'white'
+    borderColor: 'grey'
   },
   songInfo: {
     display: 'flex',
@@ -108,6 +111,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   searchBar: {
-    backgroundColor: '#d6c2c0'
+    backgroundColor: 'white'
   }
 });

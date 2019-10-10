@@ -9,7 +9,10 @@ import {
 } from 'react-native';
 import { Card } from 'react-native-elements';
 import { Feather } from '@expo/vector-icons';
-import db from '../firebase/index';
+import { play, next, pause } from '../api/spotify'
+import db, { getRoomData } from '../firebase/index'
+import Playback from './Playback'
+import PlaybackClass from './PlaybackClass'
 
 export default function PlaylistRoom(props) {
   const docId = props.navigation.state.params.docId;
@@ -24,12 +27,38 @@ export default function PlaylistRoom(props) {
         });
   }, []);
 
+  async function playSong(songID){
+
+    console.log('play id', songID)
+
+    let roomData = await getRoomData(docId)
+
+    await play(roomData, songID)
+
+  }
+
+  async function nextSong(){
+
+    let roomData = await getRoomData(docId)
+    console.log('you are in nextSong function')
+    await next(roomData)
+
+  }
+
+  async function pauseSong(){
+    let roomData = await getRoomData(docId)
+    console.log('you are in pause function')
+    await pause(roomData)
+  }
+
   return (
     <ScrollView>
       {songs &&
         songs.map(song => (
-          <View key={song.id}>
-            <Card style={styles.card}>
+          <View key={song.id} >
+            {/* <TouchableOpacity onPress={() => playSong(song.id)}> */}
+            <TouchableOpacity>
+            <Card style={styles.card} >
               <View style={styles.songContainer}>
                 <Image
                   style={{ width: 80, height: 80 }}
@@ -74,6 +103,7 @@ export default function PlaylistRoom(props) {
                 </View>
               </View>
             </Card>
+            </TouchableOpacity>
           </View>
         ))}
 
@@ -83,6 +113,22 @@ export default function PlaylistRoom(props) {
       >
         <Text>Add A Song</Text>
       </TouchableOpacity>
+
+      {/* <TouchableOpacity
+        style={styles.button}
+        onPress={() => nextSong()}
+      >
+        <Text>Next</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => pauseSong()}
+      >
+        <Text>Pause</Text>
+      </TouchableOpacity> */}
+      <PlaybackClass docId={docId} />
+
     </ScrollView>
   );
 }

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Card, Image, ListItem } from 'react-native-elements';
 import { Feather } from '@expo/vector-icons';
+import { play } from '../api/spotify'
 
 //THIS COMPONENT IS HARD-CODED
 const dummySongs = [
@@ -40,8 +41,15 @@ export default function SingleSong() {
     }
   }
 
+  async function playSong(roomData, songData){
+
+    await play(roomData, songData)
+
+  }
+  
+
   return (
-    <Card style={styles.song}>
+    <Card style={styles.song} onPress={playSong}>
       {dummySongs.map(song => {
         return (
           <View key={song.id} style={styles.songContainer}>

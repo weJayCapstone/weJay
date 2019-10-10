@@ -15,7 +15,9 @@ export async function logIn() {
       'playlist-modify-private',
       'user-modify-playback-state',
       'user-read-private',
-      'user-read-email'
+      'user-read-email',
+      'user-read-currently-playing',
+      'user-read-playback-state'
     ];
     const scopes = encodeURIComponent(scopesArr.join(' '));
 
@@ -96,6 +98,7 @@ export const makeNewPlaylist = async (accessToken, playListName) => {
           Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json'
         },
+
         body: JSON.stringify({
           name: playListName,
           public: true,
@@ -206,4 +209,159 @@ export async function getUserData(key) {
   } catch (e) {
     console.log(e);
   }
+}
+
+export const play = async(roomData, songID) => {
+
+    try {
+
+        const start = await fetch('https://api.spotify.com/v1/me/player/play', {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${roomData.accessToken}`,
+                'Content-Type': 'application/json'
+            },
+            // body: JSON.stringify({uris: [`spotify:track:${songID}`]})
+            body: JSON.stringify({uris: [`${songID}`]})
+        })
+
+        // const startJSON = await start.json()
+        // console.log('START JSON :', startJSON)
+
+    }
+    catch (e) {
+        console.log(e)
+    }
+
+}
+
+export const resume = async(roomData, songID, progress) => {
+
+    try {
+
+        const start = await fetch('https://api.spotify.com/v1/me/player/play', {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${roomData.accessToken}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({uris: [`${songID}`], position_ms: `${progress}`})
+        })
+
+    }
+    catch (e) {
+        console.log(e)
+    }
+
+}
+
+export const next = async (roomData) => {
+
+    try {
+        console.log('are you getting to next function?')
+        const next = await fetch('https://api.spotify.com/v1/me/player/next', {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${roomData.accessToken}`
+            }
+        })
+
+    }
+    catch (e) {
+        console.log(e)
+    }
+}
+
+
+export const pause = async (roomData) => {
+
+    try {
+        await fetch('https://api.spotify.com/v1/me/player/pause', {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${roomData.accessToken}`
+            }
+        })
+
+    }
+    catch (e) {
+        console.log(e)
+    }
+}
+
+export const currentTrack = async (roomData) => {
+
+    try {
+      let track = await fetch('https://api.spotify.com/v1/me/player/currently-playing', {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${roomData.accessToken}`
+            }
+        })
+
+        let trackJSON = await track.json()
+        //console.log(trackJSON)
+        return trackJSON
+    }
+    catch (e){
+        console.log(e)
+    }
+
+}
+
+export const getPlaylistTracks = async (roomData) => {
+
+    try {
+
+        let tracks = await fetch(`https://api.spotify.com/v1/playlists/${roomData.playlistID}/tracks`, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${roomData.accessToken}`
+            }
+        })
+
+        let tracksJSON = await tracks.json()
+        
+        let arr = tracksJSON.items
+
+        let songs = arr.map(function(el){
+            // console.log('this is el in map', el)
+            return el.track.uri
+        });
+
+        console.log('these are mapped songs', songs)
+
+        return songs
+
+    }
+    catch (e){
+        console.log(e)
+    }
+}
+
+
+export const shiftPlaylist = async (roomData, currentSong) => {
+
+    try {
+        console.log('current song in delete', currentSong)
+        let deleted = await fetch(`https://api.spotify.com/v1/playlists/${roomData.playlistID}/tracks`, {
+            method: 'DELETE',
+            headers: {
+                Authorization: `Bearer ${roomData.accessToken}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                tracks: [{uri: currentSong, position: [0]}]
+            })
+            
+        })
+
+        let deletedJSON = await deleted.json()
+        console.log('this is deleted', deletedJSON)
+
+    }
+    catch (e) {
+        console.log(e)
+    }
+
 }
