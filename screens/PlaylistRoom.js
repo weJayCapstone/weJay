@@ -5,125 +5,62 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Image
+  Image,
+  FlatList
 } from 'react-native';
 import { Card, Tile } from 'react-native-elements';
 import { Feather } from '@expo/vector-icons';
-import { play, next, pause } from '../api/spotify'
 import db, { getRoomData } from '../firebase/index'
-import Playback from './Playback'
 import PlaybackClass from './PlaybackClass'
+import SingleSong from './SingleSong'
 
 export default function PlaylistRoom(props) {
   const docId = props.navigation.state.params.docId;
+  const userName = props.navigation.state.params.userName;
   let [songs, setSongs] = useState([]);
+  let [loading, setLoading] = useState(true);
+//   let [downvote, setDownvote] = useState(false);
   useEffect(() => {
     let roomRef = db.collection('Rooms').doc(docId);
-    console.log('playlist title', props);
-    roomRef.collection('Playlist').onSnapshot(snapshot => {
-      const items = snapshot.docs.map(doc => doc.data());
-      setSongs(items);
-    });
-  }, []);
-
-  async function playSong(songID){
-
-    console.log('play id', songID)
-
-    let roomData = await getRoomData(docId)
-
-    await play(roomData, songID)
-
-  }
-
-  async function nextSong(){
-
-    let roomData = await getRoomData(docId)
-    console.log('you are in nextSong function')
-    await next(roomData)
-
-  }
-
-  async function pauseSong(){
-    let roomData = await getRoomData(docId)
-    console.log('you are in pause function')
-    await pause(roomData)
-  }
-
+    roomRef
+        .collection('Playlist')
+        .orderBy('timeAdded')
+        //.orderBy('votes', 'desc')
+        .onSnapshot((snapshot)=> {
+            const songArr = snapshot.docs.map(doc => doc.data());
+            console.log('im in the snapshot')
+            snapshot.forEach(doc => 
+                roomRef.collection('Playlist').doc(doc.id).set({
+                users:{
+                    [userName]:null
+                }
+              }, {merge: true}));
+            setLoading(false);
+            setSongs(songArr);
+        });
+  }, [docId]);
   return (
     <>
-      <ScrollView>
+        <ScrollView>
         <Tile
           imageSrc={require('../weJayGradient.png')}
           title="Welcome, DJ"
           featured
           caption="Add a Song Below"
           height={200}
-        />
-        {songs &&
-          songs.map(song => (
-            <View key={song.id} style={styles.background}>
-              <Card style={styles.containerStyle}>
-                <View style={styles.songContainer}>
-                  <Image
-                    style={{ width: 80, height: 80 }}
-                    resizeMode="cover"
-                    source={{
-                      uri: song.imageUrl
-                    }}
-                  />
-                  <View style={{ paddingLeft: 10 }}>
-                    <Text
-                      ellipsizeMode="tail"
-                      numberOfLines={1}
-                      style={{
-                        paddingTop: 25,
-                        fontWeight: 'bold',
-                        fontSize: 14,
-                        width: 150
-                      }}
-                    >
-                      {song.name}
-                    </Text>
-                    <Text
-                      ellipsizeMode="tail"
-                      numberOfLines={1}
-                      style={{ fontSize: 12, width: 150 }}
-                    >
-                      {song.artist}
-                    </Text>
-                    <Text
-                      ellipsizeMode="tail"
-                      numberOfLines={1}
-                      style={{ fontSize: 12, width: 150 }}
-                    >
-                      {song.albumName}
-                    </Text>
-                  </View>
-                  <View style={styles.feather}>
-                    <Feather name="chevron-up" size={30} color="black" />
-                    <Text
-                      style={{
-                        fontWeight: 'bold',
-                        marginLeft: 'auto',
-                        paddingRight: 10
-                      }}
-                    >
-                      votes
-                    </Text>
-                    <Feather name="chevron-down" size={30} color="black" />
-                  </View>
-                </View>
-              </Card>
-            </View>
-          ))}
-      </ScrollView>
+          />
+          <FlatList
+            data={songs}
+            renderItem={({ item }) => <SingleSong song={item} docId={docId} userName ={userName}/>}
+            keyExtractor={item => item.id}
+          />
+        </ScrollView>
       <View style={styles.buttonBackground}>
         <TouchableOpacity
-          style={styles.button}
-          onPress={() => props.navigation.navigate('SearchScreen', { docId })}
-        >
-          <Text style={styles.buttonText}>Add A Song</Text>
+        style={styles.button}
+        onPress={() => props.navigation.navigate('SearchScreen', { docId, userName })}
+      >
+        <Text style={styles.buttonText}>Add A Song</Text>
         </TouchableOpacity>
       </View>
       <View>
@@ -165,6 +102,12 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 20,
     textAlign: 'center'
+  },
+  vote: {
+      color: '#000'
+  },
+  voteHighlight: {
+      color:'#FF5857'
   }
   // buttonBackground: {
   //   backgroundColor: '#C9DDFF'

@@ -15,7 +15,7 @@ export default function SearchScreen(props) {
   let [results, setResults] = useState({});
   let [docId, setDocId] = useState(props.navigation.state.params.docId);
   let [accessToken, setAccessToken] = useState('');
-
+  const userName = props.navigation.state.params.userName;
   const accountInitialize = async () => {
     try {
       let result = await refreshRoomToken(docId);
@@ -65,7 +65,7 @@ export default function SearchScreen(props) {
           {results.tracks ? (
             <FlatList
               data={results.tracks.items}
-              renderItem={({ item }) => <SongCard item={item} docId={docId} />}
+              renderItem={({ item }) => <SongCard item={item} docId={docId} userName ={userName}/>}
               keyExtractor={item => item.id}
             />
           ) : (

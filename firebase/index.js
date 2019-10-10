@@ -57,7 +57,6 @@ export async function enterRoom(passcode, roomName, userName) {
       return 'Invalid credentials';
     } else {
       query.forEach(doc => {
-        roomRef.doc(doc.id).update({ userName });
         result = doc.id;
       });
       console.log('You are in the room!');
@@ -119,7 +118,9 @@ export async function getPlaylist(roomId) {
     const playlist = db
       .collection('Rooms')
       .doc(roomId)
-      .collection('Playlist');
+      .collection('Playlist')
+      .orderBy('timeAdded')
+      .orderBy('votes', 'desc');
     let allSongs = await playlist.get();
     if (allSongs.empty) {
       return songArr;
@@ -133,4 +134,4 @@ export async function getPlaylist(roomId) {
   }
 }
 
-//join playlist route given passcode, roomname,username
+//add users to playlist
