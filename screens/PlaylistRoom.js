@@ -10,7 +10,8 @@ import {
 } from 'react-native';
 import { Card, Tile } from 'react-native-elements';
 import { Feather } from '@expo/vector-icons';
-import db from '../firebase/index';
+import db, { getRoomData } from '../firebase/index'
+import PlaybackClass from './PlaybackClass'
 import SingleSong from './SingleSong'
 
 export default function PlaylistRoom(props) {
@@ -25,16 +26,17 @@ export default function PlaylistRoom(props) {
         .collection('Playlist')
         .orderBy('timeAdded')
         //.orderBy('votes', 'desc')
-        .onSnapshot((snapshot)=> {
+        .onSnapshot((snapshot) => {
             const songArr = snapshot.docs.map(doc => doc.data());
             console.log('im in the snapshot')
-            snapshot.forEach(doc => 
+            snapshot.forEach(doc =>
                 roomRef.collection('Playlist').doc(doc.id).set({
-                users:{
-                    [userName]:null
+                users: {
+                    [userName]: null
                 }
               }, {merge: true}));
             setLoading(false);
+            console.log('song arr in pl room', songArr)
             setSongs(songArr);
         });
   }, [docId]);
@@ -48,11 +50,13 @@ export default function PlaylistRoom(props) {
           caption="Add a Song Below"
           height={200}
           />
+          {songs ? (
           <FlatList
             data={songs}
-            renderItem={({ item }) => <SingleSong song={item} docId={docId} userName ={userName}/>}
+            renderItem={({ item }) => <SingleSong song={item} docId={docId} userName ={userName} />}
             keyExtractor={item => item.id}
           />
+          ) : null }
         </ScrollView>
       <View style={styles.buttonBackground}>
         <TouchableOpacity
@@ -60,7 +64,10 @@ export default function PlaylistRoom(props) {
         onPress={() => props.navigation.navigate('SearchScreen', { docId, userName })}
       >
         <Text style={styles.buttonText}>Add A Song</Text>
-      </TouchableOpacity>
+        </TouchableOpacity>
+      </View>
+      <View style={{top: 75}}>
+        <PlaybackClass docId={docId} />
       </View>
     </>
   );

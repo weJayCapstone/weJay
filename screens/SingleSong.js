@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Card, Image, ListItem } from 'react-native-elements';
 import { Feather } from '@expo/vector-icons';
+import { play } from '../api/spotify'
 import db from '../firebase/index.js'
 
 
@@ -11,13 +12,14 @@ export default function SingleSong(props) {
   const userName = props.userName;
   const docId = props.docId;
   const handleVote = (vote) => {
-    if(vote === 'up'){
+    if (vote === 'up'){
         let updateVote = {}
         updateVote[`users.${userName}`] = 'up'
-        let songRef = db.collection('Rooms').doc(docId).collection('Playlist').doc('kOxjtrsCEz9Cu30AAhOA');
-        songRef.update({['users.'+userName]:'up'});
+        let songRef = db.collection('Rooms').doc(docId).collection('Playlist')
+        .doc('kOxjtrsCEz9Cu30AAhOA');
+        songRef.update({['users.' + userName]: 'up'});
         console.log(vote);
-    }else {
+    } else {
         console.log(vote)
     }
   }
@@ -79,7 +81,7 @@ export default function SingleSong(props) {
         </View>
       </View>
     </Card>
-  </View>
+    </View>
 
     ///////////////////
     // <Card style={styles.song}>
