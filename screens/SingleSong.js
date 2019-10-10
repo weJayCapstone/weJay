@@ -22,63 +22,159 @@ export default function SingleSong(props) {
     }
   }
   return (
-    <Card style={styles.song}>
-          <View key={song.id} style={styles.songContainer}>
-            <Image
-              style={{ width: 80, height: 80 }}
-              resizeMode="cover"
-              source={{
-                uri: song.imageUrl
-              }}
-            />
-            <View style={{ paddingLeft: 10 }}>
-              <Text
-                style={{
-                  paddingTop: 25,
-                  fontWeight: 'bold',
-                  fontSize: 14
-                }}
-              >
-                {song.name}
-              </Text>
-              <Text style={{ fontSize: 12 }}>{song.artist}</Text>
-            </View>
-            <View style={{ marginLeft: 'auto' }}>
-            <TouchableOpacity
+    <View key={song.id} style={styles.background}>
+    <Card style={styles.containerStyle}>
+      <View style={styles.songContainer}>
+        <Image
+          style={{ width: 80, height: 80 }}
+          resizeMode="cover"
+          source={{
+            uri: song.imageUrl
+          }}
+        />
+        <View style={{ paddingLeft: 10 }}>
+          <Text
+            ellipsizeMode="tail"
+            numberOfLines={1}
+            style={{
+              paddingTop: 25,
+              fontWeight: 'bold',
+              fontSize: 14,
+              width: 150
+            }}
+          >
+            {song.name}
+          </Text>
+          <Text
+            ellipsizeMode="tail"
+            numberOfLines={1}
+            style={{ fontSize: 12, width: 150 }}
+          >
+            {song.artist}
+          </Text>
+          <Text
+            ellipsizeMode="tail"
+            numberOfLines={1}
+            style={{ fontSize: 12, width: 150 }}
+          >
+            {song.albumName}
+          </Text>
+        </View>
+        <View style={styles.feather}>
+        <TouchableOpacity
                onPress={() => handleVote('up')}
             >
-              <Feather
-                name="chevron-up"
-                size={30}
-                color="black"
-                
-              />
-            </TouchableOpacity>
-              <Text
-                style={{
-                  fontWeight: 'bold',
-                  marginLeft: 'auto',
-                  paddingRight: 10
-                }}
-              >
-                {song.votes}
-              </Text>
-              <Feather
-                name="chevron-down"
-                size={30}
-                color="black"
-                // onPress={() => handleVote}
-              />
-            </View>
-          </View>
+          <Feather name="chevron-up" size={30} color="black" />
+        </TouchableOpacity>
+          <Text
+            style={{
+              fontWeight: 'bold',
+              marginLeft: 'auto',
+              paddingRight: 10
+            }}
+          >
+            votes
+          </Text>
+          <Feather name="chevron-down" size={30} color="black" />
+        </View>
+      </View>
     </Card>
+  </View>
+
+    ///////////////////
+    // <Card style={styles.song}>
+    //       <View key={song.id} style={styles.songContainer}>
+    //         <Image
+    //           style={{ width: 80, height: 80 }}
+    //           resizeMode="cover"
+    //           source={{
+    //             uri: song.imageUrl
+    //           }}
+    //         />
+    //         <View style={{ paddingLeft: 10 }}>
+    //           <Text
+    //             style={{
+    //               paddingTop: 25,
+    //               fontWeight: 'bold',
+    //               fontSize: 14
+    //             }}
+    //           >
+    //             {song.name}
+    //           </Text>
+    //           <Text style={{ fontSize: 12 }}>{song.artist}</Text>
+    //         </View>
+    //         <View style={{ marginLeft: 'auto' }}>
+    //         <TouchableOpacity
+    //            onPress={() => handleVote('up')}
+    //         >
+    //           <Feather
+    //             name="chevron-up"
+    //             size={30}
+    //             color="black"
+                
+    //           />
+    //         </TouchableOpacity>
+    //           <Text
+    //             style={{
+    //               fontWeight: 'bold',
+    //               marginLeft: 'auto',
+    //               paddingRight: 10
+    //             }}
+    //           >
+    //             {song.votes}
+    //           </Text>
+    //           <Feather
+    //             name="chevron-down"
+    //             size={30}
+    //             color="black"
+    //             // onPress={() => handleVote}
+    //           />
+    //         </View>
+    //       </View>
+    // </Card>
   );
 }
 
 const styles = StyleSheet.create({
-  songContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    marginBottom: 10
-  }
-});
+    background: {
+      backgroundColor: '#F4F8FF'
+    },
+    songContainer: {
+      display: 'flex',
+      flexDirection: 'row',
+      flexWrap: 'wrap'
+    },
+    containerStyle: {
+      display: 'flex',
+      flexDirection: 'row'
+    },
+    feather: { marginLeft: 'auto' },
+    button: {
+      padding: 15,
+      backgroundColor: '#FF5857',
+      borderRadius: 25,
+      width: 200,
+      marginBottom: 25,
+      marginTop: 20,
+      margin: 'auto',
+      shadowColor: '#999',
+      shadowOffset: { width: 1, height: 2 },
+      shadowOpacity: 0.5,
+      shadowRadius: 2,
+      alignSelf: 'center'
+    },
+    buttonText: {
+      color: '#FFFFFF',
+      fontSize: 20,
+      textAlign: 'center'
+    },
+    vote: {
+        color: '#000'
+    },
+    voteHighlight: {
+        color:'#FF5857'
+    }
+    // buttonBackground: {
+    //   backgroundColor: '#C9DDFF'
+    // }
+  });

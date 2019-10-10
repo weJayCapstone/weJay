@@ -40,83 +40,26 @@ export default function PlaylistRoom(props) {
   }, [docId]);
   return (
     <>
-            {/* <FlatList
-              data={songs}
-              renderItem={({ item }) => <SingleSong song={item} docId={docId} userName ={userName}/>}
-              keyExtractor={item => item.id}
-            /> */}
-      <ScrollView>
+        <ScrollView>
         <Tile
           imageSrc={require('../weJayGradient.png')}
           title="Welcome, DJ"
           featured
           caption="Add a Song Below"
           height={200}
-        />
-        {songs &&
-          songs.map(song => (
-            <View key={song.id} style={styles.background}>
-              <Card style={styles.containerStyle}>
-                <View style={styles.songContainer}>
-                  <Image
-                    style={{ width: 80, height: 80 }}
-                    resizeMode="cover"
-                    source={{
-                      uri: song.imageUrl
-                    }}
-                  />
-                  <View style={{ paddingLeft: 10 }}>
-                    <Text
-                      ellipsizeMode="tail"
-                      numberOfLines={1}
-                      style={{
-                        paddingTop: 25,
-                        fontWeight: 'bold',
-                        fontSize: 14,
-                        width: 150
-                      }}
-                    >
-                      {song.name}
-                    </Text>
-                    <Text
-                      ellipsizeMode="tail"
-                      numberOfLines={1}
-                      style={{ fontSize: 12, width: 150 }}
-                    >
-                      {song.artist}
-                    </Text>
-                    <Text
-                      ellipsizeMode="tail"
-                      numberOfLines={1}
-                      style={{ fontSize: 12, width: 150 }}
-                    >
-                      {song.albumName}
-                    </Text>
-                  </View>
-                  <View style={styles.feather}>
-                    <Feather name="chevron-up" size={30} color="black" />
-                    <Text
-                      style={{
-                        fontWeight: 'bold',
-                        marginLeft: 'auto',
-                        paddingRight: 10
-                      }}
-                    >
-                      votes
-                    </Text>
-                    <Feather name="chevron-down" size={30} color="black" />
-                  </View>
-                </View>
-              </Card>
-            </View>
-          ))}
-      </ScrollView>
+          />
+          <FlatList
+            data={songs}
+            renderItem={({ item }) => <SingleSong song={item} docId={docId} userName ={userName}/>}
+            keyExtractor={item => item.id}
+          />
+        </ScrollView>
       <View style={styles.buttonBackground}>
         <TouchableOpacity
         style={styles.button}
         onPress={() => props.navigation.navigate('SearchScreen', { docId, userName })}
       >
-        <Text>Add A Song</Text>
+        <Text style={styles.buttonText}>Add A Song</Text>
       </TouchableOpacity>
       </View>
     </>
