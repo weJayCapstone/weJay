@@ -126,6 +126,9 @@ export default function PlaylistRoom(props) {
           <Text style={styles.buttonText}>Add A Song</Text>
         </TouchableOpacity>
       </View>
+      <View>
+        <PlaybackClass docId={docId} />
+      </View>
     </>
   );
 }
