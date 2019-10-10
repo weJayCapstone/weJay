@@ -1,103 +1,180 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Card, Image, ListItem } from 'react-native-elements';
 import { Feather } from '@expo/vector-icons';
+import db from '../firebase/index.js'
 
-//THIS COMPONENT IS HARD-CODED
-const dummySongs = [
-  {
-    id: 1,
-    imgUrl:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT77F0HHO8TgKU4y94P4PkYmgYgZrlmv_PaS_dEGBeetbsp5_7B',
-    title: 'Bye Bye Bye',
-    artist: 'NSYNC',
-    upvote: false,
-    downvote: false
-  },
-  {
-    id: 2,
-    imgUrl:
-      'https://images-na.ssl-images-amazon.com/images/I/71F3ZjInajL._SL1500_.jpg',
-    title: 'Oops! ...I Did It Again',
-    artist: 'Britney Spears',
-    upvote: false,
-    downvote: false
-  }
-];
 
-export default function SingleSong() {
-  const [songs, setSongs] = useState(dummySongs);
 
-  function handleUpVote(evt) {
-    if (evt) {
-      dummySongs.upvote = true;
+export default function SingleSong(props) {
+  const song = props.song;
+  const userName = props.userName;
+  const docId = props.docId;
+  const handleVote = (vote) => {
+    if(vote === 'up'){
+        let updateVote = {}
+        updateVote[`users.${userName}`] = 'up'
+        let songRef = db.collection('Rooms').doc(docId).collection('Playlist').doc('kOxjtrsCEz9Cu30AAhOA');
+        songRef.update({['users.'+userName]:'up'});
+        console.log(vote);
+    }else {
+        console.log(vote)
     }
   }
-
-  function handleDownVote(evt) {
-    if (evt) {
-      dummySongs.downvote = true;
-    }
-  }
-
   return (
-    <Card style={styles.song}>
-      {dummySongs.map(song => {
-        return (
-          <View key={song.id} style={styles.songContainer}>
-            <Image
-              style={{ width: 80, height: 80 }}
-              resizeMode="cover"
-              source={{
-                uri: song.imgUrl
-              }}
-            />
-            <View style={{ paddingLeft: 10 }}>
-              <Text
-                style={{
-                  paddingTop: 25,
-                  fontWeight: 'bold',
-                  fontSize: 14
-                }}
-              >
-                {song.title}
-              </Text>
-              <Text style={{ fontSize: 12 }}>{song.artist}</Text>
-            </View>
-            <View style={{ marginLeft: 'auto' }}>
-              <Feather
-                name="chevron-up"
-                size={30}
-                color="black"
-                onPress={() => handleUpVote}
-              />
-              <Text
-                style={{
-                  fontWeight: 'bold',
-                  marginLeft: 'auto',
-                  paddingRight: 10
-                }}
-              >
-                {5}
-              </Text>
-              <Feather
-                name="chevron-down"
-                size={30}
-                color="black"
-                onPress={() => handleDownVote}
-              />
-            </View>
-          </View>
-        );
-      })}
+    <View key={song.id} style={styles.background}>
+    <Card style={styles.containerStyle}>
+      <View style={styles.songContainer}>
+        <Image
+          style={{ width: 80, height: 80 }}
+          resizeMode="cover"
+          source={{
+            uri: song.imageUrl
+          }}
+        />
+        <View style={{ paddingLeft: 10 }}>
+          <Text
+            ellipsizeMode="tail"
+            numberOfLines={1}
+            style={{
+              paddingTop: 25,
+              fontWeight: 'bold',
+              fontSize: 14,
+              width: 150
+            }}
+          >
+            {song.name}
+          </Text>
+          <Text
+            ellipsizeMode="tail"
+            numberOfLines={1}
+            style={{ fontSize: 12, width: 150 }}
+          >
+            {song.artist}
+          </Text>
+          <Text
+            ellipsizeMode="tail"
+            numberOfLines={1}
+            style={{ fontSize: 12, width: 150 }}
+          >
+            {song.albumName}
+          </Text>
+        </View>
+        <View style={styles.feather}>
+        <TouchableOpacity
+               onPress={() => handleVote('up')}
+            >
+          <Feather name="chevron-up" size={30} color="black" />
+        </TouchableOpacity>
+          <Text
+            style={{
+              fontWeight: 'bold',
+              marginLeft: 'auto',
+              paddingRight: 10
+            }}
+          >
+            votes
+          </Text>
+          <Feather name="chevron-down" size={30} color="black" />
+        </View>
+      </View>
     </Card>
+  </View>
+
+    ///////////////////
+    // <Card style={styles.song}>
+    //       <View key={song.id} style={styles.songContainer}>
+    //         <Image
+    //           style={{ width: 80, height: 80 }}
+    //           resizeMode="cover"
+    //           source={{
+    //             uri: song.imageUrl
+    //           }}
+    //         />
+    //         <View style={{ paddingLeft: 10 }}>
+    //           <Text
+    //             style={{
+    //               paddingTop: 25,
+    //               fontWeight: 'bold',
+    //               fontSize: 14
+    //             }}
+    //           >
+    //             {song.name}
+    //           </Text>
+    //           <Text style={{ fontSize: 12 }}>{song.artist}</Text>
+    //         </View>
+    //         <View style={{ marginLeft: 'auto' }}>
+    //         <TouchableOpacity
+    //            onPress={() => handleVote('up')}
+    //         >
+    //           <Feather
+    //             name="chevron-up"
+    //             size={30}
+    //             color="black"
+                
+    //           />
+    //         </TouchableOpacity>
+    //           <Text
+    //             style={{
+    //               fontWeight: 'bold',
+    //               marginLeft: 'auto',
+    //               paddingRight: 10
+    //             }}
+    //           >
+    //             {song.votes}
+    //           </Text>
+    //           <Feather
+    //             name="chevron-down"
+    //             size={30}
+    //             color="black"
+    //             // onPress={() => handleVote}
+    //           />
+    //         </View>
+    //       </View>
+    // </Card>
   );
 }
 
 const styles = StyleSheet.create({
-  songContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    marginBottom: 10
-  }
-});
+    background: {
+      backgroundColor: '#F4F8FF'
+    },
+    songContainer: {
+      display: 'flex',
+      flexDirection: 'row',
+      flexWrap: 'wrap'
+    },
+    containerStyle: {
+      display: 'flex',
+      flexDirection: 'row'
+    },
+    feather: { marginLeft: 'auto' },
+    button: {
+      padding: 15,
+      backgroundColor: '#FF5857',
+      borderRadius: 25,
+      width: 200,
+      marginBottom: 25,
+      marginTop: 20,
+      margin: 'auto',
+      shadowColor: '#999',
+      shadowOffset: { width: 1, height: 2 },
+      shadowOpacity: 0.5,
+      shadowRadius: 2,
+      alignSelf: 'center'
+    },
+    buttonText: {
+      color: '#FFFFFF',
+      fontSize: 20,
+      textAlign: 'center'
+    },
+    vote: {
+        color: '#000'
+    },
+    voteHighlight: {
+        color:'#FF5857'
+    }
+    // buttonBackground: {
+    //   backgroundColor: '#C9DDFF'
+    // }
+  });

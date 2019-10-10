@@ -106,9 +106,7 @@ export const makeNewPlaylist = async (accessToken, playListName) => {
     const playlistJSON = await playlist.json();
     const playlistID = playlistJSON.id;
     //console.log('this is playlist, ', playlistJSON)
-    console.log('this is playlistID', playlistID);
     console.log('Youve made a playlist!');
-    console.log('playlist', playlistJSON);
     return playlistID;
   } catch (e) {
     console.log(e);
@@ -126,7 +124,11 @@ export const addSong = async(roomData, songData) => {
             body: JSON.stringify({uris: [songData.uri]})
         })
         const songJSON = await song.json();
-        console.log('this is songJSON ', songJSON)
+        if(songJSON.snapshot_id){
+            console.log('You added a song!')
+        }else {
+            console.log('something went wrong in Spotify :(');
+        }
         //if this succeeds add to database
     } catch (err){
         console.log(err)

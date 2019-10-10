@@ -10,6 +10,7 @@ import {
 
 export default function HomeScreen(props) {
   const [docId, setDocId] = useState('');
+  const [userName, setUserName] = useState('');
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#FF5857" />
@@ -23,7 +24,8 @@ export default function HomeScreen(props) {
           style={styles.button}
           onPress={() =>
             props.navigation.navigate('CreatePlaylistForm', {
-              otherParam: 'Create a Playlist'
+              otherParam: 'Create a Playlist',
+              docId, setDocId, userName,setUserName
             })
           }
         >
@@ -36,20 +38,21 @@ export default function HomeScreen(props) {
             props.navigation.navigate('JoinPlaylistForm', {
               docId,
               setDocId,
+              userName,
+              setUserName,
               otherParam: 'Join A Playlist'
             })
           }
         >
           <Text style={styles.text}>Join Playlist</Text>
         </TouchableOpacity>
-        {docId ? (
-          <TouchableOpacity
+          { docId ?( <TouchableOpacity
             style={styles.button}
-            onPress={() => props.navigation.navigate('PlaylistRoom', { docId })}
+            onPress={() => props.navigation.navigate('PlaylistRoom', {docId, setDocId, userName,setUserName})}
           >
             <Text style={styles.text}>Go To Playlist</Text>
-          </TouchableOpacity>
-        ) : null}
+          </TouchableOpacity>)
+         : null}
 
         {/* NEED THIS TO TEST, WILL REMOVE AFTER TESTING */}
 
