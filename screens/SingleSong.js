@@ -2,84 +2,85 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Card, Image, ListItem } from 'react-native-elements';
 import { Feather } from '@expo/vector-icons';
-import db from '../firebase/index.js'
-
-
+import db from '../firebase/index.js';
 
 export default function SingleSong(props) {
   const song = props.song;
   const userName = props.userName;
   const docId = props.docId;
-  const handleVote = (vote) => {
-    if(vote === 'up'){
-        let updateVote = {}
-        updateVote[`users.${userName}`] = 'up'
-        let songRef = db.collection('Rooms').doc(docId).collection('Playlist').doc('kOxjtrsCEz9Cu30AAhOA');
-        songRef.update({['users.'+userName]:'up'});
-        console.log(vote);
-    }else {
-        console.log(vote)
+  const handleVote = vote => {
+    if (vote === 'up') {
+      let updateVote = {};
+      updateVote[`users.${userName}`] = 'up';
+      let songRef = db
+        .collection('Rooms')
+        .doc(docId)
+        .collection('Playlist')
+        .doc('kOxjtrsCEz9Cu30AAhOA');
+      songRef.update({ ['users.' + userName]: 'up' });
+      console.log(vote);
+    } else {
+      console.log(vote);
     }
-  }
+  };
+  console.log('song', song);
   return (
     <View key={song.id} style={styles.background}>
-    <Card style={styles.containerStyle}>
-      <View style={styles.songContainer}>
-        <Image
-          style={{ width: 80, height: 80 }}
-          resizeMode="cover"
-          source={{
-            uri: song.imageUrl
-          }}
-        />
-        <View style={{ paddingLeft: 10 }}>
-          <Text
-            ellipsizeMode="tail"
-            numberOfLines={1}
-            style={{
-              paddingTop: 25,
-              fontWeight: 'bold',
-              fontSize: 14,
-              width: 150
+      <Card style={styles.containerStyle}>
+        <View style={styles.songContainer}>
+          <Image
+            style={{ width: 80, height: 80 }}
+            resizeMode="cover"
+            source={{
+              uri: song.imageUrl
             }}
-          >
-            {song.name}
-          </Text>
-          <Text
-            ellipsizeMode="tail"
-            numberOfLines={1}
-            style={{ fontSize: 12, width: 150 }}
-          >
-            {song.artist}
-          </Text>
-          <Text
-            ellipsizeMode="tail"
-            numberOfLines={1}
-            style={{ fontSize: 12, width: 150 }}
-          >
-            {song.albumName}
-          </Text>
-        </View>
-        <View style={styles.feather}>
-        <TouchableOpacity
-               onPress={() => handleVote('up')}
+          />
+          <View style={{ paddingLeft: 10 }}>
+            <Text
+              ellipsizeMode="tail"
+              numberOfLines={1}
+              style={{
+                paddingTop: 25,
+                fontWeight: 'bold',
+                fontSize: 14,
+                width: 150
+              }}
             >
-          <Feather name="chevron-up" size={30} color="black" />
-        </TouchableOpacity>
-          <Text
-            style={{
-              fontWeight: 'bold',
-              marginLeft: 'auto',
-              paddingRight: 10
-            }}
-          >
-            votes
-          </Text>
-          <Feather name="chevron-down" size={30} color="black" />
+              {song.name}
+            </Text>
+            <Text
+              ellipsizeMode="tail"
+              numberOfLines={1}
+              style={{ fontSize: 12, width: 150 }}
+            >
+              {song.artist}
+            </Text>
+            <Text
+              ellipsizeMode="tail"
+              numberOfLines={1}
+              style={{ fontSize: 12, width: 150 }}
+            >
+              {song.albumName}
+            </Text>
+          </View>
+          <View style={styles.feather}>
+            <TouchableOpacity onPress={() => handleVote('up')}>
+              <Feather name="chevron-up" size={30} color="black" />
+            </TouchableOpacity>
+            <Text
+              style={{
+                fontWeight: 'bold',
+                marginLeft: 'auto',
+                paddingRight: 10
+              }}
+            >
+              votes
+            </Text>
+            <Feather name="chevron-down" size={30} color="black" />
+          </View>
         </View>
-      </View>
-    </Card>
-  </View>
+      </Card>
+    </View>
 
     ///////////////////
     // <Card style={styles.song}>
@@ -111,7 +112,7 @@ export default function SingleSong(props) {
     //             name="chevron-up"
     //             size={30}
     //             color="black"
-                
+
     //           />
     //         </TouchableOpacity>
     //           <Text
@@ -136,45 +137,45 @@ export default function SingleSong(props) {
 }
 
 const styles = StyleSheet.create({
-    background: {
-      backgroundColor: '#F4F8FF'
-    },
-    songContainer: {
-      display: 'flex',
-      flexDirection: 'row',
-      flexWrap: 'wrap'
-    },
-    containerStyle: {
-      display: 'flex',
-      flexDirection: 'row'
-    },
-    feather: { marginLeft: 'auto' },
-    button: {
-      padding: 15,
-      backgroundColor: '#FF5857',
-      borderRadius: 25,
-      width: 200,
-      marginBottom: 25,
-      marginTop: 20,
-      margin: 'auto',
-      shadowColor: '#999',
-      shadowOffset: { width: 1, height: 2 },
-      shadowOpacity: 0.5,
-      shadowRadius: 2,
-      alignSelf: 'center'
-    },
-    buttonText: {
-      color: '#FFFFFF',
-      fontSize: 20,
-      textAlign: 'center'
-    },
-    vote: {
-        color: '#000'
-    },
-    voteHighlight: {
-        color:'#FF5857'
-    }
-    // buttonBackground: {
-    //   backgroundColor: '#C9DDFF'
-    // }
-  });
+  background: {
+    backgroundColor: '#F4F8FF'
+  },
+  songContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap'
+  },
+  containerStyle: {
+    display: 'flex',
+    flexDirection: 'row'
+  },
+  feather: { marginLeft: 'auto' },
+  button: {
+    padding: 15,
+    backgroundColor: '#FF5857',
+    borderRadius: 25,
+    width: 200,
+    marginBottom: 25,
+    marginTop: 20,
+    margin: 'auto',
+    shadowColor: '#999',
+    shadowOffset: { width: 1, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    alignSelf: 'center'
+  },
+  buttonText: {
+    color: '#FFFFFF',
+    fontSize: 20,
+    textAlign: 'center'
+  },
+  vote: {
+    color: '#000'
+  },
+  voteHighlight: {
+    color: '#FF5857'
+  }
+  // buttonBackground: {
+  //   backgroundColor: '#C9DDFF'
+  // }
+});
