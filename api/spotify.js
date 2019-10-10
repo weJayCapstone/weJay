@@ -323,7 +323,7 @@ export const getPlaylistTracks = async (roomData) => {
         })
 
         let tracksJSON = await tracks.json()
-        
+        console.log(tracks)
         let arr = tracksJSON.items
 
         let songs = arr.map(function(el){

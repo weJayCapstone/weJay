@@ -7,10 +7,10 @@ import {
   View,
   Image
 } from 'react-native';
-import db, { getRoomData } from '../firebase/index'
+import db, { getRoomData, refreshRoomToken } from '../firebase/index'
 import { play, next, pause, currentTrack, getPlaylistTracks, shiftPlaylist, resume } from '../api/spotify'
 
-export default class PlaylistClass extends Component {
+export default class PlaybackClass extends Component {
 
     constructor(props){
         super(props)
@@ -51,13 +51,16 @@ export default class PlaylistClass extends Component {
 
         await this.fetchSongs();
     
-        console.log('state songs in play song, ', this.state.songs)
+        console.log('state songs in play song')
         let song = this.state.songs[0]
         console.log('this is song in playsong', song)
-        let roomData = await getRoomData(this.props.docId)
-    
-        await play(roomData, song)
-    
+        try{
+            let roomData = await refreshRoomToken(this.props.docId)
+            console.log(roomData);
+            await play(roomData, song);
+        }catch(err){
+            console.log(err);
+        }
     }
 
     nextSong = async () => {
