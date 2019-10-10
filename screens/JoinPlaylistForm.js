@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { enterRoom, getPlaylist } from '../firebase/index';
-import { Input } from 'react-native-elements';
 
 export default function JoinPlayListForm(props) {
   const [authData, setAuthData] = useState({});
@@ -35,31 +34,29 @@ export default function JoinPlayListForm(props) {
     }
   };
   return (
-    <ScrollView style={styles.scrollview}>
-      <View style={styles.conatiner}>
-        <View>
-          <Text style={styles.header}>Join A Playlist</Text>
-        </View>
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Playlist Title"
-            maxLength={100}
-            onChangeText={text => setAuthData({ ...authData, title: text })}
-          />
-          <TextInput
-            style={styles.textInput}
-            placeholder="Your Name"
-            maxLength={50}
-            onChangeText={text => setAuthData({ ...authData, userName: text })}
-          />
-          <TextInput
-            style={styles.textInput}
-            placeholder="Playlist Passcode"
-            maxLength={4}
-            onChangeText={text => setAuthData({ ...authData, passcode: text })}
-          />
-        </View>
+    <View style={styles.container}>
+      <View>
+        <Text style={styles.header}>Join Playlist</Text>
+      </View>
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.textInput}
+          placeholder="Playlist Title"
+          maxLength={100}
+          onChangeText={text => setAuthData({ ...authData, title: text })}
+        />
+        <TextInput
+          style={styles.textInput}
+          placeholder="Your Name"
+          maxLength={50}
+          onChangeText={text => setAuthData({ ...authData, userName: text })}
+        />
+        <TextInput
+          style={styles.textInput}
+          placeholder="Playlist Passcode"
+          maxLength={4}
+          onChangeText={text => setAuthData({ ...authData, passcode: text })}
+        />
         <TouchableOpacity
           style={styles.saveButton}
           onPress={() => handleSubmit()}
@@ -67,59 +64,58 @@ export default function JoinPlayListForm(props) {
           <Text style={styles.saveButtonText}>Enter</Text>
         </TouchableOpacity>
       </View>
-    </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  scrollview: {
-    marginTop:80
-  },
   container: {
-    backgroundColor: '#F5FCFF',
-    justifyContent:'center',
-    flexDirection:'column'
+    flex: 1,
+    justifyContent: 'flex-start',
+    flexDirection: 'column',
+    backgroundColor: '#F4F8FF',
+    alignItems: 'center'
   },
   header: {
-    fontSize: 25,
+    fontSize: 30,
     textAlign: 'center',
     fontWeight: 'bold',
-    color: '#FF5857'
+    color: '#FF5857',
+    marginTop: 80
   },
   inputContainer: {
     paddingTop: 15,
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   textInput: {
     borderColor: '#fff',
     backgroundColor: '#fff',
-    borderRadius:30,
+    borderRadius: 30,
     borderWidth: 1,
-    width:250,
+    width: 250,
     fontSize: 18,
-    height:45,
-    textAlign:'center',
-    marginBottom:20,
+    height: 45,
+    textAlign: 'center',
+    marginBottom: 20,
     flexDirection: 'row',
-    alignItems:'center',
+    alignItems: 'center',
     shadowColor: '#999',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,
     shadowRadius: 2,
-    elevation: 1,
+    elevation: 1
   },
   saveButton: {
     backgroundColor: '#FF5857',
     padding: 15,
     borderRadius: 25,
-    width:200,
-    marginLeft: 65,
+    width: 200,
     shadowColor: '#999',
     shadowOffset: { width: 1, height: 2 },
     shadowOpacity: 0.5,
-    shadowRadius: 2,
+    shadowRadius: 2
   },
   saveButtonText: {
     color: '#FFFFFF',
