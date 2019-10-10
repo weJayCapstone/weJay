@@ -137,12 +137,12 @@ const styles = StyleSheet.create({
 
     },
     card: {
-        backgroundColor: '#E7F9A9',
-        color: '#E7F9A9',
+        backgroundColor: '#feffe8',
+        color: '#feffe8',
         display: 'flex',
         flexDirection: 'row',
-        borderWidth: 2.5,
-        borderColor: 'white',
+        borderWidth: 1,
+        borderColor: 'grey',
         padding: 4
     },
     songInfo: {
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     searchBar: {
-        backgroundColor: '#d6c2c0'
+        backgroundColor: 'white'
     },
     content: {
         backgroundColor: 'white',
