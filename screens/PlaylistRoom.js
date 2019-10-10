@@ -27,7 +27,8 @@ export default function PlaylistRoom(props) {
         //.orderBy('votes', 'desc')
         .onSnapshot((snapshot)=> {
             const songArr = snapshot.docs.map(doc => doc.data());
-            console.log('im in the snapshot')
+            setSongs(songArr);
+            console.log(songs)
             snapshot.forEach(doc => 
                 roomRef.collection('Playlist').doc(doc.id).set({
                 users:{
@@ -35,7 +36,7 @@ export default function PlaylistRoom(props) {
                 }
               }, {merge: true}));
             setLoading(false);
-            setSongs(songArr);
+            
         });
   }, [docId]);
   return (
