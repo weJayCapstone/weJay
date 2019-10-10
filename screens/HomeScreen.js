@@ -12,7 +12,8 @@ import { Feather } from '@expo/vector-icons';
 import { getTokens } from '../api/spotify';
 
 export default function HomeScreen(props){
-  const [docId, setDocId] = useState('')
+  const [docId, setDocId] = useState('');
+  const [userName, setUserName] = useState('');
     return (
       <View
         style={styles.container}
@@ -25,14 +26,14 @@ export default function HomeScreen(props){
         <View>
           <TouchableHighlight
             style={styles.button}
-            onPress={() => props.navigation.navigate('CreatePlaylistForm', {docId, setDocId})}
+            onPress={() => props.navigation.navigate('CreatePlaylistForm', {docId, setDocId, userName,setUserName})}
           >
             <Text style={styles.text}>Create Playlist</Text>
           </TouchableHighlight>
 
           <TouchableOpacity
             style={styles.button}
-            onPress={() => props.navigation.navigate('JoinPlaylistForm', {docId, setDocId})}
+            onPress={() => props.navigation.navigate('JoinPlaylistForm', {docId, setDocId, userName,setUserName})}
           >
             <Text style={styles.text}>Join Playlist</Text>
           </TouchableOpacity>

@@ -40,7 +40,10 @@ export default class SongCard extends Component {
             imageUrl: data.album.images[0].url,
             albumName: data.album.name,
             votes: 0,
-            timeAdded: Date.now()
+            timeAdded: Date.now(),
+            users: {
+                [this.props.userName]: null
+            }
         };
         return result;
     }

@@ -21,18 +21,22 @@ export default function PlaylistRoom(props) {
     let roomRef = db.collection('Rooms').doc(docId);
     roomRef
         .collection('Playlist')
+        .orderBy('timeAdded')
+        //.orderBy('votes', 'desc')
         .onSnapshot((snapshot)=> {
-            const songArr =[];
-            snapshot.forEach(doc => {
-                songArr.push(doc.data())
-            });
+            const songArr = snapshot.docs.map(doc => doc.data());
+            snapshot.forEach(doc => roomRef.collection('Playlist').doc(doc.id).set({
+                users:{
+                    [userName]:null
+                }
+              }, {merge: true}));
             setLoading(false);
             setSongs(songArr);
         });
   }, [docId]);
   return (
     <ScrollView>
-      {(songs) &&
+      {songs &&
         songs.map(song => {
         return(
           <View key={song.id}>
@@ -96,7 +100,7 @@ export default function PlaylistRoom(props) {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => props.navigation.navigate('SearchScreen', { docId })}
+        onPress={() => props.navigation.navigate('SearchScreen', { docId, userName })}
       >
         <Text>Add A Song</Text>
       </TouchableOpacity>

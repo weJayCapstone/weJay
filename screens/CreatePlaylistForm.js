@@ -30,8 +30,9 @@ export default function CreatePlaylistForm(props) {
       );
       let result = await createRoom(formData);
       props.navigation.state.params.setDocId(result);
+      props.navigation.state.params.setUserName(formData.hostName);
       if (formData.accessToken) {
-        props.navigation.navigate('PlaylistRoom', { docId: result });
+        props.navigation.navigate('PlaylistRoom', { docId: result, userName: formData.hostName });
       }
     } catch (err) {
       console.log(err);

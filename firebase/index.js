@@ -57,7 +57,6 @@ export async function enterRoom(passcode, roomName, userName) {
       return 'Invalid credentials';
     } else {
       query.forEach(doc => {
-        db.collection('Users').add({userName});
         result = doc.id;
       });
       console.log('You are in the room!');
@@ -135,4 +134,4 @@ export async function getPlaylist(roomId) {
   }
 }
 
-//join playlist route given passcode, roomname,username
+//add users to playlist
