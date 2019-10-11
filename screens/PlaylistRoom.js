@@ -18,8 +18,10 @@ import Dimensions from 'Dimensions';
 
 export default function PlaylistRoom(props) {
   const docId = props.navigation.state.params.docId;
+  // console.log('params', props.navigation.state.params);
   const userName = props.navigation.state.params.userName;
-  const {width, height} = Dimensions.get('window');
+  const hostName = props.navigation.state.params.hostName;
+
   let [songs, setSongs] = useState([]);
   useEffect(() => {
     let roomRef = db.collection('Rooms').doc(docId);
@@ -50,7 +52,7 @@ export default function PlaylistRoom(props) {
     headerRight: (
       <TouchableOpacity
         onPress={() => {
-          props.navigation.navigate('Playback', { docId });
+          props.navigation.navigate('Playback', { docId, hostName });
         }}
       >
         <Feather
@@ -71,6 +73,17 @@ export default function PlaylistRoom(props) {
       </TouchableOpacity>
     )
   };
+
+  // headerRight :  navigation.state.params.userName ?
+  //   ( <TouchableOpacity
+  //        onPress={() => this.followUser()}>
+  //        <Icon2 name="ios-person-add-outline" size={35} />
+  //     </TouchableOpacity> )
+  //   :
+  //   ( <TouchableOpacity
+  //        onPress={() => this.unfollowUser()}>
+  //        <Icon name="user-times" size={20} />
+  //     </TouchableOpacity> )
 
   return (
     <>

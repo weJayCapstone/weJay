@@ -22,7 +22,6 @@ import { Feather } from '@expo/vector-icons';
 export default class PlaylistClass extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       currentSong: {},
       songs: [],
@@ -48,15 +47,15 @@ export default class PlaylistClass extends Component {
     let roomData = await getRoomData(this.props.docId);
     let playing = await currentTrack(roomData);
     this.setState({ currentSong: playing });
-    console.log('state current time in', this.state.currentSong.progress_ms);
+    // console.log('state current time in', this.state.currentSong.progress_ms);
   };
 
   playSong = async () => {
     await this.fetchSongs();
 
-    console.log('state songs in play song, ', this.state.songs);
+    // console.log('state songs in play song, ', this.state.songs);
     let song = this.state.songs[0];
-    console.log('this is song in playsong', song);
+    // console.log('this is song in playsong', song);
     let roomData = await getRoomData(this.props.docId);
 
     await play(roomData, song);
@@ -97,37 +96,46 @@ export default class PlaylistClass extends Component {
   render() {
     // console.log('this is state', this.state.songs);
 
-    return (
-      <View style={styles.icons}>
-        <TouchableOpacity onPress={() => this.hidePlayButton()}>
-          <View>
-            {this.state.playButton ? (
-              <Feather name="play" size={50} color="#FF5857" />
-            ) : null}
-          </View>
-        </TouchableOpacity>
-
-        {!this.state.paused ? (
-          <TouchableOpacity onPress={() => this.pauseSong()}>
-            <View style={styles.pause}>
-              <Feather name="pause" size={50} color="#FF5857" />
+    if (this.props.hostName) {
+      return (
+        <View style={styles.icons}>
+          <TouchableOpacity onPress={() => this.hidePlayButton()}>
+            <View>
+              {this.state.playButton ? (
+                <Feather name="play" size={50} color="#FF5857" />
+              ) : null}
             </View>
           </TouchableOpacity>
-        ) : (
-          <TouchableOpacity onPress={() => this.resumeSong()}>
-            <View style={styles.pause}>
-              <Feather name="play" size={50} color="#FF5857" />
+
+          {!this.state.paused ? (
+            <TouchableOpacity onPress={() => this.pauseSong()}>
+              <View style={styles.pause}>
+                <Feather name="pause" size={50} color="#FF5857" />
+              </View>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity onPress={() => this.resumeSong()}>
+              <View style={styles.pause}>
+                <Feather name="play" size={50} color="#FF5857" />
+              </View>
+            </TouchableOpacity>
+          )}
+
+          <TouchableOpacity onPress={() => this.nextSong()}>
+            <View>
+              <Feather name="skip-forward" size={50} color="#FF5857" />
             </View>
           </TouchableOpacity>
-        )}
-
-        <TouchableOpacity onPress={() => this.nextSong()}>
-          <View>
-            <Feather name="skip-forward" size={50} color="#FF5857" />
-          </View>
-        </TouchableOpacity>
-      </View>
-    );
+        </View>
+      );
+    } else {
+      return (
+        <View style={styles.guest}>
+          <Feather name="speaker" size={20} color="#FF5857" />
+          <Text style={styles.nowPlaying}>Currently Playing</Text>
+        </View>
+      );
+    }
   }
 }
 
@@ -139,5 +147,13 @@ const styles = StyleSheet.create({
   pause: {
     paddingLeft: 25,
     paddingRight: 25
+  },
+  guest: {
+    flexDirection: 'row'
+  },
+  nowPlaying: {
+    fontSize: 20,
+    color: '#FF5857',
+    paddingLeft: 3
   }
 });

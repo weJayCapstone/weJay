@@ -5,9 +5,9 @@ import {
   TouchableHighlight,
   TouchableOpacity,
   View,
-  StatusBar
+  StatusBar,
+  Image
 } from 'react-native';
-
 export default function HomeScreen(props) {
   const [docId, setDocId] = useState('');
   const [userName, setUserName] = useState('');
@@ -15,9 +15,14 @@ export default function HomeScreen(props) {
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#FF5857" />
       <View style={styles.header}>
-        <Text style={{ fontSize: 40, fontWeight: 'bold', alignSelf: 'center' }}>
+        <Image
+          source={require('../weJay_Temp_Logo.png')}
+          style={{ width: 100, height: 100 }}
+        />
+
+        {/* <Text style={{ fontSize: 40, fontWeight: 'bold', alignSelf: 'center' }}>
           weJay
-        </Text>
+        </Text> */}
       </View>
       <View>
         <TouchableHighlight
