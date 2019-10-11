@@ -11,7 +11,7 @@ export default function SingleSong(props) {
   const song = props.song;
   const userName = props.userName;
   const docId = props.docId;
-  const handleVote = async(vote, songName) => {
+  const handleVote = async (vote, songName) => {
     try{
         await updateVote(songName,vote,userName,docId);
     }catch(err){
@@ -147,7 +147,11 @@ const styles = StyleSheet.create({
     },
     containerStyle: {
       display: 'flex',
-      flexDirection: 'row'
+      flexDirection: 'row',
+      shadowColor: '#999',
+      shadowOffset: { width: 1, height: 2 },
+      shadowOpacity: 0.5,
+      shadowRadius: 2,
     },
     feather: { marginLeft: 'auto' },
     button: {

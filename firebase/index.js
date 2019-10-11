@@ -167,7 +167,6 @@ export async function updateVote(songName, vote, userName, docId){
         else {
             query.forEach(doc => {
                 let songRef = songsRef.doc(doc.id);
-                songRef.update({['users.' + userName]: vote});
                 if(vote === 'up'){
                     //increment vote
                     songRef.update({
@@ -179,6 +178,7 @@ export async function updateVote(songName, vote, userName, docId){
                         votes: firebase.firestore.FieldValue.increment(-1)
                     });
                 }
+                songRef.update({['users.' + userName]: vote});
         });
           }
         //   let songRef = db.collection('Rooms').doc(docId).collection('Playlist')
