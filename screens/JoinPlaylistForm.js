@@ -24,10 +24,9 @@ export default function JoinPlayListForm(props) {
           cancelable: false
         });
       } else {
-        //set home props
-        props.navigation.state.params.setDocId(result);
-        props.navigation.state.params.setUserName(authData.userName);
-        props.navigation.navigate('PlaylistRoom', { docId: result, userName: authData.userName });
+          props.navigation.state.params.setDocId(result);
+          props.navigation.state.params.setUserName(authData.userName);
+          props.navigation.navigate('PlaylistRoom', { docId: result, userName: authData.userName });
       }
     } catch (err) {
       console.log(err);

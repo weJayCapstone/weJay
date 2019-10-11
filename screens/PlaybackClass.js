@@ -7,10 +7,10 @@ import {
   View,
   Image
 } from 'react-native';
-import db, { getRoomData } from '../firebase/index'
+import db, { getRoomData, refreshRoomToken } from '../firebase/index'
 import { play, next, pause, currentTrack, getPlaylistTracks, shiftPlaylist, resume } from '../api/spotify'
 
-export default class PlaylistClass extends Component {
+export default class PlaybackClass extends Component {
 
     constructor(props){
         super(props)
@@ -31,11 +31,11 @@ export default class PlaylistClass extends Component {
     }
 
     componentDidUpdate(){
-        
+
     }
 
     fetchSongs = async () => {
-        
+
         let roomData = await getRoomData(this.props.docId)
         let tracks = await getPlaylistTracks(roomData)
 
@@ -48,8 +48,6 @@ export default class PlaylistClass extends Component {
         let roomData = await getRoomData(this.props.docId)
         let playing = await currentTrack(roomData)
         this.setState({currentSong: playing})
-        console.log('state current time in', this.state.currentSong.progress_ms)
-
     }
 
     playbackTimer = (songTime) => {
@@ -68,20 +66,24 @@ export default class PlaylistClass extends Component {
 
     playSong = async () => {
 
-        let roomData = await getRoomData(this.props.docId)
-        console.log('songs before fetch', this.state.songs)
-        await this.fetchSongs();
-        console.log('songs after fetch', this.state.songs)
-        let song = this.state.songs[0]
-        
-        await play(roomData, song)
+        try {
+            let roomData = await refreshRoomToken(this.props.docId)
+            console.log('songs before fetch', this.state.songs)
+            await this.fetchSongs();
+            console.log('songs after fetch', this.state.songs)
+            let song = this.state.songs[0]
+            console.log(roomData);
+            await play(roomData, song);
 
-        await this.setCurrentSong()
-        const songLength = this.state.currentSong.item.duration_ms
-        this.playbackTimer(songLength)
+            await this.setCurrentSong()
+            const songLength = this.state.currentSong.item.duration_ms
+            this.playbackTimer(songLength)
 
-        console.log('does this work in play song? ', this.state.songs)
+            console.log('does this work in play song? ', this.state.songs)
 
+        } catch (err){
+            console.log(err);
+        }
     }
 
     nextSong = async () => {
@@ -122,11 +124,10 @@ export default class PlaylistClass extends Component {
 
 
     render(){
-
         return (
-        <View style={{display: 'flex', justifyContent: 'center', alignItems: 'center', bottom: 100}}>
+        <View style={{display: 'flex', justifyContent: 'center',alignItems: 'center', bottom: 100, flexDirection: 'row'}}>
             <TouchableOpacity onPress={() => this.playSong()}>
-                <View>
+                <View style={{margin: 5}}>
                     <Text>Play</Text>
                 </View>
             </TouchableOpacity>
@@ -134,13 +135,13 @@ export default class PlaylistClass extends Component {
 
             {!this.state.paused ?
             <TouchableOpacity onPress={() => this.pauseSong()}>
-                <View>
+                <View style={{margin: 5}}>
                     <Text>Pause</Text>
                 </View>
             </TouchableOpacity> :
 
             <TouchableOpacity onPress={() => this.resumeSong()}>
-            <View>
+            <View style={{margin: 5}}>
                 <Text>Resume</Text>
             </View>
             </TouchableOpacity>

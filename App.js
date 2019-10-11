@@ -21,11 +21,16 @@ import SearchScreen from './screens/SearchScreen';
 import CleanSearch from './screens/CleanSearch';
 import TestRoom from './screens/TestRoom';
 import Playback from './screens/Playback';
+import {Provider} from 'react-redux'
+// import store from '.redux/store'
 require('./secrets');
 
 export default class ReactNav extends Component {
   render() {
-    return <App />;
+
+    return (
+        <App />
+    )
   }
 }
 
