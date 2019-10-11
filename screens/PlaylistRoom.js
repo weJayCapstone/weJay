@@ -18,18 +18,29 @@ export default function PlaylistRoom(props) {
   const docId = props.navigation.state.params.docId;
   const userName = props.navigation.state.params.userName;
   let [songs, setSongs] = useState([]);
-//   let [loading, setLoading] = useState(true);
-//   let [downvote, setDownvote] = useState(false);
   useEffect(() => {
-    console.log(docId);
     let roomRef = db.collection('Rooms').doc(docId);
-    roomRef
+    let unsub = roomRef
         .collection('Playlist')
         .orderBy('timeAdded')
         .onSnapshot((snapshot) => {
             const songArr = snapshot.docs.map(doc => doc.data());
+            //sort by votes
+            songArr.sort((a,b)=> {
+                const votesA = a.votes;
+                const votesB = b.votes;
+                
+                let comparison = 0;
+                if (votesA > votesB) {
+                  comparison = -1;
+                } else if (votesA < votesB) {
+                  comparison = 1;
+                }
+                return comparison;
+              })
             setSongs(songArr);
         });
+    return unsub;
   }, [docId]);
   return (
     <>
@@ -47,7 +58,7 @@ export default function PlaylistRoom(props) {
             renderItem={({ item }) => <SingleSong song={item} docId={docId} userName ={userName} />}
             keyExtractor={item => item.id}
           />
-          ) : null }
+          ) : <Text>Search To Add Songs to Your Playlist!</Text> }
         </ScrollView>
       <View style={styles.buttonBackground}>
         <TouchableOpacity

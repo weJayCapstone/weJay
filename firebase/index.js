@@ -146,13 +146,11 @@ export async function getPlaylist(roomId) {
     //   .orderBy('votes', 'desc');
     let allSongs = await playlist.get();
     if (allSongs.empty) {
-      console.log('in empty getplaylist',songArr)
       return songArr;
     }
     allSongs.forEach(song => {
       songArr.push(song.data());
     });
-    console.log('in getplaylist',songArr)
     return songArr;
   } catch (err) {
     console.log(err);
@@ -167,7 +165,6 @@ export async function updateVote(songName, vote, userName, docId){
             console.log("something went wrong");
           } 
         else {
-              console.log('maybe it works');
             query.forEach(doc => {
                 let songRef = songsRef.doc(doc.id);
                 songRef.update({['users.' + userName]: vote});

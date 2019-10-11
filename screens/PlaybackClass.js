@@ -42,18 +42,13 @@ export default class PlaybackClass extends Component {
         let roomData = await getRoomData(this.props.docId)
         let playing = await currentTrack(roomData)
         this.setState({currentSong: playing})
-        console.log('state current time in', this.state.currentSong.progress_ms)
-
     }
 
 
     playSong = async () => {
 
         await this.fetchSongs();
-    
-        console.log('state songs in play song')
         let song = this.state.songs[0]
-        console.log('this is song in playsong', song)
         try{
             let roomData = await refreshRoomToken(this.props.docId)
             console.log(roomData);
@@ -94,13 +89,10 @@ export default class PlaybackClass extends Component {
 
 
     render(){
-
-        console.log('this is state', this.state.songs)
-
         return (
-        <View style={{display: 'flex', justifyContent: 'center', alignItems: 'center', bottom: 100}}>
+        <View style={{display: 'flex', justifyContent: 'center',alignItems: 'center', bottom: 100, flexDirection: 'row'}}>
             <TouchableOpacity onPress={() => this.playSong()}>
-                <View>
+                <View style={{margin: 5}}>
                     <Text>Play</Text>
                 </View>
             </TouchableOpacity>
@@ -108,13 +100,13 @@ export default class PlaybackClass extends Component {
 
             {!this.state.paused ?
             <TouchableOpacity onPress={() => this.pauseSong()}>
-                <View>
+                <View style={{margin: 5}}>
                     <Text>Pause</Text>
                 </View>
             </TouchableOpacity> :
 
             <TouchableOpacity onPress={() => this.resumeSong()}>
-            <View>
+            <View style={{margin: 5}}>
                 <Text>Resume</Text>
             </View>
             </TouchableOpacity>
