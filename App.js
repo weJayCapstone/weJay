@@ -21,16 +21,11 @@ import SearchScreen from './screens/SearchScreen';
 import CleanSearch from './screens/CleanSearch';
 import TestRoom from './screens/TestRoom';
 import Playback from './screens/Playback';
-import {Provider} from 'react-redux'
-// import store from '.redux/store'
 require('./secrets');
 
 export default class ReactNav extends Component {
   render() {
-
-    return (
-        <App />
-    )
+    return <App />;
   }
 }
 
@@ -39,43 +34,37 @@ const DrawerNav = createDrawerNavigator({
     screen: HomeScreen,
     navigationOptions: {
       title: 'weJay'
-      // headerStyle: {
-      //   backgroundColor: '#F4F8FF'
-      // }
     }
   },
   CreatePlaylistForm: {
     screen: CreatePlaylistForm,
     navigationOptions: {
       title: 'Create Playlist'
-      // headerStyle: {
-      //   backgroundColor: '#F4F8FF'
-      // }
     }
   },
   JoinPlaylistForm: {
     screen: JoinPlaylistForm,
     navigationOptions: {
       title: 'Join Playlist'
-      // headerStyle: {
-      //   backgroundColor: '#F4F8FF'
-      // }
     }
   }
+  // PlaylistRoom: {
+  //   screen: PlaylistRoom,
+  //   navigationOptions: {
+  //     title: 'Current Playlist'
+  //   }
+  // }
 });
 
 const StackNav = createStackNavigator({
   DrawerNav: {
     screen: DrawerNav,
+    headerMode: 'float',
     navigationOptions: ({ navigation }) => {
       const { state } = navigation;
 
       if (state.isDrawerOpen) {
         return {
-          // title: 'wejay',
-          // headerStyle: {
-          //   backgroundColor: '#F4F8FF'
-          // },
           headerLeft: (
             <TouchableOpacity
               onPress={() => {
@@ -88,10 +77,6 @@ const StackNav = createStackNavigator({
         };
       } else {
         return {
-          // title: 'weJay',
-          // headerStyle: {
-          //   backgroundColor: '#F4F8FF'
-          // },
           headerLeft: (
             <TouchableOpacity
               onPress={() => {
@@ -101,15 +86,6 @@ const StackNav = createStackNavigator({
               <Feather name="menu" size={32} color="#4392F1" />
             </TouchableOpacity>
           )
-          // headerRight: (
-          //   <TouchableOpacity
-          //     onPress={() => {
-          //       navigation.dispatch('HomeScreen');
-          //     }}
-          //   >
-          //     <Feather name="home" size={32} color="#4392F1" />
-          //   </TouchableOpacity>
-          // )
         };
       }
     }

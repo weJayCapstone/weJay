@@ -7,120 +7,137 @@ import {
   View,
   Image
 } from 'react-native';
-import db, { getRoomData, refreshRoomToken } from '../firebase/index'
-import { play, next, pause, currentTrack, getPlaylistTracks, shiftPlaylist, resume } from '../api/spotify'
+import db, { getRoomData } from '../firebase/index';
+import {
+  play,
+  next,
+  pause,
+  currentTrack,
+  getPlaylistTracks,
+  shiftPlaylist,
+  resume
+} from '../api/spotify';
+import { Feather } from '@expo/vector-icons';
 
-export default class PlaybackClass extends Component {
+export default class PlaylistClass extends Component {
+  constructor(props) {
+    super(props);
 
-    constructor(props){
-        super(props)
+    this.state = {
+      currentSong: {},
+      songs: [],
+      paused: false,
+      playButton: true
+    };
+    this.playSong = this.playSong.bind(this);
+    this.nextSong = this.nextSong.bind(this);
+    this.pauseSong = this.pauseSong.bind(this);
+    this.fetchSongs = this.fetchSongs.bind(this);
+    this.setCurrentSong = this.setCurrentSong.bind(this);
+    this.resumeSong = this.resumeSong.bind(this);
+  }
 
-        this.state = {
-            currentSong: {},
-            songs: [],
-            paused: false
-        }
-        this.playSong = this.playSong.bind(this)
-        this.nextSong = this.nextSong.bind(this)
-        this.pauseSong = this.pauseSong.bind(this)
-        this.fetchSongs = this.fetchSongs.bind(this)
-        this.setCurrentSong = this.setCurrentSong.bind(this)
-        this.resumeSong = this.resumeSong.bind(this)
-    }
+  fetchSongs = async () => {
+    let roomData = await getRoomData(this.props.docId);
+    let tracks = await getPlaylistTracks(roomData);
 
-    fetchSongs = async () => {
-        
-        let roomData = await getRoomData(this.props.docId)
-        let tracks = await getPlaylistTracks(roomData)
+    this.setState({ songs: tracks });
+  };
 
-        this.setState({songs: tracks})
+  setCurrentSong = async () => {
+    let roomData = await getRoomData(this.props.docId);
+    let playing = await currentTrack(roomData);
+    this.setState({ currentSong: playing });
+    console.log('state current time in', this.state.currentSong.progress_ms);
+  };
 
-    }
+  playSong = async () => {
+    await this.fetchSongs();
 
-    setCurrentSong = async () => {
+    console.log('state songs in play song, ', this.state.songs);
+    let song = this.state.songs[0];
+    console.log('this is song in playsong', song);
+    let roomData = await getRoomData(this.props.docId);
 
-        let roomData = await getRoomData(this.props.docId)
-        let playing = await currentTrack(roomData)
-        this.setState({currentSong: playing})
-    }
+    await play(roomData, song);
+  };
 
+  nextSong = async () => {
+    let roomData = await getRoomData(this.props.docId);
+    let currentSong = await this.state.songs[0];
 
-    playSong = async () => {
+    await shiftPlaylist(roomData, currentSong);
 
-        await this.fetchSongs();
-        let song = this.state.songs[0]
-        try{
-            let roomData = await refreshRoomToken(this.props.docId)
-            console.log(roomData);
-            await play(roomData, song);
-        }catch(err){
-            console.log(err);
-        }
-    }
+    await this.playSong();
+  };
 
-    nextSong = async () => {
+  pauseSong = async () => {
+    let roomData = await getRoomData(this.props.docId);
+    await this.setCurrentSong();
+    this.setState({ paused: true });
+    await pause(roomData);
+  };
 
-        let roomData = await getRoomData(this.props.docId)
-        let currentSong = await this.state.songs[0]
+  resumeSong = async () => {
+    let song = this.state.songs[0];
+    let roomData = await getRoomData(this.props.docId);
+    let progress = this.state.currentSong.progress_ms;
 
-        await shiftPlaylist(roomData, currentSong)
+    await resume(roomData, song, progress);
 
-        await this.playSong()
+    this.setState({ paused: false });
+  };
 
-    }
+  //ADDED THIS TO HIDE PLAY BUTTON AFTER INITIAL PRESS TO START MUSIC
+  hidePlayButton() {
+    this.playSong();
+    this.setState({ playButton: false });
+  }
 
-    pauseSong = async () => {
-        let roomData = await getRoomData(this.props.docId)
-        await this.setCurrentSong()
-        this.setState({paused: true})
-        await pause(roomData)
-    }
+  render() {
+    // console.log('this is state', this.state.songs);
 
-    resumeSong = async () => {
+    return (
+      <View style={styles.icons}>
+        <TouchableOpacity onPress={() => this.hidePlayButton()}>
+          <View>
+            {this.state.playButton ? (
+              <Feather name="play" size={50} color="#FF5857" />
+            ) : null}
+          </View>
+        </TouchableOpacity>
 
-        let song = this.state.songs[0]
-        let roomData = await getRoomData(this.props.docId)
-        let progress = this.state.currentSong.progress_ms
-
-        await resume(roomData, song, progress)
-
-        this.setState({paused: false})
-    }
-
-
-    render(){
-        return (
-        <View style={{display: 'flex', justifyContent: 'center',alignItems: 'center', bottom: 100, flexDirection: 'row'}}>
-            <TouchableOpacity onPress={() => this.playSong()}>
-                <View style={{margin: 5}}>
-                    <Text>Play</Text>
-                </View>
-            </TouchableOpacity>
-
-
-            {!this.state.paused ?
-            <TouchableOpacity onPress={() => this.pauseSong()}>
-                <View style={{margin: 5}}>
-                    <Text>Pause</Text>
-                </View>
-            </TouchableOpacity> :
-
-            <TouchableOpacity onPress={() => this.resumeSong()}>
-            <View style={{margin: 5}}>
-                <Text>Resume</Text>
+        {!this.state.paused ? (
+          <TouchableOpacity onPress={() => this.pauseSong()}>
+            <View style={styles.pause}>
+              <Feather name="pause" size={50} color="#FF5857" />
             </View>
-            </TouchableOpacity>
-            }
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity onPress={() => this.resumeSong()}>
+            <View style={styles.pause}>
+              <Feather name="play" size={50} color="#FF5857" />
+            </View>
+          </TouchableOpacity>
+        )}
 
-
-            <TouchableOpacity onPress={() => this.nextSong()}>
-                <View>
-                    <Text>Skip</Text>
-                </View>
-            </TouchableOpacity>
-            
-        </View>
-
-        )
-    }
+        <TouchableOpacity onPress={() => this.nextSong()}>
+          <View>
+            <Feather name="skip-forward" size={50} color="#FF5857" />
+          </View>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 }
+
+const styles = StyleSheet.create({
+  icons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  pause: {
+    paddingLeft: 25,
+    paddingRight: 25
+  }
+});

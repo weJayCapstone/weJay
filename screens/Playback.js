@@ -1,77 +1,128 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, StatusBar } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  StatusBar,
+  TouchableOpacity,
+  ImageBackground
+} from 'react-native';
 import { Card, Image, ListItem } from 'react-native-elements';
 import { Feather } from '@expo/vector-icons';
+import Modal from 'react-native-modal';
+import PlaybackClass from './PlaybackClass';
+import { currentTrack } from '../api/spotify';
+import db, { getRoomData, refreshRoomToken } from '../firebase/index';
 
-const dummySongs = [
-  {
-    id: 1,
-    imageUrl:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT77F0HHO8TgKU4y94P4PkYmgYgZrlmv_PaS_dEGBeetbsp5_7B',
-    name: 'Bye Bye Bye',
-    artist: 'NSYNC',
-    upvote: false,
-    downvote: false
+export default function Playback(props) {
+  const docId = props.navigation.state.params.docId;
+  const [songData, setSongData] = useState({});
+
+  async function getCurrentSongPlaying(id) {
+    try {
+      await refreshRoomToken(id);
+      let roomData = await getRoomData(id);
+      const songPlaying = await currentTrack(roomData);
+      const result = songDataParser(songPlaying.item);
+      setSongData(result);
+    } catch (err) {
+      console.log(err);
+    }
   }
-];
 
-export default function SingleSong() {
+  useEffect(() => {
+    getCurrentSongPlaying(docId);
+  }, []);
+
+  function songDataParser(data) {
+    let result = {
+      name: data.name,
+      id: data.id,
+      href: data.href,
+      uri: data.uri,
+      artist: data.artists[0].name,
+      imageUrl: data.album.images[0].url,
+      albumName: data.album.name
+    };
+    return result;
+  }
+
+  const [isVisible, setIsVisible] = useState(true);
+
+  function closeModal() {
+    setIsVisible(!isVisible);
+    props.navigation.navigate('PlaylistRoom');
+  }
+
   return (
-    <View style={styles.container}>
-      {/* <StatusBar hidden /> */}
-      {dummySongs.map(song => {
-        return (
-          <View key={song.id}>
-            <Image
-              style={styles.image}
-              resizeMode="cover"
-              source={{
-                uri: song.imageUrl
-              }}
-            />
-            <View>
-              <Text style={styles.songName}>{song.name}</Text>
-              <Text style={styles.songArtist}>{song.artist}</Text>
-            </View>
-
-            <View style={styles.icons}>
-              <Feather name="pause" size={50} color="#FF5857" />
-              <Feather name="play" size={50} color="#FF5857" />
-              <Feather name="skip-forward" size={50} color="#FF5857" />
-            </View>
+    <Modal isVisible={isVisible}>
+      <StatusBar hidden />
+      <ImageBackground
+        source={require('../weJayGradient.png')}
+        style={{ width: 400, height: 700, alignSelf: 'center' }}
+      >
+        <View style={styles.container}>
+          <TouchableOpacity onPress={() => closeModal()}>
+            <Feather name="chevron-down" size={50} color="black" />
+          </TouchableOpacity>
+          <Image
+            style={styles.image}
+            resizeMode="cover"
+            source={{
+              uri: songData.imageUrl
+            }}
+          />
+          <View style={styles.textContainer}>
+            <Text
+              ellipsizeMode="tail"
+              numberOfLines={1}
+              style={styles.songName}
+            >
+              {songData.name}
+            </Text>
+            <Text
+              ellipsizeMode="tail"
+              numberOfLines={1}
+              style={styles.songArtist}
+            >
+              {songData.artist}
+            </Text>
           </View>
-        );
-      })}
-    </View>
+          <View style={{ top: 75 }}>
+            <PlaybackClass docId={docId} />
+          </View>
+        </View>
+      </ImageBackground>
+    </Modal>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    display: 'flex',
     justifyContent: 'flex-start',
     flexDirection: 'column',
-    backgroundColor: '#F4F8FF',
-    alignItems: 'center'
+    alignItems: 'center',
+    height: 700,
+    width: 400,
+    alignSelf: 'center'
   },
   image: {
     width: 300,
-    height: 300
+    height: 300,
+    marginTop: 50
   },
   songName: {
     fontWeight: 'bold',
     fontSize: 25,
     paddingBottom: 15,
-    paddingTop: 15,
     alignSelf: 'center'
   },
   songArtist: {
     fontSize: 20,
     alignSelf: 'center'
   },
-  icons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 50
+  textContainer: {
+    width: 300
   }
 });
