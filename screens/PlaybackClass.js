@@ -7,10 +7,10 @@ import {
   View,
   Image
 } from 'react-native';
-import db, { getRoomData } from '../firebase/index'
+import db, { getRoomData, refreshRoomToken } from '../firebase/index'
 import { play, next, pause, currentTrack, getPlaylistTracks, shiftPlaylist, resume } from '../api/spotify'
 
-export default class PlaylistClass extends Component {
+export default class PlaybackClass extends Component {
 
     constructor(props){
         super(props)
@@ -42,22 +42,20 @@ export default class PlaylistClass extends Component {
         let roomData = await getRoomData(this.props.docId)
         let playing = await currentTrack(roomData)
         this.setState({currentSong: playing})
-        console.log('state current time in', this.state.currentSong.progress_ms)
-
     }
 
 
     playSong = async () => {
 
         await this.fetchSongs();
-    
-        console.log('state songs in play song, ', this.state.songs)
         let song = this.state.songs[0]
-        console.log('this is song in playsong', song)
-        let roomData = await getRoomData(this.props.docId)
-    
-        await play(roomData, song)
-    
+        try{
+            let roomData = await refreshRoomToken(this.props.docId)
+            console.log(roomData);
+            await play(roomData, song);
+        }catch(err){
+            console.log(err);
+        }
     }
 
     nextSong = async () => {
@@ -91,13 +89,10 @@ export default class PlaylistClass extends Component {
 
 
     render(){
-
-        console.log('this is state', this.state.songs)
-
         return (
-        <View style={{display: 'flex', justifyContent: 'center', alignItems: 'center', bottom: 100}}>
+        <View style={{display: 'flex', justifyContent: 'center',alignItems: 'center', bottom: 100, flexDirection: 'row'}}>
             <TouchableOpacity onPress={() => this.playSong()}>
-                <View>
+                <View style={{margin: 5}}>
                     <Text>Play</Text>
                 </View>
             </TouchableOpacity>
@@ -105,13 +100,13 @@ export default class PlaylistClass extends Component {
 
             {!this.state.paused ?
             <TouchableOpacity onPress={() => this.pauseSong()}>
-                <View>
+                <View style={{margin: 5}}>
                     <Text>Pause</Text>
                 </View>
             </TouchableOpacity> :
 
             <TouchableOpacity onPress={() => this.resumeSong()}>
-            <View>
+            <View style={{margin: 5}}>
                 <Text>Resume</Text>
             </View>
             </TouchableOpacity>

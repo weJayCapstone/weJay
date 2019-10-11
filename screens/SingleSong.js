@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Card, Image, ListItem } from 'react-native-elements';
 import { Feather } from '@expo/vector-icons';
 import { play } from '../api/spotify'
-import db from '../firebase/index.js'
+import db ,{updateVote}from '../firebase/index.js'
 
 
 
@@ -11,16 +11,11 @@ export default function SingleSong(props) {
   const song = props.song;
   const userName = props.userName;
   const docId = props.docId;
-  const handleVote = (vote) => {
-    if (vote === 'up'){
-        let updateVote = {}
-        updateVote[`users.${userName}`] = 'up'
-        let songRef = db.collection('Rooms').doc(docId).collection('Playlist')
-        .doc('kOxjtrsCEz9Cu30AAhOA');
-        songRef.update({['users.' + userName]: 'up'});
-        console.log(vote);
-    } else {
-        console.log(vote)
+  const handleVote = async (vote, songName) => {
+    try{
+        await updateVote(songName,vote,userName,docId);
+    }catch(err){
+        console.log(err);
     }
   }
   return (
@@ -64,9 +59,9 @@ export default function SingleSong(props) {
         </View>
         <View style={styles.feather}>
         <TouchableOpacity
-               onPress={() => handleVote('up')}
+               onPress={() => handleVote('up', song.name)}
             >
-          <Feather name="chevron-up" size={30} color="black" />
+          <Feather style={song.users[userName] === "up"? styles.voteHighlight: styles.vote} name="chevron-up" size={30} color="black" />
         </TouchableOpacity>
           <Text
             style={{
@@ -75,9 +70,13 @@ export default function SingleSong(props) {
               paddingRight: 10
             }}
           >
-            votes
+            {song.votes}
           </Text>
-          <Feather name="chevron-down" size={30} color="black" />
+          <TouchableOpacity
+               onPress={() => handleVote('down', song.name)}
+            >
+            <Feather style={song.users[userName] === 'down'? styles.voteHighlight: styles.vote}name="chevron-down" size={30} color="black" />
+          </TouchableOpacity>
         </View>
       </View>
     </Card>
@@ -148,7 +147,11 @@ const styles = StyleSheet.create({
     },
     containerStyle: {
       display: 'flex',
-      flexDirection: 'row'
+      flexDirection: 'row',
+      shadowColor: '#999',
+      shadowOffset: { width: 1, height: 2 },
+      shadowOpacity: 0.5,
+      shadowRadius: 2,
     },
     feather: { marginLeft: 'auto' },
     button: {
