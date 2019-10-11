@@ -14,11 +14,8 @@ import PlaybackClass from './PlaybackClass';
 import { currentTrack } from '../api/spotify';
 import db, { getRoomData, refreshRoomToken } from '../firebase/index';
 import Dimensions from 'Dimensions';
-<<<<<<< HEAD
 
 const {width, height} = Dimensions.get('window');
-=======
->>>>>>> 797d374fded4a028d20d23245dc184f40a8960e8
 
 export default function Playback(props) {
   const hostName = props.navigation.state.params.hostName;

@@ -28,12 +28,8 @@ export default function CreatePlaylistForm(props) {
       props.navigation.state.params.setUserName(formData.hostName);
       if (formData.accessToken) {
         props.navigation.navigate('PlaylistRoom', {
-<<<<<<< HEAD
-          docId: result
-=======
           docId: result,
           hostName: roomData.hostName
->>>>>>> 797d374fded4a028d20d23245dc184f40a8960e8
         });
       }
     } catch (err) {
