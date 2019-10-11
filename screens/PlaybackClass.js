@@ -19,6 +19,8 @@ import {
 } from '../api/spotify';
 import { Feather } from '@expo/vector-icons';
 
+let timeout;
+
 export default class PlaylistClass extends Component {
   constructor(props) {
     super(props);
@@ -38,56 +40,6 @@ export default class PlaylistClass extends Component {
     this.playbackTimer = this.playbackTimer.bind(this)
   }
 
-//   fetchSongs = async () => {
-//     let roomData = await getRoomData(this.props.docId);
-//     let tracks = await getPlaylistTracks(roomData);
-
-//     this.setState({ songs: tracks });
-//   };
-
-//   setCurrentSong = async () => {
-//     let roomData = await getRoomData(this.props.docId);
-//     let playing = await currentTrack(roomData);
-//     this.setState({ currentSong: playing });
-//     console.log('state current time in', this.state.currentSong.progress_ms);
-//   };
-
-//   playSong = async () => {
-//     await this.fetchSongs();
-
-//     console.log('state songs in play song, ', this.state.songs);
-//     let song = this.state.songs[0];
-//     console.log('this is song in playsong', song);
-//     let roomData = await getRoomData(this.props.docId);
-
-//     await play(roomData, song);
-//   };
-
-//   nextSong = async () => {
-//     let roomData = await getRoomData(this.props.docId);
-//     let currentSong = await this.state.songs[0];
-
-//     await shiftPlaylist(roomData, currentSong);
-
-//     await this.playSong();
-//   };
-
-//   pauseSong = async () => {
-//     let roomData = await getRoomData(this.props.docId);
-//     await this.setCurrentSong();
-//     this.setState({ paused: true });
-//     await pause(roomData);
-//   };
-
-//   resumeSong = async () => {
-//     let song = this.state.songs[0];
-//     let roomData = await getRoomData(this.props.docId);
-//     let progress = this.state.currentSong.progress_ms;
-
-//     await resume(roomData, song, progress);
-
-//     this.setState({ paused: false });
-//   };
 
 fetchSongs = async () => {
 
@@ -110,7 +62,7 @@ playbackTimer = (songTime) => {
     console.log('this is songTime', songTime)
     console.log('this is this.state.songs.length', this.state.songs.length)
 
-    setTimeout(function(){
+    timeout = setTimeout(function(){
         if (this.state.songs.length > 1){
             console.log('this is inside the timeout')
             this.nextSong()
@@ -156,8 +108,9 @@ pauseSong = async () => {
     let roomData = await getRoomData(this.props.docId)
     await this.setCurrentSong()
     this.setState({paused: true})
-    this.setState({songs: []})
-    this.playbackTimer()
+    // this.setState({songs: []})
+    // this.playbackTimer()
+    clearTimeout(timeout)
     await pause(roomData)
 }
 

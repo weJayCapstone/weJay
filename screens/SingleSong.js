@@ -89,7 +89,6 @@ export default function SingleSong(props) {
                 color="black"
               />
             </TouchableOpacity>
-            <Feather name="chevron-down" size={30} color="black" />
           </View>
         </View>
       </Card>
