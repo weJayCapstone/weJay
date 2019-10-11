@@ -55,6 +55,7 @@ export default class PlaylistClass extends Component {
     playbackTimer = (songTime) => {
 
         console.log('this is songTime', songTime)
+        console.log('this is this.state.songs.length', this.state.songs.length)
 
         setTimeout(function(){
             if (this.state.songs.length > 1){
@@ -86,7 +87,7 @@ export default class PlaylistClass extends Component {
     nextSong = async () => {
 
         let roomData = await getRoomData(this.props.docId)
-        let currentSong = await this.state.songs[0]
+        let currentSong = this.state.currentSong.item.uri
 
         await shiftPlaylist(roomData, currentSong)
 
@@ -98,16 +99,23 @@ export default class PlaylistClass extends Component {
         let roomData = await getRoomData(this.props.docId)
         await this.setCurrentSong()
         this.setState({paused: true})
+        this.setState({songs: []})
+        this.playbackTimer()
         await pause(roomData)
     }
 
     resumeSong = async () => {
-
-        let song = this.state.songs[0]
+        await this.fetchSongs()
+        //let song = this.state.songs[0]
+        let song = this.state.currentSong.item.uri
+        console.log('this is song in resume', song)
         let roomData = await getRoomData(this.props.docId)
         let progress = this.state.currentSong.progress_ms
 
+        let remainingTime = this.state.currentSong.item.duration_ms - progress
+
         await resume(roomData, song, progress)
+        this.playbackTimer(remainingTime)
 
         this.setState({paused: false})
     }
