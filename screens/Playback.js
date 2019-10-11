@@ -15,11 +15,13 @@ import { currentTrack } from '../api/spotify';
 import db, { getRoomData, refreshRoomToken } from '../firebase/index';
 import Dimensions from 'Dimensions';
 
+const {width, height} = Dimensions.get('window');
+
 export default function Playback(props) {
   const hostName = props.navigation.state.params.hostName;
   const docId = props.navigation.state.params.docId;
   const [songData, setSongData] = useState({});
-
+  
   async function getCurrentSongPlaying(id) {
     try {
       await refreshRoomToken(id);
@@ -63,7 +65,7 @@ export default function Playback(props) {
       <StatusBar hidden />
       <ImageBackground
         source={require('../weJayGradient.png')}
-        style={{ width: 400, height: 700, alignSelf: 'center' }}
+        style={{ width: width, height: height, alignSelf: 'center' }}
       >
         <View style={styles.container}>
           <TouchableOpacity onPress={() => closeModal()}>
@@ -107,14 +109,14 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     flexDirection: 'column',
     alignItems: 'center',
-    height: 700,
-    width: 400,
+    height: height,
+    width: width,
     alignSelf: 'center'
   },
   image: {
-    width: 300,
-    height: 300,
-    marginTop: 50
+    width: .5 * width,
+    height: .3 * height,
+    marginTop: 40
   },
   songName: {
     fontWeight: 'bold',
