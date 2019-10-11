@@ -5,71 +5,103 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Image,
-  FlatList
+  FlatList,
+  Image
 } from 'react-native';
 import { Card, Tile } from 'react-native-elements';
 import { Feather } from '@expo/vector-icons';
-import db, { getRoomData, subToPlaylist, getPlaylist } from '../firebase/index'
-import PlaybackClass from './PlaybackClass'
-import SingleSong from './SingleSong'
+import db, { getRoomData, subToPlaylist, getPlaylist } from '../firebase/index';
+import PlaybackClass from './PlaybackClass';
+import SingleSong from './SingleSong';
 
 export default function PlaylistRoom(props) {
   const docId = props.navigation.state.params.docId;
+  console.log('params', props.navigation.state.params);
   const userName = props.navigation.state.params.userName;
+
   let [songs, setSongs] = useState([]);
   useEffect(() => {
     let roomRef = db.collection('Rooms').doc(docId);
     let unsub = roomRef
-        .collection('Playlist')
-        .orderBy('timeAdded')
-        .onSnapshot((snapshot) => {
-            const songArr = snapshot.docs.map(doc => doc.data());
-            //sort by votes
-            songArr.sort((a,b)=> {
-                const votesA = a.votes;
-                const votesB = b.votes;
-                
-                let comparison = 0;
-                if (votesA > votesB) {
-                  comparison = -1;
-                } else if (votesA < votesB) {
-                  comparison = 1;
-                }
-                return comparison;
-              })
-            setSongs(songArr);
+      .collection('Playlist')
+      .orderBy('timeAdded')
+      .onSnapshot(snapshot => {
+        const songArr = snapshot.docs.map(doc => doc.data());
+        //sort by votes
+        songArr.sort((a, b) => {
+          const votesA = a.votes;
+          const votesB = b.votes;
+
+          let comparison = 0;
+          if (votesA > votesB) {
+            comparison = -1;
+          } else if (votesA < votesB) {
+            comparison = 1;
+          }
+          return comparison;
         });
+        setSongs(songArr);
+      });
     return unsub;
   }, [docId]);
+
+  PlaylistRoom.navigationOptions = {
+    headerRight: (
+      <TouchableOpacity
+        onPress={() => {
+          props.navigation.navigate('Playback', { docId });
+        }}
+      >
+        <Feather
+          name="music"
+          size={30}
+          color="#4392F1"
+          style={styles.musicnote}
+        />
+      </TouchableOpacity>
+    ),
+    headerLeft: (
+      <TouchableOpacity
+        onPress={() => {
+          props.navigation.navigate('Home');
+        }}
+      >
+        <Feather name="chevron-left" size={32} color="#4392F1" />
+      </TouchableOpacity>
+    )
+  };
+
   return (
     <>
-        <ScrollView>
+      <ScrollView>
         <Tile
           imageSrc={require('../weJayGradient.png')}
           title="Welcome, DJ"
           featured
           caption="Add a Song Below"
           height={200}
-          />
-          {songs ? (
+        />
+        {songs ? (
           <FlatList
             data={songs}
-            renderItem={({ item }) => <SingleSong song={item} docId={docId} userName ={userName} />}
+            renderItem={({ item }) => (
+              <SingleSong song={item} docId={docId} userName={userName} />
+            )}
             keyExtractor={item => item.id}
           />
-          ) : <Text>Search To Add Songs to Your Playlist!</Text> }
-        </ScrollView>
+        ) : (
+          <Text>Search To Add Songs to Your Playlist!</Text>
+        )}
+      </ScrollView>
       <View style={styles.buttonBackground}>
         <TouchableOpacity
-        style={styles.button}
-        onPress={() => props.navigation.navigate('SearchScreen', { docId, userName })}
-      >
-        <Text style={styles.buttonText}>Add A Song</Text>
+          style={styles.button}
+          onPress={() =>
+            props.navigation.navigate('SearchScreen', { docId, userName })
+          }
+        >
+          <Text style={styles.buttonText}>Add A Song</Text>
         </TouchableOpacity>
-      </View>
-      <View style={{top: 75}}>
-        <PlaybackClass docId={docId} />
       </View>
     </>
   );
@@ -109,12 +141,12 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   vote: {
-      color: '#000'
+    color: '#000'
   },
   voteHighlight: {
-      color:'#FF5857'
+    color: '#FF5857'
+  },
+  musicnote: {
+    paddingRight: 10
   }
-  // buttonBackground: {
-  //   backgroundColor: '#C9DDFF'
-  // }
 });

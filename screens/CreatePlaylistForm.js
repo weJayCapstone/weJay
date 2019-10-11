@@ -26,7 +26,10 @@ export default function CreatePlaylistForm(props) {
       props.navigation.state.params.setDocId(result);
       props.navigation.state.params.setUserName(formData.hostName);
       if (formData.accessToken) {
-        props.navigation.navigate('PlaylistRoom', { docId: result, userName: formData.hostName });
+        props.navigation.navigate('PlaylistRoom', {
+          docId: result,
+          userName: formData.hostName
+        });
       }
     } catch (err) {
       console.log(err);
@@ -122,6 +125,7 @@ const styles = StyleSheet.create({
   saveButtonText: {
     color: '#FFFFFF',
     fontSize: 20,
-    textAlign: 'center'
+    textAlign: 'center',
+    fontWeight: 'bold'
   }
 });
