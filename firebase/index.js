@@ -157,33 +157,32 @@ export async function getPlaylist(roomId) {
   }
 }
 
-export async function updateVote(songName, vote, userName, docId){
+export async function updateVote(songId, vote, userName, docId){
     let songsRef = db.collection('Rooms').doc(docId).collection('Playlist');
+
     try{
-        let query = await songsRef.where('name', '==', songName).get();
+        let query = await songsRef.where('id', '==', songId).get();
         if (query.empty) {
             console.log("something went wrong");
           } 
         else {
-            query.forEach(doc => {
+            query.forEach(async doc => {
                 let songRef = songsRef.doc(doc.id);
-                if(vote === 'up'){
+                let songData = doc.data();
+                if(vote === 'up' && (songData.users[userName] !== 'up')){
                     //increment vote
                     songRef.update({
                         votes: firebase.firestore.FieldValue.increment(1)
                     });
-                }else {
+                }else if(vote === 'down' && (songData.users[userName] !== 'down')) {
                     //decrease vote 
                     songRef.update({
                         votes: firebase.firestore.FieldValue.increment(-1)
                     });
                 }
                 songRef.update({['users.' + userName]: vote});
-        });
+            });
           }
-        //   let songRef = db.collection('Rooms').doc(docId).collection('Playlist')
-        // .doc('xTV5Q653FCnHg3JzSdzZ');
-        // songRef.update({['users.' + userName]: vote});
     }catch(err){
         console.log(err)
     }
