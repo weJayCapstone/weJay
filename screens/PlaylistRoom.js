@@ -10,10 +10,9 @@ import {
 } from 'react-native';
 import { Card, Tile } from 'react-native-elements';
 import { Feather } from '@expo/vector-icons';
-import db from '../firebase/index';
+import db, { getRoomData, subToPlaylist, getPlaylist } from '../firebase/index';
+import PlaybackClass from './PlaybackClass';
 import SingleSong from './SingleSong';
-
-import { getRoom } from '../firebase/index';
 
 export default function PlaylistRoom(props) {
   const docId = props.navigation.state.params.docId;
@@ -21,32 +20,29 @@ export default function PlaylistRoom(props) {
   const userName = props.navigation.state.params.userName;
 
   let [songs, setSongs] = useState([]);
-  let [loading, setLoading] = useState(true);
-  //   let [downvote, setDownvote] = useState(false);
   useEffect(() => {
     let roomRef = db.collection('Rooms').doc(docId);
-    roomRef
+    let unsub = roomRef
       .collection('Playlist')
       .orderBy('timeAdded')
-      // .orderBy('votes', 'desc')
       .onSnapshot(snapshot => {
         const songArr = snapshot.docs.map(doc => doc.data());
-        console.log('im in the snapshot');
-        snapshot.forEach(doc =>
-          roomRef
-            .collection('Playlist')
-            .doc(doc.id)
-            .set(
-              {
-                users: {
-                  [userName]: null
-                }
-              },
-              { merge: true }
-            ));
-        setLoading(false);
+        //sort by votes
+        songArr.sort((a, b) => {
+          const votesA = a.votes;
+          const votesB = b.votes;
+
+          let comparison = 0;
+          if (votesA > votesB) {
+            comparison = -1;
+          } else if (votesA < votesB) {
+            comparison = 1;
+          }
+          return comparison;
+        });
         setSongs(songArr);
       });
+    return unsub;
   }, [docId]);
 
   PlaylistRoom.navigationOptions = {
@@ -93,7 +89,9 @@ export default function PlaylistRoom(props) {
             )}
             keyExtractor={item => item.id}
           />
-        ) : null}
+        ) : (
+          <Text>Search To Add Songs to Your Playlist!</Text>
+        )}
       </ScrollView>
       <View style={styles.buttonBackground}>
         <TouchableOpacity

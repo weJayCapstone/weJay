@@ -43,7 +43,6 @@ export async function getTokens() {
     const ClientID = process.env.SPOTIFY_CLIENT_ID; //replace with your client Id from spotify
     const ClientSecret = process.env.SPOTIFY; //replace with your own secret
     const redirect = AuthSession.getRedirectUrl();
-    console.log(redirect);
     const encodedRedirect = encodeURIComponent(redirect);
     const credsB64 = btoa(`${ClientID}:${ClientSecret}`);
 
@@ -57,7 +56,6 @@ export async function getTokens() {
     });
 
     const responseJSON = await response.json();
-    console.log('responseJSON', responseJSON);
     return responseJSON;
     // const {
     //     access_token: accessToken,
@@ -72,8 +70,6 @@ export async function getTokens() {
 export const makeNewPlaylist = async (accessToken, playListName) => {
   try {
     //const code = await getUserData('accessToken')
-
-    console.log('this is accessToken', accessToken);
 
     let user = await fetch('https://api.spotify.com/v1/me', {
       method: 'GET',
@@ -305,18 +301,19 @@ export const getPlaylistTracks = async roomData => {
         }
       }
     );
-
     let tracksJSON = await tracks.json();
-
     let arr = tracksJSON.items;
 
     let songs = arr.map(function(el) {
       // console.log('this is el in map', el)
       return el.track.uri;
     });
-
-    console.log('these are mapped songs', songs);
-
+    if (tracks.status !== 200) {
+      console.log(
+        'somethings off in spotify, this is your status:',
+        tracks.status
+      );
+    }
     return songs;
   } catch (e) {
     console.log(e);
