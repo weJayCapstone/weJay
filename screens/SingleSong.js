@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Card, Image, ListItem } from 'react-native-elements';
 import { Feather } from '@expo/vector-icons';
+import { play } from '../api/spotify';
 import db from '../firebase/index.js';
 
 export default function SingleSong(props) {
@@ -23,7 +24,6 @@ export default function SingleSong(props) {
       console.log(vote);
     }
   };
-  console.log('song', song);
   return (
     <View key={song.id} style={styles.background}>
       <Card style={styles.containerStyle}>

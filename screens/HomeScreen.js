@@ -25,7 +25,10 @@ export default function HomeScreen(props) {
           onPress={() =>
             props.navigation.navigate('CreatePlaylistForm', {
               otherParam: 'Create a Playlist',
-              docId, setDocId, userName,setUserName
+              docId,
+              setDocId,
+              userName,
+              setUserName
             })
           }
         >
@@ -46,22 +49,21 @@ export default function HomeScreen(props) {
         >
           <Text style={styles.text}>Join Playlist</Text>
         </TouchableOpacity>
-          { docId ?( <TouchableOpacity
+        {docId ? (
+          <TouchableOpacity
             style={styles.button}
-            onPress={() => props.navigation.navigate('PlaylistRoom', {docId, setDocId, userName,setUserName})}
+            onPress={() =>
+              props.navigation.navigate('PlaylistRoom', {
+                docId,
+                setDocId,
+                userName,
+                setUserName
+              })
+            }
           >
             <Text style={styles.text}>Go To Playlist</Text>
-          </TouchableOpacity>)
-         : null}
-
-        {/* NEED THIS TO TEST, WILL REMOVE AFTER TESTING */}
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => props.navigation.navigate('Playback')}
-        >
-          <Text style={styles.text}>Playback (TEST)</Text>
-        </TouchableOpacity>
+          </TouchableOpacity>
+        ) : null}
       </View>
     </View>
   );

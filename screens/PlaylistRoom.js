@@ -5,17 +5,21 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Image,
-  FlatList
+  FlatList,
+  Image
 } from 'react-native';
 import { Card, Tile } from 'react-native-elements';
 import { Feather } from '@expo/vector-icons';
 import db from '../firebase/index';
 import SingleSong from './SingleSong';
 
+import { getRoom } from '../firebase/index';
+
 export default function PlaylistRoom(props) {
   const docId = props.navigation.state.params.docId;
+  console.log('params', props.navigation.state.params);
   const userName = props.navigation.state.params.userName;
+
   let [songs, setSongs] = useState([]);
   let [loading, setLoading] = useState(true);
   //   let [downvote, setDownvote] = useState(false);
@@ -24,7 +28,7 @@ export default function PlaylistRoom(props) {
     roomRef
       .collection('Playlist')
       .orderBy('timeAdded')
-      //.orderBy('votes', 'desc')
+      // .orderBy('votes', 'desc')
       .onSnapshot(snapshot => {
         const songArr = snapshot.docs.map(doc => doc.data());
         console.log('im in the snapshot');
@@ -44,6 +48,33 @@ export default function PlaylistRoom(props) {
         setSongs(songArr);
       });
   }, [docId]);
+
+  PlaylistRoom.navigationOptions = {
+    headerRight: (
+      <TouchableOpacity
+        onPress={() => {
+          props.navigation.navigate('Playback', { docId });
+        }}
+      >
+        <Feather
+          name="music"
+          size={30}
+          color="#4392F1"
+          style={styles.musicnote}
+        />
+      </TouchableOpacity>
+    ),
+    headerLeft: (
+      <TouchableOpacity
+        onPress={() => {
+          props.navigation.navigate('Home');
+        }}
+      >
+        <Feather name="chevron-left" size={32} color="#4392F1" />
+      </TouchableOpacity>
+    )
+  };
+
   return (
     <>
       <ScrollView>
@@ -54,14 +85,15 @@ export default function PlaylistRoom(props) {
           caption="Add a Song Below"
           height={200}
         />
-        <Text>Hello</Text>
-        <FlatList
-          data={songs}
-          renderItem={({ item }) => (
-            <SingleSong song={item} docId={docId} userName={userName} />
-          )}
-          keyExtractor={item => item.id}
-        />
+        {songs ? (
+          <FlatList
+            data={songs}
+            renderItem={({ item }) => (
+              <SingleSong song={item} docId={docId} userName={userName} />
+            )}
+            keyExtractor={item => item.id}
+          />
+        ) : null}
       </ScrollView>
       <View style={styles.buttonBackground}>
         <TouchableOpacity
@@ -115,8 +147,8 @@ const styles = StyleSheet.create({
   },
   voteHighlight: {
     color: '#FF5857'
+  },
+  musicnote: {
+    paddingRight: 10
   }
-  // buttonBackground: {
-  //   backgroundColor: '#C9DDFF'
-  // }
 });
