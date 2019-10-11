@@ -36,7 +36,7 @@ export default function PlaylistRoom(props) {
                 }
               }, {merge: true}));
             setLoading(false);
-            console.log('song arr in pl room', songArr)
+            //console.log('song arr in pl room', songArr)
             setSongs(songArr);
         });
   }, [docId]);

@@ -331,7 +331,7 @@ export const getPlaylistTracks = async (roomData) => {
             return el.track.uri
         });
 
-        console.log('these are mapped songs', songs)
+        // console.log('these are mapped songs', songs)
 
         return songs
 
@@ -359,7 +359,7 @@ export const shiftPlaylist = async (roomData, currentSong) => {
         })
 
         let deletedJSON = await deleted.json()
-        console.log('this is deleted', deletedJSON)
+        // console.log('this is deleted', deletedJSON)
 
     }
     catch (e) {
@@ -367,3 +367,5 @@ export const shiftPlaylist = async (roomData, currentSong) => {
     }
 
 }
+
+

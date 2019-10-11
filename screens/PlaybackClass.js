@@ -18,7 +18,8 @@ export default class PlaylistClass extends Component {
         this.state = {
             currentSong: {},
             songs: [],
-            paused: false
+            paused: false,
+            playing: null
         }
         this.playSong = this.playSong.bind(this)
         this.nextSong = this.nextSong.bind(this)
@@ -26,6 +27,11 @@ export default class PlaylistClass extends Component {
         this.fetchSongs = this.fetchSongs.bind(this)
         this.setCurrentSong = this.setCurrentSong.bind(this)
         this.resumeSong = this.resumeSong.bind(this)
+        this.playbackTimer = this.playbackTimer.bind(this)
+    }
+
+    componentDidUpdate(){
+        
     }
 
     fetchSongs = async () => {
@@ -46,18 +52,35 @@ export default class PlaylistClass extends Component {
 
     }
 
+    playbackTimer = (songTime) => {
+
+        console.log('this is songTime', songTime)
+
+        setTimeout(function(){
+            if (this.state.songs.length > 1){
+                console.log('this is inside the timeout')
+                this.nextSong()
+            }
+        }.bind(this), songTime)
+
+    }
 
     playSong = async () => {
 
-        await this.fetchSongs();
-    
-        console.log('state songs in play song, ', this.state.songs)
-        let song = this.state.songs[0]
-        console.log('this is song in playsong', song)
         let roomData = await getRoomData(this.props.docId)
-    
+        console.log('songs before fetch', this.state.songs)
+        await this.fetchSongs();
+        console.log('songs after fetch', this.state.songs)
+        let song = this.state.songs[0]
+        
         await play(roomData, song)
-    
+
+        await this.setCurrentSong()
+        const songLength = this.state.currentSong.item.duration_ms
+        this.playbackTimer(songLength)
+
+        console.log('does this work in play song? ', this.state.songs)
+
     }
 
     nextSong = async () => {
@@ -91,8 +114,6 @@ export default class PlaylistClass extends Component {
 
 
     render(){
-
-        console.log('this is state', this.state.songs)
 
         return (
         <View style={{display: 'flex', justifyContent: 'center', alignItems: 'center', bottom: 100}}>
