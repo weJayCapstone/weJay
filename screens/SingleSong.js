@@ -9,9 +9,9 @@ export default function SingleSong(props) {
   const song = props.song;
   const userName = props.userName;
   const docId = props.docId;
-  const handleVote = async (vote, songName) => {
+  const handleVote = async (vote, songId) => {
     try {
-      await updateVote(songName, vote, userName, docId);
+      await updateVote(songId, vote, userName, docId);
     } catch (err) {
       console.log(err);
     }
@@ -56,7 +56,7 @@ export default function SingleSong(props) {
             </Text>
           </View>
           <View style={styles.feather}>
-            <TouchableOpacity onPress={() => handleVote('up', song.name)}>
+            <TouchableOpacity onPress={() => handleVote('up', song.id)}>
               <Feather
                 style={
                   song.users[userName] === 'up'
@@ -77,7 +77,7 @@ export default function SingleSong(props) {
             >
               {song.votes}
             </Text>
-            <TouchableOpacity onPress={() => handleVote('down', song.name)}>
+            <TouchableOpacity onPress={() => handleVote('down', song.id)}>
               <Feather
                 style={
                   song.users[userName] === 'down'
@@ -89,7 +89,6 @@ export default function SingleSong(props) {
                 color="black"
               />
             </TouchableOpacity>
-            <Feather name="chevron-down" size={30} color="black" />
           </View>
         </View>
       </Card>
