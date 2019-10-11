@@ -13,8 +13,10 @@ import Modal from 'react-native-modal';
 import PlaybackClass from './PlaybackClass';
 import { currentTrack } from '../api/spotify';
 import db, { getRoomData, refreshRoomToken } from '../firebase/index';
+import Dimensions from 'Dimensions';
 
 export default function Playback(props) {
+  const hostName = props.navigation.state.params.hostName;
   const docId = props.navigation.state.params.docId;
   const [songData, setSongData] = useState({});
 
@@ -54,6 +56,8 @@ export default function Playback(props) {
     props.navigation.navigate('PlaylistRoom');
   }
 
+  // const { width, height } = Dimensions.get('window');
+
   return (
     <Modal isVisible={isVisible}>
       <StatusBar hidden />
@@ -89,7 +93,7 @@ export default function Playback(props) {
             </Text>
           </View>
           <View style={{ top: 75 }}>
-            <PlaybackClass docId={docId} />
+            <PlaybackClass docId={docId} hostName={hostName} />
           </View>
         </View>
       </ImageBackground>

@@ -28,7 +28,7 @@ export default function CreatePlaylistForm(props) {
       if (formData.accessToken) {
         props.navigation.navigate('PlaylistRoom', {
           docId: result,
-          userName: formData.hostName
+          hostName: roomData.hostName
         });
       }
     } catch (err) {
