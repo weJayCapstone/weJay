@@ -69,11 +69,15 @@ export const pauseSong = async (docId) => {
 export const resumeSong = async (docId) => {
     
     let roomData = await getRoomData(docId)
-    let song = getCurrentSongData()
-    
+    let song = await getCurrentSongData(docId)
+    console.log('this is song in resume: ', song)
     let progress = song.progress
+    console.log('this is progress in resume: ', progress)
     let remainingTime = song.duration - progress
+    console.log('this is remainingtime in resume: ', remainingTime)
 
-    await resume(roomData, song, progress)
+
+
+    await resume(roomData, song.uri, progress)
     playbackTimer(remainingTime)
 }

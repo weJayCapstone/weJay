@@ -19,6 +19,18 @@ export default class PlaylistClass extends Component {
       paused: false,
       playButton: true
     };
+
+    this.handlePause = this.handlePause.bind(this)
+  }
+
+  handlePause(){
+    this.setState({paused: true})
+    pauseSong(this.props.docId)
+  }
+
+  handleResume(){
+    this.setState({paused: false})
+    resumeSong(this.props.docId)
   }
 
 
@@ -26,6 +38,7 @@ export default class PlaylistClass extends Component {
   hidePlayButton() {
     playSong(this.props.docId);
     this.setState({ playButton: false });
+    this.props.setPlaying(true)
   }
 
   render() {
@@ -44,13 +57,13 @@ export default class PlaylistClass extends Component {
           </TouchableOpacity>
 
           {!this.state.paused ? (
-            <TouchableOpacity onPress={() => pauseSong(this.props.docId)}>
+            <TouchableOpacity onPress={() => this.handlePause()}>
               <View style={styles.pause}>
                 <Feather name="pause" size={50} color="#FF5857" />
               </View>
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity onPress={() => resumeSong(this.props.docId)}>
+            <TouchableOpacity onPress={() => this.handleResume()}>
               <View style={styles.pause}>
                 <Feather name="play" size={50} color="#FF5857" />
               </View>

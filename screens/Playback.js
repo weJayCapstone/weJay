@@ -12,7 +12,7 @@ import { Feather } from '@expo/vector-icons';
 import Modal from 'react-native-modal';
 import PlaybackClass from './PlaybackClass';
 import { currentTrack } from '../api/spotify';
-import db, { getRoomData, refreshRoomToken } from '../firebase/index';
+import db, { getRoomData, refreshRoomToken, getCurrentSongData } from '../firebase/index';
 import Dimensions from 'Dimensions';
 
 const {width, height} = Dimensions.get('window');
@@ -21,12 +21,13 @@ export default function Playback(props) {
   const hostName = props.navigation.state.params.hostName;
   const docId = props.navigation.state.params.docId;
   const [songData, setSongData] = useState({});
-  
+  const [isPlaying, setPlaying] = useState(false)
+
   async function getCurrentSongPlaying(id) {
     try {
       await refreshRoomToken(id);
-      let roomData = await getRoomData(id);
-      const songPlaying = await currentTrack(roomData);
+      //let roomData = await getRoomData(id);
+      const songPlaying = await getCurrentSongData(id);
       const result = songDataParser(songPlaying.item);
       setSongData(result);
     } catch (err) {
@@ -35,7 +36,13 @@ export default function Playback(props) {
   }
 
   useEffect(() => {
-    getCurrentSongPlaying(docId);
+
+    if (isPlaying){
+
+      getCurrentSongPlaying(docId);
+
+    }
+
   }, []);
 
   function songDataParser(data) {
@@ -71,13 +78,13 @@ export default function Playback(props) {
           <TouchableOpacity onPress={() => closeModal()}>
             <Feather name="chevron-down" size={50} color="black" />
           </TouchableOpacity>
-          <Image
+          {songData.imageUrl ? <Image
             style={styles.image}
             resizeMode="cover"
             source={{
               uri: songData.imageUrl
             }}
-          />
+          /> : null}
           <View style={styles.textContainer}>
             <Text
               ellipsizeMode="tail"
@@ -95,7 +102,7 @@ export default function Playback(props) {
             </Text>
           </View>
           <View style={{ top: 75 }}>
-            <PlaybackClass docId={docId} hostName={hostName} />
+            <PlaybackClass docId={docId} setPlaying={setPlaying} hostName={hostName} />
           </View>
         </View>
       </ImageBackground>
