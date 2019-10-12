@@ -166,7 +166,7 @@ export async function updateVote(songId, vote, userName, docId){
             console.log("something went wrong");
           } 
         else {
-            query.forEach(async doc => {
+            query.forEach(doc => {
                 let songRef = songsRef.doc(doc.id);
                 let songData = doc.data();
                 if(vote === 'up' && (songData.users[userName] !== 'up')){
@@ -186,6 +186,34 @@ export async function updateVote(songId, vote, userName, docId){
     }catch(err){
         console.log(err)
     }
+}
+
+export async function setCurrentSong(roomData, docId) {
+    let songDocId;
+    let roomRef = db.collection('Rooms').doc(docId)
+    let currentSong = roomData.queue[0];
+    let newQueue = roomData.queue.slice(1); //new queue
+    //set currentSong
+    roomRef.set({currentSong}, {merge:true});
+    roomRef.update({queue: newQueue});
+    //get playlist 
+    let playlistRef = db.collection('Rooms').doc(docId).collection('Playlist');
+    let query = await playlistRef.where('id', '==',currentSong.id).get();
+    //find song, and remove it from playlist collection
+    query.forEach(doc => songDocId = doc.id);
+    await playlistRef.doc(songDocId).delete();
+    
+    return currentSong;
+}
+
+export async function pauseCurrentSong(docId, progress) {
+    let roomRef = db.collection('Rooms').doc(docId);
+    await roomRef.update({'currentSong.progress': progress});
+}
+export async function getCurrentSongData(docId){
+    let roomRef = await db.collection('Rooms').doc(docId).get();
+    let currentSong = roomRef.data().currentSong;
+    return currentSong
 }
 
 //add users to playlist
