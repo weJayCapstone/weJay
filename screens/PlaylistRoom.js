@@ -43,6 +43,7 @@ export default function PlaylistRoom(props) {
           }
           return comparison;
         });
+        roomRef.update({queue: songArr})
         setSongs(songArr);
       });
     return unsub;

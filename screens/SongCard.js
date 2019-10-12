@@ -36,6 +36,7 @@ export default class SongCard extends Component {
     this.toggleModal = this.toggleModal.bind(this);
   }
   songDataParser = data => {
+    console.log(data);
     let result = {
       name: data.name,
       id: data.id,
@@ -45,6 +46,8 @@ export default class SongCard extends Component {
       imageUrl: data.album.images[0].url,
       albumName: data.album.name,
       votes: 0,
+      duration: data.duration_ms,
+      progress: null,
       timeAdded: Date.now(),
       users: {
         [this.props.userName]: null
