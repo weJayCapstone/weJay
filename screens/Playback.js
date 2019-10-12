@@ -15,7 +15,7 @@ import { currentTrack } from '../api/spotify';
 import { getRoomData, refreshRoomToken } from '../firebase/index';
 import Dimensions from 'Dimensions';
 
-const { width, height } = Dimensions.get('window');
+// const { width, height } = Dimensions.get('window');
 
 export default function Playback(props) {
   const hostName = props.navigation.state.params.hostName;
@@ -33,7 +33,6 @@ export default function Playback(props) {
       console.log(err);
     }
   }
-
   useEffect(() => {
     getCurrentSongPlaying(docId);
   }, []);

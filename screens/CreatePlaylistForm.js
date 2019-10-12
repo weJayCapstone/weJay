@@ -31,7 +31,7 @@ export default function CreatePlaylistForm(props) {
           hostName: roomData.hostName
         });
       }
-      // setRoomData({ title: '', hostName: '', passcode: '' });
+      // setRoomData({ title: '', hostName: '', passcode: null });
     } catch (err) {
       console.log(err);
     }
