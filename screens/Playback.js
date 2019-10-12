@@ -7,21 +7,21 @@ import {
   TouchableOpacity,
   ImageBackground
 } from 'react-native';
-import { Card, Image, ListItem } from 'react-native-elements';
+import { Image } from 'react-native-elements';
 import { Feather } from '@expo/vector-icons';
 import Modal from 'react-native-modal';
 import PlaybackClass from './PlaybackClass';
 import { currentTrack } from '../api/spotify';
-import db, { getRoomData, refreshRoomToken } from '../firebase/index';
+import { getRoomData, refreshRoomToken } from '../firebase/index';
 import Dimensions from 'Dimensions';
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 export default function Playback(props) {
   const hostName = props.navigation.state.params.hostName;
   const docId = props.navigation.state.params.docId;
   const [songData, setSongData] = useState({});
-  
+
   async function getCurrentSongPlaying(id) {
     try {
       await refreshRoomToken(id);

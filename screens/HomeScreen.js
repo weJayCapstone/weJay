@@ -5,7 +5,6 @@ import {
   TouchableHighlight,
   TouchableOpacity,
   View,
-  StatusBar,
   Image
 } from 'react-native';
 export default function HomeScreen(props) {
@@ -13,16 +12,11 @@ export default function HomeScreen(props) {
   const [userName, setUserName] = useState('');
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FF5857" />
       <View style={styles.header}>
         <Image
           source={require('../weJay_Temp_Logo.png')}
           style={{ width: 100, height: 100 }}
         />
-
-        {/* <Text style={{ fontSize: 40, fontWeight: 'bold', alignSelf: 'center' }}>
-          weJay
-        </Text> */}
       </View>
       <View>
         <TouchableHighlight
@@ -56,7 +50,7 @@ export default function HomeScreen(props) {
         </TouchableOpacity>
         {docId ? (
           <TouchableOpacity
-            style={styles.button}
+            style={styles.goToPlaylistButton}
             onPress={() =>
               props.navigation.navigate('PlaylistRoom', {
                 docId,
@@ -84,7 +78,7 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingBottom: 25,
-    marginTop: 80
+    marginTop: 100
   },
   text: {
     fontSize: 24,
@@ -93,7 +87,7 @@ const styles = StyleSheet.create({
     color: '#fff'
   },
   button: {
-    marginTop: 10,
+    marginTop: 30,
     shadowColor: '#999',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,
@@ -102,6 +96,18 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     padding: 10,
     backgroundColor: '#FF5857',
+    width: 300
+  },
+  goToPlaylistButton: {
+    marginTop: 150,
+    shadowColor: '#999',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    elevation: 1,
+    borderRadius: 25,
+    padding: 10,
+    backgroundColor: '#4392F1',
     width: 300
   }
 });

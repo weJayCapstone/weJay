@@ -15,7 +15,6 @@ import PlaybackClass from './PlaybackClass';
 import SingleSong from './SingleSong';
 import Dimensions from 'Dimensions';
 
-
 export default function PlaylistRoom(props) {
   const docId = props.navigation.state.params.docId;
   // console.log('params', props.navigation.state.params);
@@ -55,12 +54,15 @@ export default function PlaylistRoom(props) {
           props.navigation.navigate('Playback', { docId, hostName });
         }}
       >
-        <Feather
-          name="music"
-          size={30}
-          color="#4392F1"
-          style={styles.musicnote}
-        />
+        <View style={styles.headerContainer}>
+          <Text style={styles.nowPlayingText}>Now Playing</Text>
+          <Feather
+            name="music"
+            size={30}
+            color="#4392F1"
+            style={styles.musicnote}
+          />
+        </View>
       </TouchableOpacity>
     ),
     headerLeft: (
@@ -74,17 +76,6 @@ export default function PlaylistRoom(props) {
     )
   };
 
-  // headerRight :  navigation.state.params.userName ?
-  //   ( <TouchableOpacity
-  //        onPress={() => this.followUser()}>
-  //        <Icon2 name="ios-person-add-outline" size={35} />
-  //     </TouchableOpacity> )
-  //   :
-  //   ( <TouchableOpacity
-  //        onPress={() => this.unfollowUser()}>
-  //        <Icon name="user-times" size={20} />
-  //     </TouchableOpacity> )
-
   return (
     <>
       <ScrollView>
@@ -94,6 +85,8 @@ export default function PlaylistRoom(props) {
           featured
           caption="Add a Song Below"
           height={200}
+          titleStyle={{ fontSize: 50, fontWeight: 'bold' }}
+          captionStyle={{ fontSize: 20 }}
         />
         {songs ? (
           <FlatList
@@ -134,7 +127,17 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row'
   },
+  headerContainer: {
+    display: 'flex',
+    flexDirection: 'row'
+  },
   feather: { marginLeft: 'auto' },
+  nowPlayingText: {
+    color: '#4392F1',
+    fontSize: 18,
+    paddingRight: 3,
+    paddingTop: 5
+  },
   button: {
     padding: 15,
     backgroundColor: '#FF5857',
