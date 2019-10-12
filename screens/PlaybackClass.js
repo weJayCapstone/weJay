@@ -7,7 +7,7 @@ import {
   View,
   Image
 } from 'react-native';
-import db, { getRoomData, refreshRoomToken } from '../firebase/index';
+import db, { getRoomData, refreshRoomToken, setCurrentSong, getCurrentSongData, pauseCurrentSong } from '../firebase/index';
 import {
   play,
   next,
@@ -34,7 +34,7 @@ export default class PlaylistClass extends Component {
     this.nextSong = this.nextSong.bind(this);
     this.pauseSong = this.pauseSong.bind(this);
     this.fetchSongs = this.fetchSongs.bind(this);
-    this.setCurrentSong = this.setCurrentSong.bind(this);
+    // this.setCurrentSong = this.setCurrentSong.bind(this);
     this.resumeSong = this.resumeSong.bind(this);
     this.playbackTimer = this.playbackTimer.bind(this)
   }
@@ -49,12 +49,12 @@ fetchSongs = async () => {
 
 }
 
-setCurrentSong = async () => {
+// setCurrentSong = async () => {
 
-    let roomData = await getRoomData(this.props.docId)
-    let playing = await currentTrack(roomData)
-    this.setState({currentSong: playing})
-}
+//     let roomData = await getRoomData(this.props.docId)
+//     let playing = await currentTrack(roomData)
+//     this.setState({currentSong: playing})
+// }
 
 playbackTimer = (songTime) => {
 
@@ -75,17 +75,21 @@ playSong = async () => {
     try {
         let roomData = await refreshRoomToken(this.props.docId)
         console.log('songs before fetch', this.state.songs)
-        await this.fetchSongs();
+        //await this.fetchSongs();
         console.log('songs after fetch', this.state.songs)
-        let song = this.state.songs[0]
-        console.log(roomData);
+        //add hostname conditional
+        //set current song
+        let song = await setCurrentSong(roomData, this.props.docId);
+        //let song = await getCurrentSongFromDb()
+        // console.log(roomData);
         await play(roomData, song);
 
-        await this.setCurrentSong()
-        const songLength = this.state.currentSong.item.duration_ms
-        this.playbackTimer(songLength)
-
-        console.log('does this work in play song? ', this.state.songs)
+        // await this.setCurrentSong()
+        // const songLength = this.state.currentSong.item.duration_ms
+        // this.playbackTimer(songLength)
+        await getCurrentSongData(this.props.docId)
+        await pauseCurrentSong(this.props.docId, 10000)
+        console.log('this is the current song', song)
 
     } catch (err){
         console.log(err);
@@ -139,6 +143,7 @@ resumeSong = async () => {
     // console.log('this is state', this.state.songs);
 
     if (this.props.hostName) {
+    //set current song here in db make a new song queue with shifted array
       return (
         <View style={styles.icons}>
           <TouchableOpacity onPress={() => this.hidePlayButton()}>

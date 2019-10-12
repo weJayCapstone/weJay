@@ -176,7 +176,7 @@ export async function getUserData(key) {
   }
 }
 
-export const play = async (roomData, songID) => {
+export const play = async (roomData, songData) => {
   try {
     const start = await fetch('https://api.spotify.com/v1/me/player/play', {
       method: 'PUT',
@@ -185,7 +185,7 @@ export const play = async (roomData, songID) => {
         'Content-Type': 'application/json'
       },
       // body: JSON.stringify({uris: [`spotify:track:${songID}`]})
-      body: JSON.stringify({ uris: [`${songID}`] })
+      body: JSON.stringify({ uris: [songData.uri] })
     });
 
     // const startJSON = await start.json()
