@@ -213,7 +213,7 @@ export async function pauseCurrentSong(docId, progress) {
 export async function getCurrentSongData(docId){
     let roomRef = await db.collection('Rooms').doc(docId).get();
     let currentSong = roomRef.data().currentSong;
-    console.log(currentSong);
+    return currentSong
 }
 
 //add users to playlist
