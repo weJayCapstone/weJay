@@ -21,7 +21,7 @@ export default function Playback(props) {
   const hostName = props.navigation.state.params.hostName;
   const docId = props.navigation.state.params.docId;
   const [songData, setSongData] = useState({});
-  
+  const [isPlaying, setPlaying] =useState(false);
   async function getCurrentSongPlaying(id) {
     try {
       await refreshRoomToken(id);
@@ -65,7 +65,7 @@ export default function Playback(props) {
       <StatusBar hidden />
       <ImageBackground
         source={require('../weJayGradient.png')}
-        style={{ width: width, height: height, alignSelf: 'center' }}
+        // style={{ width: width, height: height, alignSelf: 'center' }}
       >
         <View style={styles.container}>
           <TouchableOpacity onPress={() => closeModal()}>
@@ -95,7 +95,7 @@ export default function Playback(props) {
             </Text>
           </View>
           <View style={{ top: 75 }}>
-            <PlaybackClass docId={docId} hostName={hostName} />
+            <PlaybackClass docId={docId} setPlaying ={setPlaying} hostName={hostName} />
           </View>
         </View>
       </ImageBackground>
@@ -109,13 +109,13 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     flexDirection: 'column',
     alignItems: 'center',
-    height: height,
-    width: width,
+    //height: height,
+    //width: width,
     alignSelf: 'center'
   },
   image: {
-    width: .5* width,
-    height: .3 * height,
+    //width: .5* width,
+    //height: .3 * height,
     marginTop: 40
   },
   songName: {
