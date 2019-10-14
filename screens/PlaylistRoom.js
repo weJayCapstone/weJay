@@ -9,6 +9,7 @@ import {
   ImageBackground
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
+import MarqueeText from 'react-native-marquee';
 import db, { refreshRoomToken, getCurrentSongData } from '../firebase/index';
 import SingleSong from './SingleSong';
 
@@ -16,6 +17,47 @@ export default function PlaylistRoom(props) {
   const docId = props.navigation.state.params.docId;
   const userName = props.navigation.state.params.userName;
   const hostName = props.navigation.state.params.hostName;
+  const title = props.navigation.state.params.title;
+  const [songData, setSongData] = useState({});
+  async function getCurrentSongPlaying(id) {
+    try {
+      await refreshRoomToken(id);
+      //let roomData = await getRoomData(id);
+      const songPlaying = await getCurrentSongData(id);
+      const result = songDataParser(songPlaying.item);
+      setSongData(result);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  useEffect(() => {
+    let roomRef = db.collection('Rooms').doc(docId);
+    let unsub = roomRef.onSnapshot(snapshot => {
+      if (snapshot.data().currentSong) {
+        setSongData(snapshot.data().currentSong);
+      }
+    });
+    // if (isPlaying){
+
+    //   getCurrentSongPlaying(docId);
+
+    // }
+    //this might fix the memory leak errors:
+    return () => unsub();
+  }, []);
+
+  function songDataParser(data) {
+    let result = {
+      name: data.name,
+      id: data.id,
+      href: data.href,
+      uri: data.uri,
+      artist: data.artists[0].name,
+      imageUrl: data.album.images[0].url,
+      albumName: data.album.name
+    };
+    return result;
+  }
 
   let [songs, setSongs] = useState([]);
   useEffect(() => {
@@ -88,32 +130,35 @@ export default function PlaylistRoom(props) {
                 color: 'white',
                 alignSelf: 'center',
                 alignContent: 'center',
-                paddingTop: 55
+                paddingTop: 40
               }}
               ellipsizeMode="tail"
               numberOfLines={2}
             >
               Welcome, DJ {hostName}
             </Text>
-            {/* <Text
-              style={{
-                fontSize: 20,
-                color: "white",
-                alignSelf: "center",
-                paddingTop: 10
-              }}
-            >
-              Now Playing: {songData.Title}
-            </Text> */}
             <Text
               style={{
-                fontSize: 20,
+                fontSize: 16,
                 color: 'white',
                 alignSelf: 'center',
-                paddingTop: 30
+                paddingTop: 15,
+                maxWidth: 300
+              }}
+              ellipsizeMode="tail"
+              numberOfLines={1}
+            >
+              Now Playing: {songData.name}
+            </Text>
+            <Text
+              style={{
+                fontSize: 14,
+                color: 'white',
+                alignSelf: 'center',
+                paddingTop: 25
               }}
             >
-              Add a Song Below
+              Add a Song to {title} Below
             </Text>
           </ImageBackground>
           {songs ? (
@@ -146,7 +191,12 @@ export default function PlaylistRoom(props) {
         <ScrollView>
           <ImageBackground
             source={require('../weJayGradient.png')}
-            style={{ height: 200, display: 'flex', flexDirection: 'column' }}
+            style={{
+              height: 200,
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center'
+            }}
           >
             <Text
               style={{
@@ -155,32 +205,52 @@ export default function PlaylistRoom(props) {
                 color: 'white',
                 alignSelf: 'center',
                 alignContent: 'center',
-                paddingTop: 55
+                paddingTop: 40
               }}
               ellipsizeMode="tail"
               numberOfLines={2}
             >
               Welcome, DJ {userName}
             </Text>
-            {/* <Text
+
+            {/* <MarqueeText
               style={{
-                fontSize: 20,
-                color: "white",
-                alignSelf: "center",
-                paddingTop: 10
-              }}
-            >
-              Now Playing: {songData.Title}
-            </Text> */}
-            <Text
-              style={{
-                fontSize: 20,
+                fontSize: 16,
                 color: 'white',
                 alignSelf: 'center',
-                paddingTop: 30
+                paddingTop: 15,
+                maxWidth: 200
+              }}
+              duration={5000}
+              marqueeOnStart
+              loop={true}
+              marqueeDelay={1000}
+              marqueeResetDelay={1000}
+            >
+              Now Playing: {songData.name}
+            </MarqueeText> */}
+            <Text
+              style={{
+                fontSize: 16,
+                color: 'white',
+                alignSelf: 'center',
+                paddingTop: 15,
+                maxWidth: 300
+              }}
+              ellipsizeMode="tail"
+              numberOfLines={1}
+            >
+              Now Playing: {songData.name}
+            </Text>
+            <Text
+              style={{
+                fontSize: 14,
+                color: 'white',
+                alignSelf: 'center',
+                paddingTop: 25
               }}
             >
-              Add a Song Below
+              Add a Song to {title} Below
             </Text>
           </ImageBackground>
           {songs ? (
