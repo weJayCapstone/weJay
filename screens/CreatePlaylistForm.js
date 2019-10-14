@@ -3,8 +3,12 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { getTokens, makeNewPlaylist } from '../api/spotify';
 import { createRoom } from '../firebase/index';
+<<<<<<< HEAD
 import {setDocId, fetchRoomDataThunk, setUserName} from '../redux/store'
 import { connect } from 'react-redux';
+=======
+import { Feather } from '@expo/vector-icons';
+>>>>>>> d7856e62999b9f8cc044e8642d01de35f1ddd8f9
 
 function CreatePlaylistForm(props) {
   const [roomData, setRoomData] = useState({
@@ -12,7 +16,7 @@ function CreatePlaylistForm(props) {
     hostName: '',
     passcode: null
   });
-  console.log(props.navigation.state.params)
+  console.log(props.navigation.state.params);
   const handleSubmit = async formData => {
     try {
       const spotifyTokens = await getTokens();
@@ -40,6 +44,22 @@ function CreatePlaylistForm(props) {
     } catch (err) {
       console.log(err);
     }
+  };
+
+  CreatePlaylistForm.navigationOptions = {
+    headerStyle: {
+      backgroundColor: '#423959',
+      borderBottomWidth: 0
+    },
+    headerLeft: (
+      <TouchableOpacity
+        onPress={() => {
+          props.navigation.navigate('Home');
+        }}
+      >
+        <Feather name="chevron-left" size={32} color="#FF5857" />
+      </TouchableOpacity>
+    )
   };
   return (
     <View style={styles.container}>
@@ -93,7 +113,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     flexDirection: 'column',
-    backgroundColor: '#F4F8FF',
+    backgroundColor: '#423959',
     alignItems: 'center'
   },
   header: {
@@ -111,7 +131,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     borderColor: '#fff',
-    backgroundColor: '#fff',
+    backgroundColor: '#E9DBFF',
     borderRadius: 30,
     borderWidth: 1,
     width: 250,
@@ -120,25 +140,25 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 20,
     flexDirection: 'row',
-    alignItems: 'center',
-    shadowColor: '#999',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 2,
-    elevation: 1
+    alignItems: 'center'
+    // shadowColor: '#999',
+    // shadowOffset: { width: 0, height: 2 },
+    // shadowOpacity: 0.5,
+    // shadowRadius: 2,
+    // elevation: 1
   },
   saveButton: {
     backgroundColor: '#FF5857',
     padding: 15,
     borderRadius: 25,
-    width: 200,
-    shadowColor: '#999',
-    shadowOffset: { width: 1, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 2
+    width: 200
+    // shadowColor: '#999',
+    // shadowOffset: { width: 1, height: 2 },
+    // shadowOpacity: 0.5,
+    // shadowRadius: 2
   },
   saveButtonText: {
-    color: '#FFFFFF',
+    color: '#E9DBFF',
     fontSize: 20,
     textAlign: 'center',
     fontWeight: 'bold'

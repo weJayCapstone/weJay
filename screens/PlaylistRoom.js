@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -19,10 +19,10 @@ function PlaylistRoom(props) {
   const userName = props.userName;
   let [songs, setSongs] = useState([]);
   useEffect(() => {
-    let roomRef = db.collection('Rooms').doc(docId);
+    let roomRef = db.collection("Rooms").doc(docId);
     let unsub = roomRef
-      .collection('Playlist')
-      .orderBy('timeAdded')
+      .collection("Playlist")
+      .orderBy("timeAdded")
       .onSnapshot(snapshot => {
         const songArr = snapshot.docs.map(doc => doc.data());
         //sort by votes
@@ -48,42 +48,71 @@ return (
       <>
         <ScrollView>
           <ImageBackground
-            source={require('../weJayGradient.png')}
-            style={{ height: 200, display: 'flex', flexDirection: 'column' }}
+            source={require("../gradient3.png")}
+            style={{
+              height: 200,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center"
+            }}
+            resizeMode="stretch"
           >
             <Text
               style={{
                 fontSize: 30,
-                fontWeight: 'bold',
-                color: 'white',
-                alignSelf: 'center',
-                alignContent: 'center',
-                paddingTop: 55
+                fontWeight: "bold",
+                color: "white",
+                alignSelf: "center",
+                alignContent: "center",
+                paddingTop: 35,
+                opacity: 0.7
               }}
               ellipsizeMode="tail"
               numberOfLines={2}
             >
               Welcome, DJ {userName}
             </Text>
-            {/* <Text
+
+            {/* <MarqueeText
               style={{
-                fontSize: 20,
-                color: "white",
-                alignSelf: "center",
-                paddingTop: 10
-              }}
-            >
-              Now Playing: {songData.Title}
-            </Text> */}
-            <Text
-              style={{
-                fontSize: 20,
+                fontSize: 16,
                 color: 'white',
                 alignSelf: 'center',
-                paddingTop: 30
+                paddingTop: 15,
+                maxWidth: 200
+              }}
+              duration={5000}
+              marqueeOnStart
+              loop={true}
+              marqueeDelay={1000}
+              marqueeResetDelay={1000}
+            >
+              Now Playing: {songData.name}
+            </MarqueeText> */}
+            <Text
+              style={{
+                fontSize: 16,
+                color: "white",
+                alignSelf: "center",
+                paddingTop: 15,
+                maxWidth: 300,
+                opacity: 0.7
+              }}
+              ellipsizeMode="tail"
+              numberOfLines={1}
+            >
+              Now Playing {songData.name}
+            </Text>
+            <Text
+              style={{
+                fontSize: 14,
+                color: "white",
+                alignSelf: "center",
+                paddingTop: 25,
+                opacity: 0.7
               }}
             >
-              Add a Song Below
+              Add a Song to {title} Below
             </Text>
           </ImageBackground>
           {songs !== [] ? (
@@ -104,7 +133,7 @@ return (
           <TouchableOpacity
             style={styles.button}
             onPress={() =>
-              props.navigation.navigate('SearchScreen', { docId, userName })
+              props.navigation.navigate("SearchScreen", { docId, userName })
             }
           >
             <Text style={styles.buttonText}>Add A Song</Text>
@@ -125,24 +154,24 @@ export default connect(mapStateToProps)(PlaylistRoom);
 
 const styles = StyleSheet.create({
   background: {
-    backgroundColor: '#F4F8FF'
+    backgroundColor: "#423959"
   },
   songContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap'
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap"
   },
   containerStyle: {
-    display: 'flex',
-    flexDirection: 'row'
+    display: "flex",
+    flexDirection: "row"
   },
   headerContainer: {
-    display: 'flex',
-    flexDirection: 'row'
+    display: "flex",
+    flexDirection: "row"
   },
-  feather: { marginLeft: 'auto' },
+  feather: { marginLeft: "auto" },
   nowPlayingText: {
-    color: '#4392F1',
+    color: "#FF5857",
     fontSize: 18,
     paddingRight: 3,
     paddingTop: 5
@@ -155,28 +184,27 @@ const styles = StyleSheet.create({
   },
   button: {
     padding: 15,
-    backgroundColor: '#FF5857',
+    backgroundColor: "#423959",
     borderRadius: 25,
     width: 200,
     marginBottom: 25,
     marginTop: 20,
-    margin: 'auto',
-    shadowColor: '#999',
-    shadowOffset: { width: 1, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 2,
-    alignSelf: 'center'
+    margin: "auto",
+    alignSelf: "center"
   },
   buttonText: {
-    color: '#FFFFFF',
+    color: "white",
     fontSize: 20,
-    textAlign: 'center'
+    textAlign: "center"
+  },
+  buttonBackground: {
+    backgroundColor: "#FF5857"
   },
   vote: {
-    color: '#000'
+    color: "#000"
   },
   voteHighlight: {
-    color: '#FF5857'
+    color: "#FF5857"
   },
   musicnote: {
     paddingRight: 10

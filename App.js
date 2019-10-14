@@ -44,68 +44,76 @@ export default class ReactNav extends Component{
 //   );
 // }
 
-const DrawerNav = createDrawerNavigator({
+// const DrawerNav = createDrawerNavigator({
+//   Home: {
+//     screen: HomeScreen,
+//     navigationOptions: {
+//       title: 'weJay - Home'
+//     }
+//   },
+//   CreatePlaylistForm: {
+//     screen: CreatePlaylistForm,
+//     navigationOptions: {
+//       title: 'Create Playlist'
+//     }
+//   },
+//   JoinPlaylistForm: {
+//     screen: JoinPlaylistForm,
+//     navigationOptions: {
+//       title: 'Join Playlist'
+//     }
+//   }
+// });
+
+const StackNav = createStackNavigator({
+  // DrawerNav: {
+  //   screen: DrawerNav,
+  //   navigationOptions: ({ navigation }) => {
+  //     const { state } = navigation;
+
+  //     if (state.isDrawerOpen) {
+  //       return {
+  //         headerLeft: (
+  //           <TouchableOpacity
+  //             onPress={() => {
+  //               navigation.dispatch(DrawerActions.toggleDrawer());
+  //             }}
+  //           >
+  //             <Feather
+  //               name="menu"
+  //               size={32}
+  //               color="#4392F1"
+  //               style={{ paddingLeft: 10 }}
+  //             />
+  //           </TouchableOpacity>
+  //         )
+  //       };
+  //     } else {
+  //       return {
+  //         headerLeft: (
+  //           <TouchableOpacity
+  //             onPress={() => {
+  //               navigation.dispatch(DrawerActions.toggleDrawer());
+  //             }}
+  //           >
+  //             <Feather
+  //               name="menu"
+  //               size={32}
+  //               color="#4392F1"
+  //               style={{ paddingLeft: 10 }}
+  //             />
+  //           </TouchableOpacity>
+  //         )
+  //       };
+  //     }
+  //   }
+  // },
   Home: {
     screen: HomeScreen,
     navigationOptions: {
-      title: 'weJay'
+      header: null
     }
   },
-  CreatePlaylistForm: {
-    screen: CreatePlaylistForm,
-    navigationOptions: {
-      title: 'Create Playlist'
-    }
-  },
-  JoinPlaylistForm: {
-    screen: JoinPlaylistForm,
-    navigationOptions: {
-      title: 'Join Playlist'
-    }
-  }
-  // PlaylistRoom: {
-  //   screen: PlaylistRoom,
-  //   navigationOptions: {
-  //     title: 'Current Playlist'
-  //   }
-  // }
-});
-
-const StackNav = createStackNavigator({
-  DrawerNav: {
-    screen: DrawerNav,
-    headerMode: 'float',
-    navigationOptions: ({ navigation }) => {
-      const { state } = navigation;
-
-      if (state.isDrawerOpen) {
-        return {
-          headerLeft: (
-            <TouchableOpacity
-              onPress={() => {
-                navigation.dispatch(DrawerActions.toggleDrawer());
-              }}
-            >
-              <Feather name="menu" size={32} color="#4392F1" />
-            </TouchableOpacity>
-          )
-        };
-      } else {
-        return {
-          headerLeft: (
-            <TouchableOpacity
-              onPress={() => {
-                navigation.dispatch(DrawerActions.toggleDrawer());
-              }}
-            >
-              <Feather name="menu" size={32} color="#4392F1" />
-            </TouchableOpacity>
-          )
-        };
-      }
-    }
-  },
-  Home: { screen: HomeScreen },
   CreatePlaylistForm: { screen: CreatePlaylistForm },
   JoinPlaylistForm: { screen: JoinPlaylistForm },
   PlaylistRoom: {

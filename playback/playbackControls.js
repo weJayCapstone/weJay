@@ -16,19 +16,19 @@ import {
     let queueLength = roomData.queue.length; // i think this works, I awaited everytime playbackTimer is called
       timeout = setTimeout(function(){
       //const firestoreArray = get songs from firestore
-      if(queueLength > 0){
+      if (queueLength > 0){
           nextSong(docId);
       }
-  
+
       }, songTime)
-  
+
   }
 
 export const playSong = async (docId) => {
 
     try {
         let roomData = await refreshRoomToken(docId)
-        
+
         //remove first item from the sorted songs array in firestore
         //set the removed item as currentSong in firestore
         //let song = await getCurrentSong from firestore
@@ -37,7 +37,7 @@ export const playSong = async (docId) => {
 
         //call spotify api to play song
         await play(roomData, song);
-        
+
         await playbackTimer(song.duration, docId)
 
     } catch (err){
@@ -69,7 +69,7 @@ export const pauseSong = async (docId) => {
 }
 
 export const resumeSong = async (docId) => {
-    
+
     let roomData = await getRoomData(docId)
     let song = await getCurrentSongData(docId)
     //console.log('this is song in resume: ', song)
@@ -77,8 +77,6 @@ export const resumeSong = async (docId) => {
     //console.log('this is progress in resume: ', progress)
     let remainingTime = song.duration - progress
     //console.log('this is remainingtime in resume: ', remainingTime)
-
-
 
     await resume(roomData, song.uri, progress)
     await playbackTimer(remainingTime, docId)

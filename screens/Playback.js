@@ -58,7 +58,7 @@ function Playback(props) {
       <StatusBar hidden />
       <ImageBackground
         source={require('../weJayGradient.png')}
-        style={{ width: width, height: height, alignSelf: 'center' }}
+        style={{ width: width, height: height, alignSelf: 'center', display: 'flex' }}
       >
         <View style={styles.container}>
           <TouchableOpacity onPress={() => closeModal()}>
@@ -72,7 +72,13 @@ function Playback(props) {
                 uri: songData.imageUrl
               }}
             />
-          ) : null}
+          ) : (
+            <Image
+              style={styles.wejayLogo}
+              resizeMode="cover"
+              source={require('../weJay2.png')}
+            />
+          )}
           <View style={styles.textContainer}>
             <Text
               ellipsizeMode="tail"
@@ -120,6 +126,11 @@ const styles = StyleSheet.create({
     width: .5* width,
     height: .3 * height,
     marginTop: 40
+  },
+  wejayLogo: {
+    width: 300,
+    height: 300,
+    paddingTop: 100
   },
   songName: {
     fontWeight: 'bold',

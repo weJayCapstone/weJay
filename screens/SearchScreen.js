@@ -50,8 +50,17 @@ function SearchScreen(props) {
     );
     const searchJSON = await response.json();
     setResults(searchJSON);
-    setSearch("");
+    // setSearch("");
   };
+
+
+  const activeSearch = async (text) => {
+
+    setSearch(text)
+
+    await searchHandler()
+
+  }
 
   SearchScreen.navigationOptions = {
     headerLeft: (
@@ -72,16 +81,19 @@ function SearchScreen(props) {
       <Content>
         <SearchBar
           placeholder="Search"
-          onChangeText={text => setSearch(text)}
+          onChangeText={text => activeSearch(text)}
           value={search}
           onSubmitEditing={searchHandler}
           returnKeyType="search"
+          style={styles.searchBar}
           inputStyle={{ backgroundColor: "white" }}
           containerStyle={{
             backgroundColor: "white",
             borderWidth: 1,
             borderRadius: 40,
-            borderColor: "black"
+            borderColor: "black",
+            width: '95%',
+            alignSelf: 'center'
           }}
           inputContainerStyle={{
             backgroundColor: "white",

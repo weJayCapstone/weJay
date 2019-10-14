@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
   Image,
+  ImageBackground,
   Dimensions
 } from 'react-native';
 import { connect } from 'react-redux';
@@ -17,12 +18,20 @@ function HomeScreen(props) {
   const userName = props.userName;
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Image
-          source={require('../weJay.png')}
-          style={{ width: 150, height: 150 }}
-        />
-      </View>
+    <ImageBackground
+        source={{
+          uri:
+            'https://s30226.pcdn.co/wp-content/uploads/2015/02/half-moon-party-dates.jpg'
+        }}
+        style={{ width: 375, height: 1000 }}
+        imageStyle={{ opacity: 0.7 }}
+        resizeMode="cover"
+      >
+        <View style ={styles.container}>
+            <Image
+            source={require('../weJay.png')}
+            style={{ width: 150, height: 150 }}
+            />
       <View>
         <TouchableHighlight
           style={styles.button}
@@ -58,9 +67,11 @@ function HomeScreen(props) {
             <Text style={styles.text}>Go To Playlist</Text>
           </TouchableOpacity>
         ) : null}
+            </View>
+            </View>
+        </ImageBackground>
       </View>
-    </View>
-  );
+  )
 }
 const mapStateToProps = state => {
     return{
@@ -75,14 +86,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     flexDirection: 'column',
-    alignItems: 'center',
-    backgroundColor: '#F4F8FF',
-    width: width,
-    height: height
-  },
-  header: {
-    paddingBottom: 25,
-    marginTop: 100
+    alignItems: 'center'
   },
   text: {
     fontSize: 24,
@@ -91,27 +95,27 @@ const styles = StyleSheet.create({
     color: '#fff'
   },
   button: {
-    marginTop: 10,
-    shadowColor: '#999',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 2,
-    elevation: 1,
+    marginTop: 30,
+    // shadowColor: '#999',
+    // shadowOffset: { width: 0, height: 2 },
+    // shadowOpacity: 0.5,
+    // shadowRadius: 2,
+    // elevation: 1,
     borderRadius: 25,
     padding: 10,
     backgroundColor: '#FF5857',
     width: 300
   },
   goToPlaylistButton: {
-    marginTop:10,
-    shadowColor: '#999',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 2,
-    elevation: 1,
+    marginTop: 20,
+    // shadowColor: '#999',
+    // shadowOffset: { width: 0, height: 2 },
+    // shadowOpacity: 0.5,
+    // shadowRadius: 2,
+    // elevation: 1,
     borderRadius: 25,
     padding: 10,
-    backgroundColor: '#4392F1',
+    backgroundColor: '#A085AD',
     width: 300
   }
 });
