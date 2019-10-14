@@ -1,14 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  TouchableOpacity,
-  Alert
-} from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { enterRoom, getPlaylist } from '../firebase/index';
+import { Feather } from '@expo/vector-icons';
 
 export default function JoinPlayListForm(props) {
   const [authData, setAuthData] = useState({});
@@ -38,6 +32,21 @@ export default function JoinPlayListForm(props) {
     }
   };
 
+  JoinPlayListForm.navigationOptions = {
+    headerStyle: {
+      backgroundColor: '#423959',
+      borderBottomWidth: 0
+    },
+    headerLeft: (
+      <TouchableOpacity
+        onPress={() => {
+          props.navigation.navigate('Home');
+        }}
+      >
+        <Feather name="chevron-left" size={32} color="#FF5857" />
+      </TouchableOpacity>
+    )
+  };
   return (
     <View style={styles.container}>
       <View>
@@ -78,7 +87,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     flexDirection: 'column',
-    backgroundColor: '#F4F8FF',
+    backgroundColor: '#423959',
     alignItems: 'center'
   },
   header: {
@@ -96,7 +105,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     borderColor: '#fff',
-    backgroundColor: '#fff',
+    backgroundColor: '#E9DBFF',
     borderRadius: 30,
     borderWidth: 1,
     width: 250,
@@ -105,25 +114,25 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 20,
     flexDirection: 'row',
-    alignItems: 'center',
-    shadowColor: '#999',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 2,
-    elevation: 1
+    alignItems: 'center'
+    // shadowColor: '#999',
+    // shadowOffset: { width: 0, height: 2 },
+    // shadowOpacity: 0.5,
+    // shadowRadius: 2,
+    // elevation: 1
   },
   saveButton: {
     backgroundColor: '#FF5857',
     padding: 15,
     borderRadius: 25,
-    width: 200,
-    shadowColor: '#999',
-    shadowOffset: { width: 1, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 2
+    width: 200
+    // shadowColor: '#999',
+    // shadowOffset: { width: 1, height: 2 },
+    // shadowOpacity: 0.5,
+    // shadowRadius: 2
   },
   saveButtonText: {
-    color: '#FFFFFF',
+    color: '#E9DBFF',
     fontSize: 20,
     textAlign: 'center',
     fontWeight: 'bold'
