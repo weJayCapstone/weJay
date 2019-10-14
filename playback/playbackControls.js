@@ -16,7 +16,9 @@ import {
     let queueLength = roomData.queue.length; // i think this works, I awaited everytime playbackTimer is called
       timeout = setTimeout(function(){
       //const firestoreArray = get songs from firestore
-        nextSong(docId)
+      if(queueLength > 1){
+          nextSong(docId);
+      }
   
       }, songTime)
   
@@ -44,11 +46,10 @@ export const playSong = async (docId) => {
 }
 
 export const nextSong = async (docId) => {
-
-
+    clearTimeout(timeout);
     await playSong(docId)
 
-}
+};
 
 export const pauseSong = async (docId) => {
     let roomData = await getRoomData(docId)
