@@ -11,21 +11,24 @@ import {
 
   let timeout;
 
-  const playbackTimer = (songTime, docId) => {
-
+  const playbackTimer = async (songTime, docId) => {
+    let roomData = await getRoomData(docId) 
+    let queueLength = roomData.queue.length; // i think this works, I awaited everytime playbackTimer is called
       timeout = setTimeout(function(){
-          //const firestoreArray = get songs from firestore
-              nextSong(docId)
-  
+      //const firestoreArray = get songs from firestore
+      if (queueLength > 1){
+          nextSong(docId);
+      }
+
       }, songTime)
-  
+
   }
 
 export const playSong = async (docId) => {
 
     try {
         let roomData = await refreshRoomToken(docId)
-        
+
         //remove first item from the sorted songs array in firestore
         //set the removed item as currentSong in firestore
         //let song = await getCurrentSong from firestore
@@ -34,8 +37,8 @@ export const playSong = async (docId) => {
 
         //call spotify api to play song
         await play(roomData, song);
-        
-        playbackTimer(song.duration, docId)
+
+        await playbackTimer(song.duration, docId)
 
     } catch (err){
         console.log(err);
@@ -43,11 +46,10 @@ export const playSong = async (docId) => {
 }
 
 export const nextSong = async (docId) => {
-
-    clearTimeout(timeout)
+    clearTimeout(timeout);
     await playSong(docId)
 
-}
+};
 
 export const pauseSong = async (docId) => {
     let roomData = await getRoomData(docId)
@@ -67,17 +69,15 @@ export const pauseSong = async (docId) => {
 }
 
 export const resumeSong = async (docId) => {
-    
+
     let roomData = await getRoomData(docId)
     let song = await getCurrentSongData(docId)
-    console.log('this is song in resume: ', song)
+    //console.log('this is song in resume: ', song)
     let progress = song.progress
-    console.log('this is progress in resume: ', progress)
+    //console.log('this is progress in resume: ', progress)
     let remainingTime = song.duration - progress
-    console.log('this is remainingtime in resume: ', remainingTime)
-
-
+    //console.log('this is remainingtime in resume: ', remainingTime)
 
     await resume(roomData, song.uri, progress)
-    playbackTimer(remainingTime, docId)
+    await playbackTimer(remainingTime, docId)
 }

@@ -20,7 +20,7 @@ export default function JoinPlayListForm(props) {
         authData.userName
       );
       if (result === 'Invalid credentials') {
-        Alert.alert('Alert Title', result + ' try again', {
+        Alert.alert('Try Again!', result + '. Fields are case sensitive.', {
           cancelable: false
         });
       } else {
@@ -36,6 +36,7 @@ export default function JoinPlayListForm(props) {
       console.log(err);
     }
   };
+
   return (
     <View style={styles.container}>
       <View>
@@ -57,7 +58,7 @@ export default function JoinPlayListForm(props) {
         <TextInput
           style={styles.textInput}
           placeholder="Playlist Passcode"
-          maxLength={4}
+          maxLength={50}
           onChangeText={text => setAuthData({ ...authData, passcode: text })}
         />
         <TouchableOpacity

@@ -7,10 +7,13 @@ import {
   View,
   Image
 } from 'react-native';
-import { playSong, nextSong, pauseSong, resumeSong } from '../playback/playbackControls'
-
+import {
+  playSong,
+  nextSong,
+  pauseSong,
+  resumeSong
+} from '../playback/playbackControls';
 import { Feather } from '@expo/vector-icons';
-
 
 export default class PlaylistClass extends Component {
   constructor(props) {
@@ -19,33 +22,30 @@ export default class PlaylistClass extends Component {
       paused: false,
       playButton: true
     };
-
-    this.handlePause = this.handlePause.bind(this)
   }
 
-  handlePause(){
-    this.setState({paused: true})
-    pauseSong(this.props.docId)
+  handlePause() {
+    this.setState({ paused: true });
+    pauseSong(this.props.docId);
   }
 
-  handleResume(){
-    this.setState({paused: false})
-    resumeSong(this.props.docId)
+  handleResume() {
+    this.setState({ paused: false });
+    resumeSong(this.props.docId);
   }
-
 
   //ADDED THIS TO HIDE PLAY BUTTON AFTER INITIAL PRESS TO START MUSIC
   hidePlayButton() {
     playSong(this.props.docId);
     this.setState({ playButton: false });
-    this.props.setPlaying(true)
+    this.props.setPlaying(true);
   }
 
   render() {
     // console.log('this is state', this.state.songs);
 
     if (this.props.hostName) {
-    //set current song here in db make a new song queue with shifted array
+      //set current song here in db make a new song queue with shifted array
       return (
         <View style={styles.icons}>
           <TouchableOpacity onPress={() => this.hidePlayButton()}>
@@ -81,7 +81,7 @@ export default class PlaylistClass extends Component {
       return (
         <View style={styles.guest}>
           <Feather name="speaker" size={20} color="#FF5857" />
-          <Text style={styles.nowPlaying}>Currently Playing</Text>
+          <Text style={styles.nowPlaying}>Now Playing</Text>
         </View>
       );
     }
