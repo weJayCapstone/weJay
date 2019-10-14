@@ -44,7 +44,7 @@ export const playSong = async (docId) => {
 
 export const nextSong = async (docId) => {
 
-
+    clearTimeout(timeout)
     await playSong(docId)
 
 }
@@ -79,5 +79,5 @@ export const resumeSong = async (docId) => {
 
 
     await resume(roomData, song.uri, progress)
-    playbackTimer(remainingTime)
+    playbackTimer(remainingTime, docId)
 }
