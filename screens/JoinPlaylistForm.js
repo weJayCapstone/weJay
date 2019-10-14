@@ -29,7 +29,8 @@ export default function JoinPlayListForm(props) {
         props.navigation.state.params.setUserName(authData.userName);
         props.navigation.navigate('PlaylistRoom', {
           docId: result,
-          userName: authData.userName
+          userName: authData.userName,
+          title: authData.title
         });
       }
     } catch (err) {

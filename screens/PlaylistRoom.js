@@ -16,6 +16,7 @@ export default function PlaylistRoom(props) {
   const docId = props.navigation.state.params.docId;
   const userName = props.navigation.state.params.userName;
   const hostName = props.navigation.state.params.hostName;
+  const title = props.navigation.state.params.title;
 
   let [songs, setSongs] = useState([]);
   useEffect(() => {
@@ -113,7 +114,7 @@ export default function PlaylistRoom(props) {
                 paddingTop: 30
               }}
             >
-              Add a Song Below
+              Add a Song to {title} Below
             </Text>
           </ImageBackground>
           {songs ? (
@@ -180,7 +181,7 @@ export default function PlaylistRoom(props) {
                 paddingTop: 30
               }}
             >
-              Add a Song Below
+              Add a Song to {title} Below
             </Text>
           </ImageBackground>
           {songs ? (
