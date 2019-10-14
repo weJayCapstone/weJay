@@ -11,19 +11,19 @@ import {
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
-import { SearchBar, Button } from "react-native-elements";
-import { Container, Content, Footer } from "native-base";
-require("../secrets");
-import { Card, CardButton } from "react-native-cards";
+import { SearchBar} from "react-native-elements";
+import { Container, Content} from "native-base";
 import SongCard from "../screens/SongCard.js";
-import { refreshRoomToken, getRoomData } from "../firebase/index";
+import { refreshRoomToken} from "../firebase/index";
+import { connect } from 'react-redux';
 
-export default function SearchScreen(props) {
+function SearchScreen(props) {
+  const userName = props.userName;
+  const docId = props.docId;
   let [search, setSearch] = useState("");
   let [results, setResults] = useState({});
-  let [docId, setDocId] = useState(props.navigation.state.params.docId);
   let [accessToken, setAccessToken] = useState("");
-  const userName = props.navigation.state.params.userName;
+  
   const accountInitialize = async () => {
     try {
       let result = await refreshRoomToken(docId);
@@ -106,6 +106,13 @@ export default function SearchScreen(props) {
     </Container>
   );
 }
+const mapStateToProps = state => {
+    return{
+        docId: state.docId,
+        userName: state.userName
+    }
+}
+export default connect(mapStateToProps)(SearchScreen);
 
 const styles = StyleSheet.create({
   button: {

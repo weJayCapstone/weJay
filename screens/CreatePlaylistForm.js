@@ -3,8 +3,10 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { getTokens, makeNewPlaylist } from '../api/spotify';
 import { createRoom } from '../firebase/index';
+import {setDocId, fetchRoomDataThunk, setUserName} from '../redux/store'
+import { connect } from 'react-redux';
 
-export default function CreatePlaylistForm(props) {
+function CreatePlaylistForm(props) {
   const [roomData, setRoomData] = useState({
     title: '',
     hostName: '',
@@ -24,13 +26,15 @@ export default function CreatePlaylistForm(props) {
         formData.title
       );
       let result = await createRoom(formData);
-      props.navigation.state.params.setDocId(result);
-      props.navigation.state.params.setUserName(formData.hostName);
+      //redux store updates
+      props.setStoreDocId(result);
+      props.setStoreRoomData(result);
+      props.setUserName(formData.hostName);
+      //navigation params
+      //adds host name to App.js level:
+      //props.navigation.state.params.setHostName(formData.hostName);
       if (formData.accessToken) {
-        props.navigation.navigate('PlaylistRoom', {
-          docId: result,
-          hostName: roomData.hostName
-        });
+        props.navigation.navigate('PlaylistRoom');
       }
       setRoomData({ title: '', hostName: '', passcode: null });
     } catch (err) {
@@ -74,6 +78,15 @@ export default function CreatePlaylistForm(props) {
     </View>
   );
 }
+const mapDispatchToProps = dispatch => {
+    return {
+        setStoreDocId: (result) => dispatch(setDocId(result)),
+        setStoreRoomData: (docId) => dispatch(fetchRoomDataThunk(docId)),
+        setUserName: (userName) => dispatch(setUserName(userName))
+    };
+};
+
+export default connect(null, mapDispatchToProps)(CreatePlaylistForm)
 
 const styles = StyleSheet.create({
   container: {

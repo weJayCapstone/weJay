@@ -5,35 +5,36 @@ import {
   StyleSheet,
   StatusBar,
   TouchableOpacity,
-  ImageBackground
+  ImageBackground,
+  Dimensions
 } from 'react-native';
 import { Image } from 'react-native-elements';
 import { Feather } from '@expo/vector-icons';
 import Modal from 'react-native-modal';
 import PlaybackClass from './PlaybackClass';
-import db, {
-  getRoomData,
-  refreshRoomToken,
-  getCurrentSongData
-} from '../firebase/index';
+import db from '../firebase/index';
+import { connect } from 'react-redux';
 
-export default function Playback(props) {
-  const hostName = props.navigation.state.params.hostName;
-  const docId = props.navigation.state.params.docId;
+const width = Dimensions.get('window').width;
+const height = Dimensions.get('window').height;
+
+function Playback(props) {
+  //const hostName = props.navigation.state.params.hostName;
+  const docId = props.docId;
   const [songData, setSongData] = useState({});
   const [isPlaying, setPlaying] = useState(false);
 
-  async function getCurrentSongPlaying(id) {
-    try {
-      await refreshRoomToken(id);
-      //let roomData = await getRoomData(id);
-      const songPlaying = await getCurrentSongData(id);
-      const result = songDataParser(songPlaying.item);
-      setSongData(result);
-    } catch (err) {
-      console.log(err);
-    }
-  }
+//   async function getCurrentSongPlaying(id) {
+//     try {
+//       await refreshRoomToken(id);
+//       //let roomData = await getRoomData(id);
+//       const songPlaying = await getCurrentSongData(id);
+//       const result = songDataParser(songPlaying.item);
+//       setSongData(result);
+//     } catch (err) {
+//       console.log(err);
+//     }
+//   }
   useEffect(() => {
     let roomRef = db.collection('Rooms').doc(docId);
     let unsub = roomRef
@@ -42,27 +43,8 @@ export default function Playback(props) {
                setSongData(snapshot.data().currentSong)
            }
         });
-    // if (isPlaying){
-
-    //   getCurrentSongPlaying(docId);
-
-    // }
-    //this might fix the memory leak errors:
     return () => unsub();
   }, []);
-
-  function songDataParser(data) {
-    let result = {
-      name: data.name,
-      id: data.id,
-      href: data.href,
-      uri: data.uri,
-      artist: data.artists[0].name,
-      imageUrl: data.album.images[0].url,
-      albumName: data.album.name
-    };
-    return result;
-  }
 
   const [isVisible, setIsVisible] = useState(true);
 
@@ -76,7 +58,7 @@ export default function Playback(props) {
       <StatusBar hidden />
       <ImageBackground
         source={require('../weJayGradient.png')}
-        // style={{ width: width, height: height, alignSelf: 'center' }}
+        style={{ width: width, height: height, alignSelf: 'center' }}
       >
         <View style={styles.container}>
           <TouchableOpacity onPress={() => closeModal()}>
@@ -109,9 +91,7 @@ export default function Playback(props) {
           </View>
           <View style={{ top: 75 }}>
             <PlaybackClass
-              docId={docId}
               setPlaying={setPlaying}
-              hostName={hostName}
             />
           </View>
         </View>
@@ -119,6 +99,12 @@ export default function Playback(props) {
     </Modal>
   );
 }
+const mapStateToProps = state => {
+    return {
+        docId: state.docId
+    }
+}
+export default connect(mapStateToProps)(Playback);
 
 const styles = StyleSheet.create({
   container: {
@@ -126,13 +112,13 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     flexDirection: 'column',
     alignItems: 'center',
-    //height: height,
-    //width: width,
+    height: height,
+    width: width,
     alignSelf: 'center'
   },
   image: {
-    //width: .5* width,
-    //height: .3 * height,
+    width: .5* width,
+    height: .3 * height,
     marginTop: 40
   },
   songName: {

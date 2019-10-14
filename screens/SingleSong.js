@@ -4,8 +4,9 @@ import { Card, Image, ListItem } from 'react-native-elements';
 import { Feather } from '@expo/vector-icons';
 import { play } from '../api/spotify';
 import db, { updateVote } from '../firebase/index.js';
+import { connect } from 'react-redux';
 
-export default function SingleSong(props) {
+function SingleSong(props) {
   const song = props.song;
   const userName = props.userName;
   const docId = props.docId;
@@ -18,7 +19,6 @@ export default function SingleSong(props) {
   };
   return (
     <View key={song.id} style={styles.background}>
-      <Card style={styles.containerStyle}>
         <View style={styles.songContainer}>
           <Image
             style={{ width: 80, height: 80 }}
@@ -91,62 +91,16 @@ export default function SingleSong(props) {
             </TouchableOpacity>
           </View>
         </View>
-      </Card>
     </View>
-
-    ///////////////////
-    // <Card style={styles.song}>
-    //       <View key={song.id} style={styles.songContainer}>
-    //         <Image
-    //           style={{ width: 80, height: 80 }}
-    //           resizeMode="cover"
-    //           source={{
-    //             uri: song.imageUrl
-    //           }}
-    //         />
-    //         <View style={{ paddingLeft: 10 }}>
-    //           <Text
-    //             style={{
-    //               paddingTop: 25,
-    //               fontWeight: 'bold',
-    //               fontSize: 14
-    //             }}
-    //           >
-    //             {song.name}
-    //           </Text>
-    //           <Text style={{ fontSize: 12 }}>{song.artist}</Text>
-    //         </View>
-    //         <View style={{ marginLeft: 'auto' }}>
-    //         <TouchableOpacity
-    //            onPress={() => handleVote('up')}
-    //         >
-    //           <Feather
-    //             name="chevron-up"
-    //             size={30}
-    //             color="black"
-
-    //           />
-    //         </TouchableOpacity>
-    //           <Text
-    //             style={{
-    //               fontWeight: 'bold',
-    //               marginLeft: 'auto',
-    //               paddingRight: 10
-    //             }}
-    //           >
-    //             {song.votes}
-    //           </Text>
-    //           <Feather
-    //             name="chevron-down"
-    //             size={30}
-    //             color="black"
-    //             // onPress={() => handleVote}
-    //           />
-    //         </View>
-    //       </View>
-    // </Card>
   );
 }
+const mapStateToProps = state => {
+    return {
+        docId: state.docId,
+        userName: state.userName
+    }
+}
+export default connect(mapStateToProps)(SingleSong);
 
 const styles = StyleSheet.create({
   background: {

@@ -6,17 +6,17 @@ import {
   TouchableOpacity,
   View,
   FlatList,
-  ImageBackground
+  ImageBackground,
+  SafeAreaView
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import db, { refreshRoomToken, getCurrentSongData } from '../firebase/index';
+import db from '../firebase/index';
 import SingleSong from './SingleSong';
+import { connect } from 'react-redux';
 
-export default function PlaylistRoom(props) {
-  const docId = props.navigation.state.params.docId;
-  const userName = props.navigation.state.params.userName;
-  const hostName = props.navigation.state.params.hostName;
-
+function PlaylistRoom(props) {
+  const docId = props.docId;
+  const userName = props.userName;
   let [songs, setSongs] = useState([]);
   useEffect(() => {
     let roomRef = db.collection('Rooms').doc(docId);
@@ -44,104 +44,7 @@ export default function PlaylistRoom(props) {
     return unsub;
   }, [docId]);
 
-  PlaylistRoom.navigationOptions = {
-    headerRight: (
-      <TouchableOpacity
-        onPress={() => {
-          props.navigation.navigate('Playback', { docId, hostName });
-        }}
-      >
-        <View style={styles.headerContainer}>
-          <Text style={styles.nowPlayingText}>Now Playing</Text>
-          <Feather
-            name="music"
-            size={30}
-            color="#4392F1"
-            style={styles.musicnote}
-          />
-        </View>
-      </TouchableOpacity>
-    ),
-    headerLeft: (
-      <TouchableOpacity
-        onPress={() => {
-          props.navigation.navigate('Home');
-        }}
-      >
-        <Feather name="chevron-left" size={32} color="#4392F1" />
-      </TouchableOpacity>
-    )
-  };
-
-  if (hostName) {
-    return (
-      <>
-        <ScrollView>
-          <ImageBackground
-            source={require('../weJayGradient.png')}
-            style={{ height: 200, display: 'flex', flexDirection: 'column' }}
-          >
-            <Text
-              style={{
-                fontSize: 30,
-                fontWeight: 'bold',
-                color: 'white',
-                alignSelf: 'center',
-                alignContent: 'center',
-                paddingTop: 55
-              }}
-              ellipsizeMode="tail"
-              numberOfLines={2}
-            >
-              Welcome, DJ {hostName}
-            </Text>
-            {/* <Text
-              style={{
-                fontSize: 20,
-                color: "white",
-                alignSelf: "center",
-                paddingTop: 10
-              }}
-            >
-              Now Playing: {songData.Title}
-            </Text> */}
-            <Text
-              style={{
-                fontSize: 20,
-                color: 'white',
-                alignSelf: 'center',
-                paddingTop: 30
-              }}
-            >
-              Add a Song Below
-            </Text>
-          </ImageBackground>
-          {songs ? (
-            <FlatList
-              data={songs}
-              renderItem={({ item }) => (
-                <SingleSong song={item} docId={docId} userName={userName} />
-              )}
-              keyExtractor={item => item.id}
-            />
-          ) : (
-            <Text>Search To Add Songs to Your Playlist!</Text>
-          )}
-        </ScrollView>
-        <View style={styles.buttonBackground}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() =>
-              props.navigation.navigate('SearchScreen', { docId, userName })
-            }
-          >
-            <Text style={styles.buttonText}>Add A Song</Text>
-          </TouchableOpacity>
-        </View>
-      </>
-    );
-  } else {
-    return (
+return (
       <>
         <ScrollView>
           <ImageBackground
@@ -183,14 +86,16 @@ export default function PlaylistRoom(props) {
               Add a Song Below
             </Text>
           </ImageBackground>
-          {songs ? (
-            <FlatList
-              data={songs}
-              renderItem={({ item }) => (
-                <SingleSong song={item} docId={docId} userName={userName} />
-              )}
-              keyExtractor={item => item.id}
-            />
+          {songs !== [] ? (
+              <SafeAreaView >
+                <FlatList
+                data={songs}
+                renderItem={({ item }) => (
+                    <SingleSong song={item}/>
+                )}
+                keyExtractor={item => item.id}
+                />
+            </SafeAreaView>
           ) : (
             <Text>Search To Add Songs to Your Playlist!</Text>
           )}
@@ -207,8 +112,16 @@ export default function PlaylistRoom(props) {
         </View>
       </>
     );
-  }
 }
+const mapStateToProps = state => {
+    return {
+        docId: state.docId,
+        roomData: state.roomData,
+        userName: state.userName
+    }
+}
+
+export default connect(mapStateToProps)(PlaylistRoom);
 
 const styles = StyleSheet.create({
   background: {
@@ -233,6 +146,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     paddingRight: 3,
     paddingTop: 5
+  },
+  item: {
+    backgroundColor: '#f9c2ff',
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
   },
   button: {
     padding: 15,

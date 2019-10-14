@@ -5,30 +5,29 @@ import {
   TouchableHighlight,
   TouchableOpacity,
   View,
-  Image
+  Image,
+  Dimensions
 } from 'react-native';
-export default function HomeScreen(props) {
-  const [docId, setDocId] = useState('');
-  const [userName, setUserName] = useState('');
+import { connect } from 'react-redux';
+const width = Dimensions.get('window').width;
+const height = Dimensions.get('window').height;
+
+function HomeScreen(props) {
+  const docId = props.docId;
+  const userName = props.userName;
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Image
           source={require('../weJay.png')}
-          style={{ width: 250, height: 250 }}
+          style={{ width: 150, height: 150 }}
         />
       </View>
       <View>
         <TouchableHighlight
           style={styles.button}
           onPress={() =>
-            props.navigation.navigate('CreatePlaylistForm', {
-              otherParam: 'Create a Playlist',
-              docId,
-              setDocId,
-              userName,
-              setUserName
-            })
+            props.navigation.navigate('CreatePlaylistForm')
           }
         >
           <Text style={styles.text}>Create Playlist</Text>
@@ -39,9 +38,7 @@ export default function HomeScreen(props) {
           onPress={() =>
             props.navigation.navigate('JoinPlaylistForm', {
               docId,
-              setDocId,
               userName,
-              setUserName,
               otherParam: 'Join A Playlist'
             })
           }
@@ -54,9 +51,7 @@ export default function HomeScreen(props) {
             onPress={() =>
               props.navigation.navigate('PlaylistRoom', {
                 docId,
-                setDocId,
-                userName,
-                setUserName
+                userName
               })
             }
           >
@@ -67,14 +62,23 @@ export default function HomeScreen(props) {
     </View>
   );
 }
-
+const mapStateToProps = state => {
+    return{
+        docId: state.docId,
+        roomData: state.roomData,
+        userName: state.userName
+    }
+}
+export default connect(mapStateToProps)(HomeScreen)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'flex-start',
     flexDirection: 'column',
     alignItems: 'center',
-    backgroundColor: '#F4F8FF'
+    backgroundColor: '#F4F8FF',
+    width: width,
+    height: height
   },
   header: {
     paddingBottom: 25,
@@ -87,7 +91,7 @@ const styles = StyleSheet.create({
     color: '#fff'
   },
   button: {
-    marginTop: 30,
+    marginTop: 10,
     shadowColor: '#999',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,
@@ -99,7 +103,7 @@ const styles = StyleSheet.create({
     width: 300
   },
   goToPlaylistButton: {
-    marginTop: 100,
+    marginTop:10,
     shadowColor: '#999',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,
