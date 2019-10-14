@@ -36,12 +36,11 @@ export default function Playback(props) {
   }
   useEffect(() => {
     let roomRef = db.collection('Rooms').doc(docId);
-    let unsub = roomRef
-        .onSnapshot(snapshot => {
-           if(snapshot.data().currentSong){
-               setSongData(snapshot.data().currentSong)
-           }
-        });
+    let unsub = roomRef.onSnapshot(snapshot => {
+      if (snapshot.data().currentSong) {
+        setSongData(snapshot.data().currentSong);
+      }
+    });
     // if (isPlaying){
 
     //   getCurrentSongPlaying(docId);
@@ -76,7 +75,7 @@ export default function Playback(props) {
       <StatusBar hidden />
       <ImageBackground
         source={require('../weJayGradient.png')}
-        // style={{ width: width, height: height, alignSelf: 'center' }}
+        style={{ width: 400, height: 700, alignSelf: 'center' }}
       >
         <View style={styles.container}>
           <TouchableOpacity onPress={() => closeModal()}>
@@ -90,7 +89,13 @@ export default function Playback(props) {
                 uri: songData.imageUrl
               }}
             />
-          ) : null}
+          ) : (
+            <Image
+              style={styles.wejayLogo}
+              resizeMode="cover"
+              source={require('../weJay2.png')}
+            />
+          )}
           <View style={styles.textContainer}>
             <Text
               ellipsizeMode="tail"
@@ -126,14 +131,18 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     flexDirection: 'column',
     alignItems: 'center',
-    //height: height,
-    //width: width,
+    height: 700,
+    width: 400,
     alignSelf: 'center'
   },
   image: {
-    //width: .5* width,
-    //height: .3 * height,
+    width: 300,
+    height: 300,
     marginTop: 40
+  },
+  wejayLogo: {
+    width: 300,
+    height: 300
   },
   songName: {
     fontWeight: 'bold',
