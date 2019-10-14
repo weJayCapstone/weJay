@@ -7,21 +7,21 @@ import {
   TouchableOpacity,
   ImageBackground
 } from 'react-native';
-import { Card, Image, ListItem } from 'react-native-elements';
+import { Image } from 'react-native-elements';
 import { Feather } from '@expo/vector-icons';
 import Modal from 'react-native-modal';
 import PlaybackClass from './PlaybackClass';
-import { currentTrack } from '../api/spotify';
-import db, { getRoomData, refreshRoomToken, getCurrentSongData } from '../firebase/index';
-import Dimensions from 'Dimensions';
-
-const {width, height} = Dimensions.get('window');
+import db, {
+  getRoomData,
+  refreshRoomToken,
+  getCurrentSongData
+} from '../firebase/index';
 
 export default function Playback(props) {
   const hostName = props.navigation.state.params.hostName;
   const docId = props.navigation.state.params.docId;
   const [songData, setSongData] = useState({});
-  const [isPlaying, setPlaying] = useState(false)
+  const [isPlaying, setPlaying] = useState(false);
 
   async function getCurrentSongPlaying(id) {
     try {
@@ -34,15 +34,10 @@ export default function Playback(props) {
       console.log(err);
     }
   }
-
   useEffect(() => {
-
-    if (isPlaying){
-
+    if (isPlaying) {
       getCurrentSongPlaying(docId);
-
     }
-
   }, []);
 
   function songDataParser(data) {
@@ -65,8 +60,6 @@ export default function Playback(props) {
     props.navigation.navigate('PlaylistRoom');
   }
 
-  // const { width, height } = Dimensions.get('window');
-
   return (
     <Modal isVisible={isVisible}>
       <StatusBar hidden />
@@ -78,13 +71,15 @@ export default function Playback(props) {
           <TouchableOpacity onPress={() => closeModal()}>
             <Feather name="chevron-down" size={50} color="black" />
           </TouchableOpacity>
-          {songData.imageUrl ? <Image
-            style={styles.image}
-            resizeMode="cover"
-            source={{
-              uri: songData.imageUrl
-            }}
-          /> : null}
+          {songData.imageUrl ? (
+            <Image
+              style={styles.image}
+              resizeMode="cover"
+              source={{
+                uri: songData.imageUrl
+              }}
+            />
+          ) : null}
           <View style={styles.textContainer}>
             <Text
               ellipsizeMode="tail"
@@ -102,7 +97,11 @@ export default function Playback(props) {
             </Text>
           </View>
           <View style={{ top: 75 }}>
-            <PlaybackClass docId={docId} setPlaying={setPlaying} hostName={hostName} />
+            <PlaybackClass
+              docId={docId}
+              setPlaying={setPlaying}
+              hostName={hostName}
+            />
           </View>
         </View>
       </ImageBackground>
