@@ -32,6 +32,7 @@ export default function CreatePlaylistForm(props) {
           hostName: roomData.hostName
         });
       }
+      setRoomData({ title: '', hostName: '', passcode: null });
     } catch (err) {
       console.log(err);
     }
@@ -59,7 +60,7 @@ export default function CreatePlaylistForm(props) {
         <TextInput
           style={styles.textInput}
           placeholder="Your Playlist Passcode"
-          maxLength={4}
+          maxLength={50}
           value={roomData.passcode}
           onChangeText={text => setRoomData({ ...roomData, passcode: text })}
         />

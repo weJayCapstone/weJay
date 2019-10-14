@@ -15,8 +15,8 @@ import {
     let roomData = await getRoomData(docId) 
     let queueLength = roomData.queue.length; // i think this works, I awaited everytime playbackTimer is called
       timeout = setTimeout(function(){
-          //const firestoreArray = get songs from firestore
-              nextSong(docId)
+      //const firestoreArray = get songs from firestore
+        nextSong(docId)
   
       }, songTime)
   
@@ -71,11 +71,11 @@ export const resumeSong = async (docId) => {
     
     let roomData = await getRoomData(docId)
     let song = await getCurrentSongData(docId)
-    console.log('this is song in resume: ', song)
+    //console.log('this is song in resume: ', song)
     let progress = song.progress
-    console.log('this is progress in resume: ', progress)
+    //console.log('this is progress in resume: ', progress)
     let remainingTime = song.duration - progress
-    console.log('this is remainingtime in resume: ', remainingTime)
+    //console.log('this is remainingtime in resume: ', remainingTime)
 
 
 
