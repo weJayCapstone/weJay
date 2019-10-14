@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     width: 300
   },
   goToPlaylistButton: {
-    marginTop: 100,
+    marginTop: 90,
     shadowColor: '#999',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,

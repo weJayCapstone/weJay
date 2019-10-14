@@ -36,12 +36,11 @@ export default function Playback(props) {
   }
   useEffect(() => {
     let roomRef = db.collection('Rooms').doc(docId);
-    let unsub = roomRef
-        .onSnapshot(snapshot => {
-           if (snapshot.data().currentSong){
-               setSongData(snapshot.data().currentSong)
-           }
-        });
+    let unsub = roomRef.onSnapshot(snapshot => {
+      if (snapshot.data().currentSong) {
+        setSongData(snapshot.data().currentSong);
+      }
+    });
     // if (isPlaying){
 
     //   getCurrentSongPlaying(docId);
@@ -90,7 +89,13 @@ export default function Playback(props) {
                 uri: songData.imageUrl
               }}
             />
-          ) : null}
+          ) : (
+            <Image
+              style={styles.wejayLogo}
+              resizeMode="cover"
+              source={require('../weJay2.png')}
+            />
+          )}
           <View style={styles.textContainer}>
             <Text
               ellipsizeMode="tail"
@@ -134,6 +139,10 @@ const styles = StyleSheet.create({
     width: 300,
     height: 300,
     marginTop: 40
+  },
+  wejayLogo: {
+    width: 300,
+    height: 300
   },
   songName: {
     fontWeight: 'bold',
