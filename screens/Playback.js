@@ -75,7 +75,12 @@ export default function Playback(props) {
       <StatusBar hidden />
       <ImageBackground
         source={require('../weJayGradient.png')}
-        style={{ width: 400, height: 700, alignSelf: 'center' }}
+        style={{
+          width: 400,
+          height: 700,
+          alignSelf: 'center',
+          display: 'flex'
+        }}
       >
         <View style={styles.container}>
           <TouchableOpacity onPress={() => closeModal()}>
@@ -142,7 +147,8 @@ const styles = StyleSheet.create({
   },
   wejayLogo: {
     width: 300,
-    height: 300
+    height: 300,
+    paddingTop: 100
   },
   songName: {
     fontWeight: 'bold',
