@@ -192,28 +192,55 @@ export async function setCurrentSong(roomData, docId) {
     let songDocId;
     let roomRef = db.collection('Rooms').doc(docId)
     let currentSong = roomData.queue[0];
-    let newQueue = roomData.queue.slice(1); //new queue
+    let newQueue = roomData.queue.slice(1);
     //set currentSong
     roomRef.set({currentSong}, {merge:true});
     roomRef.update({queue: newQueue});
     //get playlist 
     let playlistRef = db.collection('Rooms').doc(docId).collection('Playlist');
-    let query = await playlistRef.where('id', '==',currentSong.id).get();
-    //find song, and remove it from playlist collection
-    query.forEach(doc => songDocId = doc.id);
-    await playlistRef.doc(songDocId).delete();
-    
+    try{
+        //add current song to master playlist
+        let finalPlaylist= roomRef.collection('Final Playlist');
+        await finalPlaylist.add({
+            addedToFP: Date.now(),
+            currentSong
+        });
+        //find song, and remove it from playlist collection
+        let query = await playlistRef.where('id', '==',currentSong.id).get();
+        query.forEach(doc => songDocId = doc.id);
+        await playlistRef.doc(songDocId).delete();
+
+    }catch(err){
+        console.log(err);
+    }
     return currentSong;
 }
 
 export async function pauseCurrentSong(docId, progress) {
-    let roomRef = db.collection('Rooms').doc(docId);
-    await roomRef.update({'currentSong.progress': progress});
+    try{
+        let roomRef = db.collection('Rooms').doc(docId);
+        await roomRef.update({'currentSong.progress': progress});
+    }catch(err){
+        console.log(err);
+    }
 }
 export async function getCurrentSongData(docId){
-    let roomRef = await db.collection('Rooms').doc(docId).get();
-    let currentSong = roomRef.data().currentSong;
-    return currentSong
+    try{
+        let roomRef = await db.collection('Rooms').doc(docId).get();
+        let currentSong = roomRef.data().currentSong;
+        return currentSong;
+    }catch(err){
+        console.log(err);
+    }
 }
-
+export async function getFinalPlaylist(docId){
+    try{
+        let finalPlaylistRef = db.collection('Rooms').doc(docId).collection('Final Playlist');
+        let finalpl = await finalPlaylistRef.orderBy('addedToFP','asc').get();
+        //what do you want from this? song uri?
+        console.log(finalpl);
+    }catch(err){
+        console.log(err);
+    }
+}
 //add users to playlist

@@ -36,13 +36,20 @@ export default function Playback(props) {
   }
 
   useEffect(() => {
+    let roomRef = db.collection('Rooms').doc(docId);
+    let unsub = roomRef
+        .onSnapshot(snapshot => {
+           if(snapshot.data().currentSong){
+               setSongData(snapshot.data().currentSong)
+           }
+        });
+    // if (isPlaying){
 
-    if (isPlaying){
+    //   getCurrentSongPlaying(docId);
 
-      getCurrentSongPlaying(docId);
-
-    }
-
+    // }
+    //this might fix the memory leak errors:
+    return () => unsub();
   }, []);
 
   function songDataParser(data) {
@@ -72,7 +79,7 @@ export default function Playback(props) {
       <StatusBar hidden />
       <ImageBackground
         source={require('../weJayGradient.png')}
-        style={{ width: width, height: height, alignSelf: 'center' }}
+        // style={{ width: width, height: height, alignSelf: 'center' }}
       >
         <View style={styles.container}>
           <TouchableOpacity onPress={() => closeModal()}>
@@ -116,13 +123,13 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     flexDirection: 'column',
     alignItems: 'center',
-    height: height,
-    width: width,
+    //height: height,
+    //width: width,
     alignSelf: 'center'
   },
   image: {
-    width: .5* width,
-    height: .3 * height,
+    //width: .5* width,
+    //height: .3 * height,
     marginTop: 40
   },
   songName: {

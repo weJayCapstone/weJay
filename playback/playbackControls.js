@@ -11,8 +11,9 @@ import {
 
   let timeout;
 
-  const playbackTimer = (songTime, docId) => {
-
+  const playbackTimer = async (songTime, docId) => {
+    let roomData = await getRoomData(docId) 
+    let queueLength = roomData.queue.length; // i think this works, I awaited everytime playbackTimer is called
       timeout = setTimeout(function(){
           //const firestoreArray = get songs from firestore
               nextSong(docId)
@@ -35,7 +36,7 @@ export const playSong = async (docId) => {
         //call spotify api to play song
         await play(roomData, song);
         
-        playbackTimer(song.duration, docId)
+        await playbackTimer(song.duration, docId)
 
     } catch (err){
         console.log(err);
@@ -79,5 +80,5 @@ export const resumeSong = async (docId) => {
 
 
     await resume(roomData, song.uri, progress)
-    playbackTimer(remainingTime)
+    await playbackTimer(remainingTime, docId)
 }

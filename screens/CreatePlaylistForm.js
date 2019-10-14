@@ -10,6 +10,7 @@ export default function CreatePlaylistForm(props) {
     hostName: '',
     passcode: null
   });
+  console.log(props.navigation.state.params)
   const handleSubmit = async formData => {
     try {
       const spotifyTokens = await getTokens();
@@ -23,7 +24,6 @@ export default function CreatePlaylistForm(props) {
         formData.title
       );
       let result = await createRoom(formData);
-      console.log(props.navigation.state.params)
       props.navigation.state.params.setDocId(result);
       props.navigation.state.params.setUserName(formData.hostName);
       if (formData.accessToken) {

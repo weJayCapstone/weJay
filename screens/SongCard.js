@@ -36,7 +36,6 @@ export default class SongCard extends Component {
     this.toggleModal = this.toggleModal.bind(this);
   }
   songDataParser = data => {
-    console.log(data);
     let result = {
       name: data.name,
       id: data.id,
