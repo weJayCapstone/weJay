@@ -16,7 +16,7 @@ import {
     let queueLength = roomData.queue.length; // i think this works, I awaited everytime playbackTimer is called
       timeout = setTimeout(function(){
       //const firestoreArray = get songs from firestore
-      if (queueLength > 1){
+      if (queueLength > 0){
           nextSong(docId);
       }
 
