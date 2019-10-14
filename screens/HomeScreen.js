@@ -14,8 +14,8 @@ export default function HomeScreen(props) {
     <View style={styles.container}>
       <View style={styles.header}>
         <Image
-          source={require('../weJay_Temp_Logo.png')}
-          style={{ width: 100, height: 100 }}
+          source={require('../weJay.png')}
+          style={{ width: 250, height: 250 }}
         />
       </View>
       <View>
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     width: 300
   },
   goToPlaylistButton: {
-    marginTop: 150,
+    marginTop: 100,
     shadowColor: '#999',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,

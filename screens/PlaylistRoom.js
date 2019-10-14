@@ -6,18 +6,14 @@ import {
   TouchableOpacity,
   View,
   FlatList,
-  Image
+  ImageBackground
 } from 'react-native';
-import { Card, Tile } from 'react-native-elements';
 import { Feather } from '@expo/vector-icons';
-import db, { getRoomData, subToPlaylist, getPlaylist } from '../firebase/index';
-import PlaybackClass from './PlaybackClass';
+import db, { refreshRoomToken, getCurrentSongData } from '../firebase/index';
 import SingleSong from './SingleSong';
-import Dimensions from 'Dimensions';
 
 export default function PlaylistRoom(props) {
   const docId = props.navigation.state.params.docId;
-  // console.log('params', props.navigation.state.params);
   const userName = props.navigation.state.params.userName;
   const hostName = props.navigation.state.params.hostName;
 
@@ -42,7 +38,7 @@ export default function PlaylistRoom(props) {
           }
           return comparison;
         });
-        roomRef.update({queue: songArr})
+        roomRef.update({ queue: songArr });
         setSongs(songArr);
       });
     return unsub;
@@ -77,42 +73,141 @@ export default function PlaylistRoom(props) {
     )
   };
 
-  return (
-    <>
-      <ScrollView>
-        <Tile
-          imageSrc={require('../weJayGradient.png')}
-          title="Welcome, DJ"
-          featured
-          caption="Add a Song Below"
-          height={200}
-          titleStyle={{ fontSize: 50, fontWeight: 'bold' }}
-          captionStyle={{ fontSize: 20 }}
-        />
-        {songs ? (
-          <FlatList
-            data={songs}
-            renderItem={({ item }) => (
-              <SingleSong song={item} docId={docId} userName={userName} />
-            )}
-            keyExtractor={item => item.id}
-          />
-        ) : (
-          <Text>Search To Add Songs to Your Playlist!</Text>
-        )}
-      </ScrollView>
-      <View style={styles.buttonBackground}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() =>
-            props.navigation.navigate('SearchScreen', { docId, userName })
-          }
-        >
-          <Text style={styles.buttonText}>Add A Song</Text>
-        </TouchableOpacity>
-      </View>
-    </>
-  );
+  if (hostName) {
+    return (
+      <>
+        <ScrollView>
+          <ImageBackground
+            source={require('../weJayGradient.png')}
+            style={{ height: 200, display: 'flex', flexDirection: 'column' }}
+          >
+            <Text
+              style={{
+                fontSize: 30,
+                fontWeight: 'bold',
+                color: 'white',
+                alignSelf: 'center',
+                alignContent: 'center',
+                paddingTop: 55
+              }}
+              ellipsizeMode="tail"
+              numberOfLines={2}
+            >
+              Welcome, DJ {hostName}
+            </Text>
+            {/* <Text
+              style={{
+                fontSize: 20,
+                color: "white",
+                alignSelf: "center",
+                paddingTop: 10
+              }}
+            >
+              Now Playing: {songData.Title}
+            </Text> */}
+            <Text
+              style={{
+                fontSize: 20,
+                color: 'white',
+                alignSelf: 'center',
+                paddingTop: 30
+              }}
+            >
+              Add a Song Below
+            </Text>
+          </ImageBackground>
+          {songs ? (
+            <FlatList
+              data={songs}
+              renderItem={({ item }) => (
+                <SingleSong song={item} docId={docId} userName={userName} />
+              )}
+              keyExtractor={item => item.id}
+            />
+          ) : (
+            <Text>Search To Add Songs to Your Playlist!</Text>
+          )}
+        </ScrollView>
+        <View style={styles.buttonBackground}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() =>
+              props.navigation.navigate('SearchScreen', { docId, userName })
+            }
+          >
+            <Text style={styles.buttonText}>Add A Song</Text>
+          </TouchableOpacity>
+        </View>
+      </>
+    );
+  } else {
+    return (
+      <>
+        <ScrollView>
+          <ImageBackground
+            source={require('../weJayGradient.png')}
+            style={{ height: 200, display: 'flex', flexDirection: 'column' }}
+          >
+            <Text
+              style={{
+                fontSize: 30,
+                fontWeight: 'bold',
+                color: 'white',
+                alignSelf: 'center',
+                alignContent: 'center',
+                paddingTop: 55
+              }}
+              ellipsizeMode="tail"
+              numberOfLines={2}
+            >
+              Welcome, DJ {userName}
+            </Text>
+            {/* <Text
+              style={{
+                fontSize: 20,
+                color: "white",
+                alignSelf: "center",
+                paddingTop: 10
+              }}
+            >
+              Now Playing: {songData.Title}
+            </Text> */}
+            <Text
+              style={{
+                fontSize: 20,
+                color: 'white',
+                alignSelf: 'center',
+                paddingTop: 30
+              }}
+            >
+              Add a Song Below
+            </Text>
+          </ImageBackground>
+          {songs ? (
+            <FlatList
+              data={songs}
+              renderItem={({ item }) => (
+                <SingleSong song={item} docId={docId} userName={userName} />
+              )}
+              keyExtractor={item => item.id}
+            />
+          ) : (
+            <Text>Search To Add Songs to Your Playlist!</Text>
+          )}
+        </ScrollView>
+        <View style={styles.buttonBackground}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() =>
+              props.navigation.navigate('SearchScreen', { docId, userName })
+            }
+          >
+            <Text style={styles.buttonText}>Add A Song</Text>
+          </TouchableOpacity>
+        </View>
+      </>
+    );
+  }
 }
 
 const styles = StyleSheet.create({

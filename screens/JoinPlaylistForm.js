@@ -32,7 +32,6 @@ export default function JoinPlayListForm(props) {
           userName: authData.userName
         });
       }
-      // setAuthData({ passcode: null, title: '', userName: '' });
     } catch (err) {
       console.log(err);
     }

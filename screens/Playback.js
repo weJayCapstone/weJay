@@ -11,15 +11,11 @@ import { Image } from 'react-native-elements';
 import { Feather } from '@expo/vector-icons';
 import Modal from 'react-native-modal';
 import PlaybackClass from './PlaybackClass';
-import { currentTrack } from '../api/spotify';
 import db, {
   getRoomData,
   refreshRoomToken,
   getCurrentSongData
 } from '../firebase/index';
-import Dimensions from 'Dimensions';
-
-// const { width, height } = Dimensions.get('window');
 
 export default function Playback(props) {
   const hostName = props.navigation.state.params.hostName;
@@ -63,8 +59,6 @@ export default function Playback(props) {
     setIsVisible(!isVisible);
     props.navigation.navigate('PlaylistRoom');
   }
-
-  // const { width, height } = Dimensions.get('window');
 
   return (
     <Modal isVisible={isVisible}>

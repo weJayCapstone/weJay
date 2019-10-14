@@ -13,7 +13,6 @@ import {
   pauseSong,
   resumeSong
 } from '../playback/playbackControls';
-
 import { Feather } from '@expo/vector-icons';
 
 export default class PlaylistClass extends Component {
