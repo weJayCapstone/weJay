@@ -5,63 +5,46 @@ import {
   StyleSheet,
   StatusBar,
   TouchableOpacity,
-  ImageBackground
+  ImageBackground,
+  Dimensions
 } from 'react-native';
 import { Image } from 'react-native-elements';
 import { Feather } from '@expo/vector-icons';
 import Modal from 'react-native-modal';
 import PlaybackClass from './PlaybackClass';
-import db, {
-  getRoomData,
-  refreshRoomToken,
-  getCurrentSongData
-} from '../firebase/index';
+import db from '../firebase/index';
+import { connect } from 'react-redux';
 
-export default function Playback(props) {
-  const hostName = props.navigation.state.params.hostName;
-  const docId = props.navigation.state.params.docId;
+const width = Dimensions.get('window').width;
+const height = Dimensions.get('window').height;
+
+function Playback(props) {
+  //const hostName = props.navigation.state.params.hostName;
+  const docId = props.docId;
   const [songData, setSongData] = useState({});
   const [isPlaying, setPlaying] = useState(false);
 
-  async function getCurrentSongPlaying(id) {
-    try {
-      await refreshRoomToken(id);
-      //let roomData = await getRoomData(id);
-      const songPlaying = await getCurrentSongData(id);
-      const result = songDataParser(songPlaying.item);
-      setSongData(result);
-    } catch (err) {
-      console.log(err);
-    }
-  }
+//   async function getCurrentSongPlaying(id) {
+//     try {
+//       await refreshRoomToken(id);
+//       //let roomData = await getRoomData(id);
+//       const songPlaying = await getCurrentSongData(id);
+//       const result = songDataParser(songPlaying.item);
+//       setSongData(result);
+//     } catch (err) {
+//       console.log(err);
+//     }
+//   }
   useEffect(() => {
     let roomRef = db.collection('Rooms').doc(docId);
-    let unsub = roomRef.onSnapshot(snapshot => {
-      if (snapshot.data().currentSong) {
-        setSongData(snapshot.data().currentSong);
-      }
-    });
-    // if (isPlaying){
-
-    //   getCurrentSongPlaying(docId);
-
-    // }
-    //this might fix the memory leak errors:
+    let unsub = roomRef
+        .onSnapshot(snapshot => {
+           if(snapshot.data().currentSong){
+               setSongData(snapshot.data().currentSong)
+           }
+        });
     return () => unsub();
   }, []);
-
-  function songDataParser(data) {
-    let result = {
-      name: data.name,
-      id: data.id,
-      href: data.href,
-      uri: data.uri,
-      artist: data.artists[0].name,
-      imageUrl: data.album.images[0].url,
-      albumName: data.album.name
-    };
-    return result;
-  }
 
   const [isVisible, setIsVisible] = useState(true);
 
@@ -75,16 +58,11 @@ export default function Playback(props) {
       <StatusBar hidden />
       <ImageBackground
         source={require('../weJayGradient.png')}
-        style={{
-          width: 400,
-          height: 700,
-          alignSelf: 'center',
-          display: 'flex'
-        }}
+        style={{ width: width, height: height, alignSelf: 'center', display: 'flex' }}
       >
         <View style={styles.container}>
-          <TouchableOpacity onPress={() => closeModal()}>
-            <Feather name="chevron-down" size={50} color="black" />
+        <TouchableOpacity onPress={() => closeModal()} style={{backgroundColor: 'transparent', padding:0, margin:0}}>
+            <Feather name="chevron-down" size={50} color="white" style={{alignSelf:'center', opacity: .7, margin:0, padding:0}}/>
           </TouchableOpacity>
           {songData.imageUrl ? (
             <Image
@@ -99,7 +77,7 @@ export default function Playback(props) {
               style={styles.wejayLogo}
               resizeMode="cover"
               source={require('../weJay2.png')}
-            />
+           />
           )}
           <View style={styles.textContainer}>
             <Text
@@ -119,9 +97,7 @@ export default function Playback(props) {
           </View>
           <View style={{ top: 75 }}>
             <PlaybackClass
-              docId={docId}
               setPlaying={setPlaying}
-              hostName={hostName}
             />
           </View>
         </View>
@@ -129,6 +105,12 @@ export default function Playback(props) {
     </Modal>
   );
 }
+const mapStateToProps = state => {
+    return {
+        docId: state.docId
+    }
+}
+export default connect(mapStateToProps)(Playback);
 
 const styles = StyleSheet.create({
   container: {
@@ -136,14 +118,13 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     flexDirection: 'column',
     alignItems: 'center',
-    height: 700,
-    width: 400,
+    height: height,
+    width: width,
     alignSelf: 'center'
   },
   image: {
-    width: 300,
-    height: 300,
-    marginTop: 40
+    width: width,
+    height: .5*height,
   },
   wejayLogo: {
     width: 300,
@@ -154,7 +135,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 25,
     paddingBottom: 15,
-    alignSelf: 'center'
+    alignSelf: 'center',
+    marginTop:15
   },
   songArtist: {
     fontSize: 20,

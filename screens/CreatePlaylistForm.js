@@ -3,15 +3,15 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { getTokens, makeNewPlaylist } from '../api/spotify';
 import { createRoom } from '../firebase/index';
-import { Feather } from '@expo/vector-icons';
+import {setDocId, fetchRoomDataThunk, setUserName} from '../redux/store'
+import { connect } from 'react-redux';
 
-export default function CreatePlaylistForm(props) {
+function CreatePlaylistForm(props) {
   const [roomData, setRoomData] = useState({
     title: '',
     hostName: '',
     passcode: null
   });
-  console.log(props.navigation.state.params);
   const handleSubmit = async formData => {
     try {
       const spotifyTokens = await getTokens();
@@ -25,34 +25,20 @@ export default function CreatePlaylistForm(props) {
         formData.title
       );
       let result = await createRoom(formData);
-      props.navigation.state.params.setDocId(result);
-      props.navigation.state.params.setUserName(formData.hostName);
+      //redux store updates
+      props.setStoreDocId(result);
+      props.setStoreRoomData(result);
+      props.setUserName(formData.hostName);
+      //navigation params
+      //adds host name to App.js level:
+      //props.navigation.state.params.setHostName(formData.hostName);
       if (formData.accessToken) {
-        props.navigation.navigate('PlaylistRoom', {
-          docId: result,
-          hostName: roomData.hostName
-        });
+        props.navigation.navigate('PlaylistRoom');
       }
       setRoomData({ title: '', hostName: '', passcode: null });
     } catch (err) {
       console.log(err);
     }
-  };
-
-  CreatePlaylistForm.navigationOptions = {
-    headerStyle: {
-      backgroundColor: '#423959',
-      borderBottomWidth: 0
-    },
-    headerLeft: (
-      <TouchableOpacity
-        onPress={() => {
-          props.navigation.navigate('Home');
-        }}
-      >
-        <Feather name="chevron-left" size={32} color="#FF5857" />
-      </TouchableOpacity>
-    )
   };
   return (
     <View style={styles.container}>
@@ -91,13 +77,22 @@ export default function CreatePlaylistForm(props) {
     </View>
   );
 }
+const mapDispatchToProps = dispatch => {
+    return {
+        setStoreDocId: (result) => dispatch(setDocId(result)),
+        setStoreRoomData: (docId) => dispatch(fetchRoomDataThunk(docId)),
+        setUserName: (userName) => dispatch(setUserName(userName))
+    };
+};
+
+export default connect(null, mapDispatchToProps)(CreatePlaylistForm)
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'flex-start',
     flexDirection: 'column',
-    backgroundColor: '#423959',
+    backgroundColor: '#F4F8FF',
     alignItems: 'center'
   },
   header: {
@@ -115,7 +110,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     borderColor: '#fff',
-    backgroundColor: '#E9DBFF',
+    backgroundColor: '#fff',
     borderRadius: 30,
     borderWidth: 1,
     width: 250,
@@ -124,25 +119,25 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 20,
     flexDirection: 'row',
-    alignItems: 'center'
-    // shadowColor: '#999',
-    // shadowOffset: { width: 0, height: 2 },
-    // shadowOpacity: 0.5,
-    // shadowRadius: 2,
-    // elevation: 1
+    alignItems: 'center',
+    shadowColor: '#999',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    elevation: 1
   },
   saveButton: {
     backgroundColor: '#FF5857',
     padding: 15,
     borderRadius: 25,
-    width: 200
-    // shadowColor: '#999',
-    // shadowOffset: { width: 1, height: 2 },
-    // shadowOpacity: 0.5,
-    // shadowRadius: 2
+    width: 200,
+    shadowColor: '#999',
+    shadowOffset: { width: 1, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2
   },
   saveButtonText: {
-    color: '#E9DBFF',
+    color: '#FFFFFF',
     fontSize: 20,
     textAlign: 'center',
     fontWeight: 'bold'

@@ -4,8 +4,10 @@ import { Card, Image, ListItem } from 'react-native-elements';
 import { Feather } from '@expo/vector-icons';
 import { play } from '../api/spotify';
 import db, { updateVote } from '../firebase/index.js';
+import { connect } from 'react-redux';
+import {width, height} from '../constants/Layout'
 
-export default function SingleSong(props) {
+function SingleSong(props) {
   const song = props.song;
   const userName = props.userName;
   const docId = props.docId;
@@ -22,9 +24,7 @@ export default function SingleSong(props) {
         <Image
           style={{ width: 80, height: 80 }}
           resizeMode="cover"
-          source={{
-            uri: song.imageUrl
-          }}
+          source={{ uri: song.imageUrl }}
         />
         <View style={{ paddingLeft: 10 }}>
           <Text
@@ -93,6 +93,13 @@ export default function SingleSong(props) {
     </View>
   );
 }
+const mapStateToProps = state => {
+    return {
+        docId: state.docId,
+        userName: state.userName
+    }
+}
+export default connect(mapStateToProps)(SingleSong);
 
 const styles = StyleSheet.create({
   background: {

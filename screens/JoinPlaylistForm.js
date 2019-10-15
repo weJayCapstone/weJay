@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
-import { enterRoom, getPlaylist } from '../firebase/index';
+import { enterRoom} from '../firebase/index';
 import { Feather } from '@expo/vector-icons';
+import {setDocId, fetchRoomDataThunk, setUserName} from '../redux/store';
+import { connect } from 'react-redux';
 
-export default function JoinPlayListForm(props) {
+function JoinPlayListForm(props) {
   const [authData, setAuthData] = useState({});
   const handleSubmit = async () => {
     try {
@@ -18,14 +20,12 @@ export default function JoinPlayListForm(props) {
           cancelable: false
         });
       } else {
-        //set home props
-        props.navigation.state.params.setDocId(result);
-        props.navigation.state.params.setUserName(authData.userName);
-        props.navigation.navigate('PlaylistRoom', {
-          docId: result,
-          userName: authData.userName,
-          title: authData.title
-        });
+        //set redux state
+        props.setStoreDocId(result);
+        props.setStoreRoomData(result);
+        props.setUserName(authData.userName);
+        //then navigate to playlist room
+        props.navigation.navigate('PlaylistRoom');
       }
     } catch (err) {
       console.log(err);
@@ -81,6 +81,14 @@ export default function JoinPlayListForm(props) {
     </View>
   );
 }
+const mapDispatchToProps = dispatch => {
+    return {
+        setStoreDocId: (result) => dispatch(setDocId(result)),
+        setStoreRoomData: (docId) => dispatch(fetchRoomDataThunk(docId)),
+        setUserName: (userName) => dispatch(setUserName(userName))
+    }
+}
+export default connect(null,mapDispatchToProps)(JoinPlayListForm)
 
 const styles = StyleSheet.create({
   container: {

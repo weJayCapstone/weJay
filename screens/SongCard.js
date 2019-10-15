@@ -111,24 +111,25 @@ export default class SongCard extends Component {
 
         <Modal isVisible={this.state.visibleModal}>
           <View style={styles.content}>
-            <Text
+            
+
+            <View style={styles.modalDetails}>
+              <Image
+                style={{ width: 200, height: 200, marginBottom: 20, marginTop: 15 }}
+                resizeMode="cover"
+                source={{ uri: `${this.props.item.album.images[1].url}` }}
+              />
+              <Text
               numberOfLines={2}
               ellipsizeMode="tail"
               style={styles.contentTitle}
             >
               {this.props.item.name}
             </Text>
-
-            <View style={styles.modalDetails}>
-              <Image
-                style={{ width: 200, height: 200, marginBottom: 20 }}
-                resizeMode="cover"
-                source={{ uri: `${this.props.item.album.images[1].url}` }}
-              />
               <Text
                 numberOfLines={1}
                 ellipsizeMode="tail"
-                style={{ fontSize: 18, marginBottom: 20 }}
+                style={{ fontSize: 18, marginBottom: 20, color: '#fff' }}
               >
                 {this.props.item.album.artists[0].name} -{' '}
                 {this.props.item.album.name}
@@ -145,6 +146,7 @@ export default class SongCard extends Component {
 
               <Button
                 title="Cancel"
+                color='#fff'
                 style={{ top: 15 }}
                 onPress={() => this.setState({ visibleModal: false })}
               />
@@ -179,23 +181,24 @@ const styles = StyleSheet.create({
     backgroundColor: 'white'
   },
   content: {
-    backgroundColor: '#F4F8FF',
+    backgroundColor: '#423959',
     padding: 22,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 4,
+    borderRadius: 20,
     borderColor: 'rgba(0, 0, 0, 0.1)'
   },
   contentTitle: {
     fontSize: 20,
     marginBottom: 12,
     fontWeight: 'bold',
-    textAlign: 'center'
+    textAlign: 'center',
+    color: '#fff'
   },
   modalDetails: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   addButton: {
     // marginRight: 80,
@@ -203,15 +206,21 @@ const styles = StyleSheet.create({
     // marginTop: 25,
     // paddingTop: 10,
     backgroundColor: '#FF5857',
-    borderRadius: 10
+    borderRadius: 25,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    elevation: 1,
   },
   addButtonText: {
     color: 'white',
     textAlign: 'center',
-    fontSize: 25,
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingTop: 8,
-    paddingBottom: 8
+    fontSize: 20,
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 10,
+    paddingBottom: 10,
+    fontWeight: 'bold'
   }
 });
