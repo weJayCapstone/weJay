@@ -47,7 +47,24 @@ const StackNav = createStackNavigator({
       header: null
     }
   },
-  CreatePlaylistForm: { screen: CreatePlaylistForm },
+  CreatePlaylistForm: {
+    screen: CreatePlaylistForm,
+    navigationOptions: ({ navigation }) => ({
+      headerStyle: {
+        backgroundColor: '#423959',
+        borderBottomWidth: 0
+      },
+      headerLeft: (
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('Home');
+          }}
+        >
+          <Feather name="chevron-left" size={32} color="white" />
+        </TouchableOpacity>
+      )
+    })
+  },
   JoinPlaylistForm: {
     screen: JoinPlaylistForm,
     navigationOptions: ({ navigation }) => ({

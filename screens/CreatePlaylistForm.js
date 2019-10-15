@@ -1,15 +1,16 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import { TextInput } from "react-native-gesture-handler";
-import { getTokens, makeNewPlaylist } from "../api/spotify";
-import { createRoom } from "../firebase/index";
-import { setDocId, fetchRoomDataThunk, setUserName } from "../redux/store";
-import { connect } from "react-redux";
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { TextInput } from 'react-native-gesture-handler';
+import { getTokens, makeNewPlaylist } from '../api/spotify';
+import { createRoom } from '../firebase/index';
+import { setDocId, fetchRoomDataThunk, setUserName } from '../redux/store';
+import { connect } from 'react-redux';
+import { Feather } from '@expo/vector-icons';
 
 function CreatePlaylistForm(props) {
   const [roomData, setRoomData] = useState({
-    title: "",
-    hostName: "",
+    title: '',
+    hostName: '',
     passcode: null
   });
   const handleSubmit = async formData => {
@@ -33,29 +34,14 @@ function CreatePlaylistForm(props) {
       //adds host name to App.js level:
       //props.navigation.state.params.setHostName(formData.hostName);
       if (formData.accessToken) {
-        props.navigation.navigate("PlaylistRoom");
+        props.navigation.navigate('PlaylistRoom');
       }
-      setRoomData({ title: "", hostName: "", passcode: null });
+      setRoomData({ title: '', hostName: '', passcode: null });
     } catch (err) {
       console.log(err);
     }
   };
 
-  CreatePlaylistForm.navigationOptions = {
-    headerStyle: {
-      backgroundColor: "#423959",
-      borderBottomWidth: 0
-    },
-    headerLeft: (
-      <TouchableOpacity
-        onPress={() => {
-          props.navigation.navigate("Home");
-        }}
-      >
-        <Feather name="chevron-left" size={32} color="white" />
-      </TouchableOpacity>
-    )
-  };
   return (
     <View style={styles.container}>
       <View>
@@ -109,47 +95,47 @@ export default connect(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "flex-start",
-    flexDirection: "column",
-    backgroundColor: "#423959",
-    alignItems: "center"
+    justifyContent: 'flex-start',
+    flexDirection: 'column',
+    backgroundColor: '#423959',
+    alignItems: 'center'
   },
   header: {
     fontSize: 30,
-    textAlign: "center",
-    fontWeight: "bold",
-    color: "white",
+    textAlign: 'center',
+    fontWeight: 'bold',
+    color: 'white',
     marginTop: 80
   },
   inputContainer: {
     paddingTop: 15,
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center"
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   textInput: {
-    borderColor: "#fff",
-    backgroundColor: "#E9DBFF",
+    borderColor: '#fff',
+    backgroundColor: '#E9DBFF',
     borderRadius: 30,
     borderWidth: 1,
     width: 250,
     fontSize: 18,
     height: 45,
-    textAlign: "center",
+    textAlign: 'center',
     marginBottom: 20,
-    flexDirection: "row",
-    alignItems: "center"
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   saveButton: {
-    backgroundColor: "#FF5857",
+    backgroundColor: '#FF5857',
     padding: 15,
     borderRadius: 25,
     width: 200
   },
   saveButtonText: {
-    color: "white",
+    color: 'white',
     fontSize: 20,
-    textAlign: "center",
-    fontWeight: "bold"
+    textAlign: 'center',
+    fontWeight: 'bold'
   }
 });

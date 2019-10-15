@@ -32,21 +32,6 @@ function JoinPlayListForm(props) {
     }
   };
 
-  JoinPlayListForm.navigationOptions = {
-    headerStyle: {
-      backgroundColor: "#423959",
-      borderBottomWidth: 0
-    },
-    headerLeft: (
-      <TouchableOpacity
-        onPress={() => {
-          props.navigation.navigate("Home");
-        }}
-      >
-        <Feather name="chevron-left" size={32} color="white" />
-      </TouchableOpacity>
-    )
-  };
   return (
     <View style={styles.container}>
       <View>

@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Text,
   StyleSheet,
@@ -7,9 +7,9 @@ import {
   View,
   Image,
   ImageBackground
-} from "react-native";
-import { connect } from "react-redux";
-import { width, height } from "../constants/Layout";
+} from 'react-native';
+import { connect } from 'react-redux';
+import { width, height } from '../constants/Layout';
 
 function HomeScreen(props) {
   const docId = props.docId;
@@ -19,20 +19,21 @@ function HomeScreen(props) {
       <ImageBackground
         source={{
           uri:
-            "https://s30226.pcdn.co/wp-content/uploads/2015/02/half-moon-party-dates.jpg"
+            'https://s30226.pcdn.co/wp-content/uploads/2015/02/half-moon-party-dates.jpg'
         }}
-        style={{ width: "100%", height: "100%" }}
+        style={{ width: 375, height: 1000 }}
         imageStyle={{ opacity: 0.7 }}
+        resizeMode="cover"
       >
         <View style={styles.itemsContainer}>
           <Image
-            source={require("../weJay.png")}
-            style={{ width: 150, height: 150 }}
+            source={require('../weJay.png')}
+            style={{ width: 250, height: 250, marginTop: 150 }}
           />
           <View>
             <TouchableHighlight
               style={styles.button}
-              onPress={() => props.navigation.navigate("CreatePlaylistForm")}
+              onPress={() => props.navigation.navigate('CreatePlaylistForm')}
             >
               <Text style={styles.text}>Create Playlist</Text>
             </TouchableHighlight>
@@ -40,10 +41,10 @@ function HomeScreen(props) {
             <TouchableOpacity
               style={styles.button}
               onPress={() =>
-                props.navigation.navigate("JoinPlaylistForm", {
+                props.navigation.navigate('JoinPlaylistForm', {
                   docId,
                   userName,
-                  otherParam: "Join A Playlist"
+                  otherParam: 'Join A Playlist'
                 })
               }
             >
@@ -53,7 +54,7 @@ function HomeScreen(props) {
               <TouchableOpacity
                 style={styles.goToPlaylistButton}
                 onPress={() =>
-                  props.navigation.navigate("PlaylistRoom", {
+                  props.navigation.navigate('PlaylistRoom', {
                     docId,
                     userName
                   })
@@ -79,36 +80,36 @@ export default connect(mapStateToProps)(HomeScreen);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "flex-start",
-    flexDirection: "column",
-    alignItems: "center",
-    width: width,
-    height: height
+    justifyContent: 'flex-start',
+    flexDirection: 'column',
+    alignItems: 'center',
+    width: 375,
+    height: 700
   },
   itemsContainer: {
     flex: 1,
-    flexDirection: "column",
-    justifyContent: "space-around",
-    alignItems: "center"
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'center'
   },
   text: {
     fontSize: 24,
-    textAlign: "center",
-    fontWeight: "bold",
-    color: "#fff"
+    textAlign: 'center',
+    fontWeight: 'bold',
+    color: '#fff'
   },
   button: {
     marginTop: 30,
     borderRadius: 25,
     padding: 10,
-    backgroundColor: "#FF5857",
+    backgroundColor: '#FF5857',
     width: 300
   },
   goToPlaylistButton: {
     marginTop: 20,
     borderRadius: 25,
     padding: 10,
-    backgroundColor: "#A085AD",
+    backgroundColor: '#A085AD',
     width: 300
   }
 });
