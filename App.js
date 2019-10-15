@@ -115,7 +115,24 @@ const StackNav = createStackNavigator({
     }
   },
   CreatePlaylistForm: { screen: CreatePlaylistForm },
-  JoinPlaylistForm: { screen: JoinPlaylistForm },
+  JoinPlaylistForm: { 
+      screen: JoinPlaylistForm,
+      navigationOptions: ({navigation}) => ({
+        headerStyle: {
+          backgroundColor: '#423959',
+          borderBottomWidth: 0
+        },
+        headerLeft: (
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('Home');
+            }}
+          >
+            <Feather name="chevron-left" size={32} color="#FF5857" />
+          </TouchableOpacity>
+        )
+      })
+     },
   PlaylistRoom: {
     screen: PlaylistRoom,
     navigationOptions: ({ navigation }) => ({
@@ -150,7 +167,24 @@ const StackNav = createStackNavigator({
         )
       })
   },
-  SearchScreen: { screen: SearchScreen },
+  SearchScreen: { 
+      screen: SearchScreen,
+      navigationOptions: ({navigation}) => ({
+        headerStyle: {
+            backgroundColor: "#a99bc9",
+            borderBottomWidth: 0,
+          },
+        headerLeft: (
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("PlaylistRoom");
+            }}
+          >
+            <Feather name="chevron-left" size={32} color="#000" />
+          </TouchableOpacity>
+        )
+      })
+     },
   Playback: {
     screen: Playback
   }

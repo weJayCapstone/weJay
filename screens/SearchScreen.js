@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   mainView: {
-    backgroundColor: "#F4F8FF",
+    backgroundColor: "#a99bc9",
     display: "flex",
     alignItems: "stretch"
   },

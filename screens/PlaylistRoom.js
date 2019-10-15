@@ -25,7 +25,7 @@ function PlaylistRoom(props) {
   let [songData, setSongData] = useState({});
   useEffect(() => {
     let roomRef = db.collection("Rooms").doc(docId);
-    roomRef.onSnapshot(snapshot => {
+    let unsubFromSong = roomRef.onSnapshot(snapshot => {
       if (snapshot.data().currentSong) {
         setSongData(snapshot.data().currentSong);
       }
@@ -51,7 +51,9 @@ function PlaylistRoom(props) {
         roomRef.update({ queue: songArr });
         setSongs(songArr);
       });
-    return ()=> unsub();
+    return ()=> {
+        unsubFromSong();
+        unsub()};
   }, [docId]);
 
 return (
@@ -80,7 +82,7 @@ return (
               ellipsizeMode="tail"
               numberOfLines={2}
             >
-              Welcome, DJ {userName}
+              {title}
             </Text>
 
             {/* <MarqueeText
@@ -122,7 +124,7 @@ return (
                 opacity: 0.7
               }}
             >
-              Add a Song to {title} Below
+              Welcome to the party {userName}!
             </Text>
           </ImageBackground>
           {songs !== [] ? (
