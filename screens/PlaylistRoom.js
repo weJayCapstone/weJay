@@ -270,55 +270,55 @@ export default function PlaylistRoom(props) {
   }
 }
 
-const styles = StyleSheet.create({
-  background: {
-    backgroundColor: '#423959'
-  },
-  songContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap'
-  },
-  containerStyle: {
-    display: 'flex',
-    flexDirection: 'row'
-  },
-  headerContainer: {
-    display: 'flex',
-    flexDirection: 'row'
-  },
-  feather: { marginLeft: 'auto' },
-  nowPlayingText: {
-    color: 'white',
-    fontSize: 18,
-    paddingRight: 3,
-    paddingTop: 5
-  },
-  button: {
-    padding: 15,
-    backgroundColor: '#423959',
-    borderRadius: 25,
-    width: 200,
-    marginBottom: 25,
-    marginTop: 20,
-    margin: 'auto',
-    alignSelf: 'center'
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 20,
-    textAlign: 'center'
-  },
-  buttonBackground: {
-    backgroundColor: '#FF5857'
-  },
-  vote: {
-    color: '#000'
-  },
-  voteHighlight: {
-    color: '#FF5857'
-  },
-  musicnote: {
-    paddingRight: 10
-  }
-});
+// const styles = StyleSheet.create({
+//   background: {
+//     backgroundColor: '#423959'
+//   },
+//   songContainer: {
+//     display: 'flex',
+//     flexDirection: 'row',
+//     flexWrap: 'wrap'
+//   },
+//   containerStyle: {
+//     display: 'flex',
+//     flexDirection: 'row'
+//   },
+//   headerContainer: {
+//     display: 'flex',
+//     flexDirection: 'row'
+//   },
+//   feather: { marginLeft: 'auto' },
+//   nowPlayingText: {
+//     color: 'white',
+//     fontSize: 18,
+//     paddingRight: 3,
+//     paddingTop: 5
+//   },
+//   button: {
+//     padding: 15,
+//     backgroundColor: '#423959',
+//     borderRadius: 25,
+//     width: 200,
+//     marginBottom: 25,
+//     marginTop: 20,
+//     margin: 'auto',
+//     alignSelf: 'center'
+//   },
+//   buttonText: {
+//     color: 'white',
+//     fontSize: 20,
+//     textAlign: 'center'
+//   },
+//   buttonBackground: {
+//     backgroundColor: '#FF5857'
+//   },
+//   vote: {
+//     color: '#000'
+//   },
+//   voteHighlight: {
+//     color: '#FF5857'
+//   },
+//   musicnote: {
+//     paddingRight: 10
+//   }
+// });

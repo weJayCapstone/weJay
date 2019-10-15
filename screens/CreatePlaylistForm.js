@@ -92,59 +92,59 @@ export default function CreatePlaylistForm(props) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'flex-start',
-    flexDirection: 'column',
-    backgroundColor: '#423959',
-    alignItems: 'center'
-  },
-  header: {
-    fontSize: 30,
-    textAlign: 'center',
-    fontWeight: 'bold',
-    color: 'white',
-    marginTop: 80
-  },
-  inputContainer: {
-    paddingTop: 15,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  textInput: {
-    borderColor: '#fff',
-    backgroundColor: '#E9DBFF',
-    borderRadius: 30,
-    borderWidth: 1,
-    width: 250,
-    fontSize: 18,
-    height: 45,
-    textAlign: 'center',
-    marginBottom: 20,
-    flexDirection: 'row',
-    alignItems: 'center'
-    // shadowColor: '#999',
-    // shadowOffset: { width: 0, height: 2 },
-    // shadowOpacity: 0.5,
-    // shadowRadius: 2,
-    // elevation: 1
-  },
-  saveButton: {
-    backgroundColor: '#FF5857',
-    padding: 15,
-    borderRadius: 25,
-    width: 200
-    // shadowColor: '#999',
-    // shadowOffset: { width: 1, height: 2 },
-    // shadowOpacity: 0.5,
-    // shadowRadius: 2
-  },
-  saveButtonText: {
-    color: 'white',
-    fontSize: 20,
-    textAlign: 'center',
-    fontWeight: 'bold'
-  }
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     justifyContent: 'flex-start',
+//     flexDirection: 'column',
+//     backgroundColor: '#423959',
+//     alignItems: 'center'
+//   },
+//   header: {
+//     fontSize: 30,
+//     textAlign: 'center',
+//     fontWeight: 'bold',
+//     color: 'white',
+//     marginTop: 80
+//   },
+//   inputContainer: {
+//     paddingTop: 15,
+//     flexDirection: 'column',
+//     justifyContent: 'center',
+//     alignItems: 'center'
+//   },
+//   textInput: {
+//     borderColor: '#fff',
+//     backgroundColor: '#E9DBFF',
+//     borderRadius: 30,
+//     borderWidth: 1,
+//     width: 250,
+//     fontSize: 18,
+//     height: 45,
+//     textAlign: 'center',
+//     marginBottom: 20,
+//     flexDirection: 'row',
+//     alignItems: 'center'
+//     // shadowColor: '#999',
+//     // shadowOffset: { width: 0, height: 2 },
+//     // shadowOpacity: 0.5,
+//     // shadowRadius: 2,
+//     // elevation: 1
+//   },
+//   saveButton: {
+//     backgroundColor: '#FF5857',
+//     padding: 15,
+//     borderRadius: 25,
+//     width: 200
+//     // shadowColor: '#999',
+//     // shadowOffset: { width: 1, height: 2 },
+//     // shadowOpacity: 0.5,
+//     // shadowRadius: 2
+//   },
+//   saveButtonText: {
+//     color: 'white',
+//     fontSize: 20,
+//     textAlign: 'center',
+//     fontWeight: 'bold'
+//   }
+// });

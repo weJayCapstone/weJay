@@ -137,44 +137,44 @@ export default function Playback(props) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    display: 'flex',
-    justifyContent: 'flex-start',
-    flexDirection: 'column',
-    alignItems: 'center',
-    height: 700,
-    width: 400,
-    alignSelf: 'center'
-  },
-  image: {
-    width: 300,
-    height: 300,
-    marginTop: 40
-  },
-  wejayLogo: {
-    width: 300,
-    height: 300,
-    paddingTop: 100
-  },
-  songName: {
-    fontWeight: 'bold',
-    fontSize: 25,
-    paddingBottom: 15,
-    alignSelf: 'center',
-    color: 'white'
-  },
-  songArtist: {
-    fontSize: 20,
-    alignSelf: 'center',
-    color: 'white'
-  },
-  songAlbum: {
-    fontSize: 20,
-    alignSelf: 'center',
-    color: 'white'
-  },
-  textContainer: {
-    width: 300
-  }
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     display: 'flex',
+//     justifyContent: 'flex-start',
+//     flexDirection: 'column',
+//     alignItems: 'center',
+//     height: 700,
+//     width: 400,
+//     alignSelf: 'center'
+//   },
+//   image: {
+//     width: 300,
+//     height: 300,
+//     marginTop: 40
+//   },
+//   wejayLogo: {
+//     width: 300,
+//     height: 300,
+//     paddingTop: 100
+//   },
+//   songName: {
+//     fontWeight: 'bold',
+//     fontSize: 25,
+//     paddingBottom: 15,
+//     alignSelf: 'center',
+//     color: 'white'
+//   },
+//   songArtist: {
+//     fontSize: 20,
+//     alignSelf: 'center',
+//     color: 'white'
+//   },
+//   songAlbum: {
+//     fontSize: 20,
+//     alignSelf: 'center',
+//     color: 'white'
+//   },
+//   textContainer: {
+//     width: 300
+//   }
+// });
