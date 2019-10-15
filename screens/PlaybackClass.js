@@ -1,21 +1,15 @@
-import React, { Component } from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  Image
-} from 'react-native';
+import React, { Component } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import {
   playSong,
   nextSong,
   pauseSong,
   resumeSong
-} from '../playback/playbackControls';
-import { Feather } from '@expo/vector-icons';
+} from "../playback/playbackControls";
+import { Feather } from "@expo/vector-icons";
+import { connect } from "react-redux";
 
-export default class PlaylistClass extends Component {
+class PlaylistClass extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -42,7 +36,10 @@ export default class PlaylistClass extends Component {
   }
 
   render() {
-    if (this.props.hostName) {
+    // console.log('this is state', this.state.songs);
+    const hostName = this.props.roomData.hostName;
+    const userName = this.props.userName;
+    if (userName === hostName) {
       //set current song here in db make a new song queue with shifted array
       return (
         <View style={styles.icons}>
@@ -85,23 +82,30 @@ export default class PlaylistClass extends Component {
     }
   }
 }
-
+const mapStateToProps = state => {
+  return {
+    docId: state.docId,
+    roomData: state.roomData,
+    userName: state.userName
+  };
+};
+export default connect(mapStateToProps)(PlaylistClass);
 const styles = StyleSheet.create({
   icons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between'
+    flexDirection: "row",
+    justifyContent: "space-between"
   },
   pause: {
     paddingLeft: 25,
     paddingRight: 25
   },
   guest: {
-    flexDirection: 'row'
+    flexDirection: "row"
   },
   nowPlaying: {
     fontSize: 20,
-    color: '#423959',
+    color: "#423959",
     paddingLeft: 3,
-    fontWeight: 'bold'
+    fontWeight: "bold"
   }
 });

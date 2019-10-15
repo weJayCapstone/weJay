@@ -1,29 +1,16 @@
-import React, { Component } from 'react';
-import {
-  Card,
-  CardTitle,
-  CardContent,
-  CardAction,
-  CardButton,
-  CardImage
-} from 'react-native-cards';
+import React, { Component } from "react";
+import { Card } from "react-native-cards";
 import {
   Text,
   View,
-  FlatList,
   Image,
   Button,
   StyleSheet,
-  ScrollView,
   TouchableHighlight,
-  TouchableOpacity,
-  AsyncStorage,
-  SafeAreaView
-} from 'react-native';
-import Modal from 'react-native-modal';
-
-import { addSong } from '../api/spotify';
-import { addSongToDB, getRoomData } from '../firebase/index';
+  TouchableOpacity
+} from "react-native";
+import Modal from "react-native-modal";
+import { addSongToDB } from "../firebase/index";
 
 export default class SongCard extends Component {
   constructor(props) {
@@ -91,7 +78,7 @@ export default class SongCard extends Component {
                   ellipsizeMode="tail"
                   style={{ fontSize: 19 }}
                 >
-                  {this.props.item.name}{' '}
+                  {this.props.item.name}{" "}
                 </Text>
               </View>
 
@@ -101,7 +88,7 @@ export default class SongCard extends Component {
                   ellipsizeMode="tail"
                   style={{ fontSize: 15 }}
                 >
-                  {this.props.item.album.artists[0].name} -{' '}
+                  {this.props.item.album.artists[0].name} -{" "}
                   {this.props.item.album.name}
                 </Text>
               </View>
@@ -111,26 +98,30 @@ export default class SongCard extends Component {
 
         <Modal isVisible={this.state.visibleModal}>
           <View style={styles.content}>
-            <Text
-              numberOfLines={2}
-              ellipsizeMode="tail"
-              style={styles.contentTitle}
-            >
-              {this.props.item.name}
-            </Text>
-
             <View style={styles.modalDetails}>
               <Image
-                style={{ width: 200, height: 200, marginBottom: 20 }}
+                style={{
+                  width: 200,
+                  height: 200,
+                  marginBottom: 20,
+                  marginTop: 15
+                }}
                 resizeMode="cover"
                 source={{ uri: `${this.props.item.album.images[1].url}` }}
               />
               <Text
+                numberOfLines={2}
+                ellipsizeMode="tail"
+                style={styles.contentTitle}
+              >
+                {this.props.item.name}
+              </Text>
+              <Text
                 numberOfLines={1}
                 ellipsizeMode="tail"
-                style={{ fontSize: 18, marginBottom: 20 }}
+                style={{ fontSize: 18, marginBottom: 20, color: "#fff" }}
               >
-                {this.props.item.album.artists[0].name} -{' '}
+                {this.props.item.album.artists[0].name} -{" "}
                 {this.props.item.album.name}
               </Text>
             </View>
@@ -145,6 +136,7 @@ export default class SongCard extends Component {
 
               <Button
                 title="Cancel"
+                color="#fff"
                 style={{ top: 15 }}
                 onPress={() => this.setState({ visibleModal: false })}
               />
@@ -158,60 +150,62 @@ export default class SongCard extends Component {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     // color: '#feffe8',
-    display: 'flex',
-    flexDirection: 'row',
+    display: "flex",
+    flexDirection: "row",
     borderWidth: 1,
-    borderColor: 'grey',
+    borderColor: "grey",
     padding: 4
   },
   songInfo: {
-    display: 'flex',
-    flexDirection: 'column',
-    flexWrap: 'wrap',
-    alignItems: 'stretch',
+    display: "flex",
+    flexDirection: "column",
+    flexWrap: "wrap",
+    alignItems: "stretch",
     flex: 1,
     padding: 13,
-    justifyContent: 'center'
+    justifyContent: "center"
   },
   searchBar: {
-    backgroundColor: 'white'
+    backgroundColor: "white"
   },
   content: {
-    backgroundColor: '#F4F8FF',
+    backgroundColor: "#423959",
     padding: 22,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 4,
-    borderColor: 'rgba(0, 0, 0, 0.1)'
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 20,
+    borderColor: "rgba(0, 0, 0, 0.1)"
   },
   contentTitle: {
     fontSize: 20,
     marginBottom: 12,
-    fontWeight: 'bold',
-    textAlign: 'center'
+    fontWeight: "bold",
+    textAlign: "center",
+    color: "#fff"
   },
   modalDetails: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center"
   },
   addButton: {
     // marginRight: 80,
     // marginLeft: 80,
     // marginTop: 25,
     // paddingTop: 10,
-    backgroundColor: '#FF5857',
-    borderRadius: 10
+    backgroundColor: "#FF5857",
+    borderRadius: 25
   },
   addButtonText: {
-    color: 'white',
-    textAlign: 'center',
-    fontSize: 25,
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingTop: 8,
-    paddingBottom: 8
+    color: "white",
+    textAlign: "center",
+    fontSize: 20,
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 10,
+    paddingBottom: 10,
+    fontWeight: "bold"
   }
 });

@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Card, Image, ListItem } from 'react-native-elements';
-import { Feather } from '@expo/vector-icons';
-import { play } from '../api/spotify';
-import db, { updateVote } from '../firebase/index.js';
+import React from "react";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { Image } from "react-native-elements";
+import { Feather } from "@expo/vector-icons";
+import { updateVote } from "../firebase/index.js";
+import { connect } from "react-redux";
 
-export default function SingleSong(props) {
+function SingleSong(props) {
   const song = props.song;
   const userName = props.userName;
   const docId = props.docId;
@@ -22,9 +22,7 @@ export default function SingleSong(props) {
         <Image
           style={{ width: 80, height: 80 }}
           resizeMode="cover"
-          source={{
-            uri: song.imageUrl
-          }}
+          source={{ uri: song.imageUrl }}
         />
         <View style={{ paddingLeft: 10 }}>
           <Text
@@ -32,7 +30,7 @@ export default function SingleSong(props) {
             numberOfLines={1}
             style={{
               paddingTop: 15,
-              fontWeight: 'bold',
+              fontWeight: "bold",
               fontSize: 14,
               width: 200
             }}
@@ -55,10 +53,10 @@ export default function SingleSong(props) {
           </Text>
         </View>
         <View style={styles.feather}>
-          <TouchableOpacity onPress={() => handleVote('up', song.id)}>
+          <TouchableOpacity onPress={() => handleVote("up", song.id)}>
             <Feather
               style={
-                song.users[userName] === 'up'
+                song.users[userName] === "up"
                   ? styles.voteHighlight
                   : styles.vote
               }
@@ -69,17 +67,17 @@ export default function SingleSong(props) {
           </TouchableOpacity>
           <Text
             style={{
-              fontWeight: 'bold',
-              marginLeft: 'auto',
+              fontWeight: "bold",
+              marginLeft: "auto",
               paddingRight: 10
             }}
           >
             {song.votes}
           </Text>
-          <TouchableOpacity onPress={() => handleVote('down', song.id)}>
+          <TouchableOpacity onPress={() => handleVote("down", song.id)}>
             <Feather
               style={
-                song.users[userName] === 'down'
+                song.users[userName] === "down"
                   ? styles.voteHighlight
                   : styles.vote
               }
@@ -93,51 +91,58 @@ export default function SingleSong(props) {
     </View>
   );
 }
+const mapStateToProps = state => {
+  return {
+    docId: state.docId,
+    userName: state.userName
+  };
+};
+export default connect(mapStateToProps)(SingleSong);
 
 const styles = StyleSheet.create({
   background: {
-    backgroundColor: '#FF5857'
+    backgroundColor: "#FF5857"
   },
   songContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    backgroundColor: 'white',
-    borderTopColor: '#FF5857',
-    borderBottomColor: '#FF5857',
-    borderRightColor: '#FF5857',
-    borderLeftColor: '#FF5857',
-    borderStyle: 'solid',
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    backgroundColor: "white",
+    borderTopColor: "#FF5857",
+    borderBottomColor: "#FF5857",
+    borderRightColor: "#FF5857",
+    borderLeftColor: "#FF5857",
+    borderStyle: "solid",
     borderWidth: 1,
     marginLeft: 10,
     marginRight: 10,
     marginBottom: 10
   },
   containerStyle: {
-    display: 'flex',
-    flexDirection: 'row',
-    backgroundColor: '#E9DBFF'
+    display: "flex",
+    flexDirection: "row",
+    backgroundColor: "#E9DBFF"
   },
-  feather: { marginLeft: 'auto', paddingRight: 10 },
+  feather: { marginLeft: "auto", paddingRight: 10 },
   button: {
     padding: 15,
-    backgroundColor: '#FF5857',
+    backgroundColor: "#FF5857",
     borderRadius: 25,
     width: 200,
     marginBottom: 25,
     marginTop: 20,
-    margin: 'auto',
-    alignSelf: 'center'
+    margin: "auto",
+    alignSelf: "center"
   },
   buttonText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 20,
-    textAlign: 'center'
+    textAlign: "center"
   },
   vote: {
-    color: '#000'
+    color: "#000"
   },
   voteHighlight: {
-    color: '#FF5857'
+    color: "#FF5857"
   }
 });

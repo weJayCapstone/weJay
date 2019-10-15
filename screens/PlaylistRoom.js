@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -8,10 +8,10 @@ import {
   FlatList,
   ImageBackground,
   StatusBar
-} from 'react-native';
-import { Feather } from '@expo/vector-icons';
-import db, { refreshRoomToken, getCurrentSongData } from '../firebase/index';
-import SingleSong from './SingleSong';
+} from "react-native";
+import { Feather } from "@expo/vector-icons";
+import db, { refreshRoomToken, getCurrentSongData } from "../firebase/index";
+import SingleSong from "./SingleSong";
 
 export default function PlaylistRoom(props) {
   const docId = props.navigation.state.params.docId;
@@ -31,7 +31,7 @@ export default function PlaylistRoom(props) {
     }
   }
   useEffect(() => {
-    let roomRef = db.collection('Rooms').doc(docId);
+    let roomRef = db.collection("Rooms").doc(docId);
     let unsub = roomRef.onSnapshot(snapshot => {
       if (snapshot.data().currentSong) {
         setSongData(snapshot.data().currentSong);
@@ -61,10 +61,10 @@ export default function PlaylistRoom(props) {
 
   let [songs, setSongs] = useState([]);
   useEffect(() => {
-    let roomRef = db.collection('Rooms').doc(docId);
+    let roomRef = db.collection("Rooms").doc(docId);
     let unsub = roomRef
-      .collection('Playlist')
-      .orderBy('timeAdded')
+      .collection("Playlist")
+      .orderBy("timeAdded")
       .onSnapshot(snapshot => {
         const songArr = snapshot.docs.map(doc => doc.data());
         //sort by votes
@@ -88,13 +88,13 @@ export default function PlaylistRoom(props) {
 
   PlaylistRoom.navigationOptions = {
     headerStyle: {
-      backgroundColor: '#423959',
+      backgroundColor: "#423959",
       borderBottomWidth: 0
     },
     headerRight: (
       <TouchableOpacity
         onPress={() => {
-          props.navigation.navigate('Playback', { docId, hostName });
+          props.navigation.navigate("Playback", { docId, hostName });
         }}
       >
         <View style={styles.headerContainer}>
@@ -111,7 +111,7 @@ export default function PlaylistRoom(props) {
     headerLeft: (
       <TouchableOpacity
         onPress={() => {
-          props.navigation.navigate('Home');
+          props.navigation.navigate("Home");
         }}
       >
         <Feather name="chevron-left" size={32} color="white" />
@@ -122,19 +122,19 @@ export default function PlaylistRoom(props) {
   if (hostName) {
     return (
       <>
-        <ScrollView style={{ backgroundColor: '#FF5857' }}>
+        <ScrollView style={{ backgroundColor: "#FF5857" }}>
           <ImageBackground
-            source={require('../gradient3.png')}
-            style={{ height: 200, display: 'flex', flexDirection: 'column' }}
+            source={require("../gradient3.png")}
+            style={{ height: 200, display: "flex", flexDirection: "column" }}
             resizeMode="stretch"
           >
             <Text
               style={{
                 fontSize: 30,
-                fontWeight: 'bold',
-                color: 'white',
-                alignSelf: 'center',
-                alignContent: 'center',
+                fontWeight: "bold",
+                color: "white",
+                alignSelf: "center",
+                alignContent: "center",
                 paddingTop: 35
               }}
               ellipsizeMode="tail"
@@ -145,8 +145,8 @@ export default function PlaylistRoom(props) {
             <Text
               style={{
                 fontSize: 16,
-                color: 'white',
-                alignSelf: 'center',
+                color: "white",
+                alignSelf: "center",
                 paddingTop: 15,
                 maxWidth: 300
               }}
@@ -158,8 +158,8 @@ export default function PlaylistRoom(props) {
             <Text
               style={{
                 fontSize: 14,
-                color: 'white',
-                alignSelf: 'center',
+                color: "white",
+                alignSelf: "center",
                 paddingTop: 25
               }}
             >
@@ -182,7 +182,7 @@ export default function PlaylistRoom(props) {
           <TouchableOpacity
             style={styles.button}
             onPress={() =>
-              props.navigation.navigate('SearchScreen', { docId, userName })
+              props.navigation.navigate("SearchScreen", { docId, userName })
             }
           >
             <Text style={styles.buttonText}>Add A Song</Text>
@@ -193,24 +193,24 @@ export default function PlaylistRoom(props) {
   } else {
     return (
       <>
-        <ScrollView style={{ backgroundColor: '#FF5857' }}>
+        <ScrollView style={{ backgroundColor: "#FF5857" }}>
           <ImageBackground
-            source={require('../gradient3.png')}
+            source={require("../gradient3.png")}
             style={{
               height: 200,
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center'
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center"
             }}
             resizeMode="stretch"
           >
             <Text
               style={{
                 fontSize: 30,
-                fontWeight: 'bold',
-                color: 'white',
-                alignSelf: 'center',
-                alignContent: 'center',
+                fontWeight: "bold",
+                color: "white",
+                alignSelf: "center",
+                alignContent: "center",
                 paddingTop: 35
               }}
               ellipsizeMode="tail"
@@ -222,8 +222,8 @@ export default function PlaylistRoom(props) {
             <Text
               style={{
                 fontSize: 16,
-                color: 'white',
-                alignSelf: 'center',
+                color: "white",
+                alignSelf: "center",
                 paddingTop: 15,
                 maxWidth: 300
               }}
@@ -235,8 +235,8 @@ export default function PlaylistRoom(props) {
             <Text
               style={{
                 fontSize: 14,
-                color: 'white',
-                alignSelf: 'center',
+                color: "white",
+                alignSelf: "center",
                 paddingTop: 25
               }}
             >
@@ -259,7 +259,7 @@ export default function PlaylistRoom(props) {
           <TouchableOpacity
             style={styles.button}
             onPress={() =>
-              props.navigation.navigate('SearchScreen', { docId, userName })
+              props.navigation.navigate("SearchScreen", { docId, userName })
             }
           >
             <Text style={styles.buttonText}>Add A Song</Text>
@@ -270,55 +270,55 @@ export default function PlaylistRoom(props) {
   }
 }
 
-// const styles = StyleSheet.create({
-//   background: {
-//     backgroundColor: '#423959'
-//   },
-//   songContainer: {
-//     display: 'flex',
-//     flexDirection: 'row',
-//     flexWrap: 'wrap'
-//   },
-//   containerStyle: {
-//     display: 'flex',
-//     flexDirection: 'row'
-//   },
-//   headerContainer: {
-//     display: 'flex',
-//     flexDirection: 'row'
-//   },
-//   feather: { marginLeft: 'auto' },
-//   nowPlayingText: {
-//     color: 'white',
-//     fontSize: 18,
-//     paddingRight: 3,
-//     paddingTop: 5
-//   },
-//   button: {
-//     padding: 15,
-//     backgroundColor: '#423959',
-//     borderRadius: 25,
-//     width: 200,
-//     marginBottom: 25,
-//     marginTop: 20,
-//     margin: 'auto',
-//     alignSelf: 'center'
-//   },
-//   buttonText: {
-//     color: 'white',
-//     fontSize: 20,
-//     textAlign: 'center'
-//   },
-//   buttonBackground: {
-//     backgroundColor: '#FF5857'
-//   },
-//   vote: {
-//     color: '#000'
-//   },
-//   voteHighlight: {
-//     color: '#FF5857'
-//   },
-//   musicnote: {
-//     paddingRight: 10
-//   }
-// });
+const styles = StyleSheet.create({
+  background: {
+    backgroundColor: "#423959"
+  },
+  songContainer: {
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap"
+  },
+  containerStyle: {
+    display: "flex",
+    flexDirection: "row"
+  },
+  headerContainer: {
+    display: "flex",
+    flexDirection: "row"
+  },
+  feather: { marginLeft: "auto" },
+  nowPlayingText: {
+    color: "white",
+    fontSize: 18,
+    paddingRight: 3,
+    paddingTop: 5
+  },
+  button: {
+    padding: 15,
+    backgroundColor: "#423959",
+    borderRadius: 25,
+    width: 200,
+    marginBottom: 25,
+    marginTop: 20,
+    margin: "auto",
+    alignSelf: "center"
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 20,
+    textAlign: "center"
+  },
+  buttonBackground: {
+    backgroundColor: "#FF5857"
+  },
+  vote: {
+    color: "#000"
+  },
+  voteHighlight: {
+    color: "#FF5857"
+  },
+  musicnote: {
+    paddingRight: 10
+  }
+});
