@@ -1,6 +1,5 @@
-import React, { Component, useState, useEffect } from "react";
-import { AuthSession } from "expo";
-import { encode as btoa } from "base-64";
+import React, { useState, useEffect } from "react";
+
 import {
   Text,
   View,
@@ -11,11 +10,11 @@ import {
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
-import { SearchBar} from "react-native-elements";
-import { Container, Content} from "native-base";
+import { SearchBar } from "react-native-elements";
+import { Container, Content } from "native-base";
 import SongCard from "../screens/SongCard.js";
-import { refreshRoomToken} from "../firebase/index";
-import { connect } from 'react-redux';
+import { refreshRoomToken } from "../firebase/index";
+import { connect } from "react-redux";
 
 function SearchScreen(props) {
   const userName = props.userName;
@@ -23,7 +22,7 @@ function SearchScreen(props) {
   let [search, setSearch] = useState("");
   let [results, setResults] = useState({});
   let [accessToken, setAccessToken] = useState("");
-  
+
   const accountInitialize = async () => {
     try {
       let result = await refreshRoomToken(docId);
@@ -53,14 +52,11 @@ function SearchScreen(props) {
     // setSearch("");
   };
 
+  const activeSearch = async text => {
+    setSearch(text);
 
-  const activeSearch = async (text) => {
-
-    setSearch(text)
-
-    await searchHandler()
-
-  }
+    await searchHandler();
+  };
 
   SearchScreen.navigationOptions = {
     headerLeft: (
@@ -92,8 +88,8 @@ function SearchScreen(props) {
             borderWidth: 1,
             borderRadius: 40,
             borderColor: "black",
-            width: '95%',
-            alignSelf: 'center'
+            width: "95%",
+            alignSelf: "center"
           }}
           inputContainerStyle={{
             backgroundColor: "white",
@@ -119,11 +115,11 @@ function SearchScreen(props) {
   );
 }
 const mapStateToProps = state => {
-    return{
-        docId: state.docId,
-        userName: state.userName
-    }
-}
+  return {
+    docId: state.docId,
+    userName: state.userName
+  };
+};
 export default connect(mapStateToProps)(SearchScreen);
 
 const styles = StyleSheet.create({

@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
-import { enterRoom} from '../firebase/index';
-import { Feather } from '@expo/vector-icons';
-import {setDocId, fetchRoomDataThunk, setUserName} from '../redux/store';
-import { connect } from 'react-redux';
+import React, { useState } from "react";
+import { StyleSheet, Text, View, TouchableOpacity, Alert } from "react-native";
+import { TextInput } from "react-native-gesture-handler";
+import { enterRoom } from "../firebase/index";
+import { Feather } from "@expo/vector-icons";
+import { setDocId, fetchRoomDataThunk, setUserName } from "../redux/store";
+import { connect } from "react-redux";
 
 function JoinPlayListForm(props) {
   const [authData, setAuthData] = useState({});
@@ -15,8 +15,8 @@ function JoinPlayListForm(props) {
         authData.title,
         authData.userName
       );
-      if (result === 'Invalid credentials') {
-        Alert.alert('Try Again!', result + '. Fields are case sensitive.', {
+      if (result === "Invalid credentials") {
+        Alert.alert("Try Again!", result + ". Fields are case sensitive.", {
           cancelable: false
         });
       } else {
@@ -25,28 +25,13 @@ function JoinPlayListForm(props) {
         props.setStoreRoomData(result);
         props.setUserName(authData.userName);
         //then navigate to playlist room
-        props.navigation.navigate('PlaylistRoom');
+        props.navigation.navigate("PlaylistRoom");
       }
     } catch (err) {
       console.log(err);
     }
   };
 
-  JoinPlayListForm.navigationOptions = {
-    headerStyle: {
-      backgroundColor: '#423959',
-      borderBottomWidth: 0
-    },
-    headerLeft: (
-      <TouchableOpacity
-        onPress={() => {
-          props.navigation.navigate('Home');
-        }}
-      >
-        <Feather name="chevron-left" size={32} color="#FF5857" />
-      </TouchableOpacity>
-    )
-  };
   return (
     <View style={styles.container}>
       <View>
@@ -82,67 +67,61 @@ function JoinPlayListForm(props) {
   );
 }
 const mapDispatchToProps = dispatch => {
-    return {
-        setStoreDocId: (result) => dispatch(setDocId(result)),
-        setStoreRoomData: (docId) => dispatch(fetchRoomDataThunk(docId)),
-        setUserName: (userName) => dispatch(setUserName(userName))
-    }
-}
-export default connect(null,mapDispatchToProps)(JoinPlayListForm)
+  return {
+    setStoreDocId: result => dispatch(setDocId(result)),
+    setStoreRoomData: docId => dispatch(fetchRoomDataThunk(docId)),
+    setUserName: userName => dispatch(setUserName(userName))
+  };
+};
+export default connect(
+  null,
+  mapDispatchToProps
+)(JoinPlayListForm);
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-start',
-    flexDirection: 'column',
-    backgroundColor: '#423959',
-    alignItems: 'center'
+    justifyContent: "flex-start",
+    flexDirection: "column",
+    backgroundColor: "#423959",
+    alignItems: "center"
   },
   header: {
     fontSize: 30,
-    textAlign: 'center',
-    fontWeight: 'bold',
-    color: '#FF5857',
+    textAlign: "center",
+    fontWeight: "bold",
+    color: "white",
     marginTop: 80
   },
   inputContainer: {
     paddingTop: 15,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center'
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center"
   },
   textInput: {
-    borderColor: '#fff',
-    backgroundColor: '#E9DBFF',
+    borderColor: "#fff",
+    backgroundColor: "#E9DBFF",
     borderRadius: 30,
     borderWidth: 1,
     width: 250,
     fontSize: 18,
     height: 45,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 20,
-    flexDirection: 'row',
-    alignItems: 'center'
-    // shadowColor: '#999',
-    // shadowOffset: { width: 0, height: 2 },
-    // shadowOpacity: 0.5,
-    // shadowRadius: 2,
-    // elevation: 1
+    flexDirection: "row",
+    alignItems: "center"
   },
   saveButton: {
-    backgroundColor: '#FF5857',
+    backgroundColor: "#FF5857",
     padding: 15,
     borderRadius: 25,
     width: 200
-    // shadowColor: '#999',
-    // shadowOffset: { width: 1, height: 2 },
-    // shadowOpacity: 0.5,
-    // shadowRadius: 2
   },
   saveButtonText: {
-    color: '#E9DBFF',
+    color: "white",
     fontSize: 20,
-    textAlign: 'center',
-    fontWeight: 'bold'
+    textAlign: "center",
+    fontWeight: "bold"
   }
 });

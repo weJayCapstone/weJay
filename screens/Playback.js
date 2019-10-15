@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,42 +7,26 @@ import {
   TouchableOpacity,
   ImageBackground,
   Dimensions
-} from 'react-native';
-import { Image } from 'react-native-elements';
-import { Feather } from '@expo/vector-icons';
-import Modal from 'react-native-modal';
-import PlaybackClass from './PlaybackClass';
-import db from '../firebase/index';
-import { connect } from 'react-redux';
-
-const width = Dimensions.get('window').width;
-const height = Dimensions.get('window').height;
+} from "react-native";
+import { Image } from "react-native-elements";
+import { Feather } from "@expo/vector-icons";
+import Modal from "react-native-modal";
+import PlaybackClass from "./PlaybackClass";
+import db from "../firebase/index";
+import { connect } from "react-redux";
 
 function Playback(props) {
-  //const hostName = props.navigation.state.params.hostName;
   const docId = props.docId;
   const [songData, setSongData] = useState({});
   const [isPlaying, setPlaying] = useState(false);
 
-//   async function getCurrentSongPlaying(id) {
-//     try {
-//       await refreshRoomToken(id);
-//       //let roomData = await getRoomData(id);
-//       const songPlaying = await getCurrentSongData(id);
-//       const result = songDataParser(songPlaying.item);
-//       setSongData(result);
-//     } catch (err) {
-//       console.log(err);
-//     }
-//   }
   useEffect(() => {
-    let roomRef = db.collection('Rooms').doc(docId);
-    let unsub = roomRef
-        .onSnapshot(snapshot => {
-           if(snapshot.data().currentSong){
-               setSongData(snapshot.data().currentSong)
-           }
-        });
+    let roomRef = db.collection("Rooms").doc(docId);
+    let unsub = roomRef.onSnapshot(snapshot => {
+      if (snapshot.data().currentSong) {
+        setSongData(snapshot.data().currentSong);
+      }
+    });
     return () => unsub();
   }, []);
 
@@ -50,19 +34,24 @@ function Playback(props) {
 
   function closeModal() {
     setIsVisible(!isVisible);
-    props.navigation.navigate('PlaylistRoom');
+    props.navigation.navigate("PlaylistRoom");
   }
 
   return (
     <Modal isVisible={isVisible}>
       <StatusBar hidden />
       <ImageBackground
-        source={require('../weJayGradient.png')}
-        style={{ width: width, height: height, alignSelf: 'center', display: 'flex' }}
+        source={require("../gradient3.png")}
+        style={{
+          width: 400,
+          height: 700,
+          alignSelf: "center",
+          display: "flex"
+        }}
       >
         <View style={styles.container}>
-        <TouchableOpacity onPress={() => closeModal()} style={{backgroundColor: 'transparent', padding:0, margin:0}}>
-            <Feather name="chevron-down" size={50} color="white" style={{alignSelf:'center', opacity: .7, margin:0, padding:0}}/>
+          <TouchableOpacity onPress={() => closeModal()}>
+            <Feather name="chevron-down" size={50} color="white" />
           </TouchableOpacity>
           {songData.imageUrl ? (
             <Image
@@ -76,8 +65,8 @@ function Playback(props) {
             <Image
               style={styles.wejayLogo}
               resizeMode="cover"
-              source={require('../weJay2.png')}
-           />
+              source={require("../weJay.png")}
+            />
           )}
           <View style={styles.textContainer}>
             <Text
@@ -94,11 +83,16 @@ function Playback(props) {
             >
               {songData.artist}
             </Text>
+            <Text
+              ellipsizeMode="tail"
+              numberOfLines={1}
+              style={styles.songAlbum}
+            >
+              {songData.albumName}
+            </Text>
           </View>
           <View style={{ top: 75 }}>
-            <PlaybackClass
-              setPlaying={setPlaying}
-            />
+            <PlaybackClass setPlaying={setPlaying} />
           </View>
         </View>
       </ImageBackground>
@@ -106,25 +100,26 @@ function Playback(props) {
   );
 }
 const mapStateToProps = state => {
-    return {
-        docId: state.docId
-    }
-}
+  return {
+    docId: state.docId
+  };
+};
 export default connect(mapStateToProps)(Playback);
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
-    justifyContent: 'flex-start',
-    flexDirection: 'column',
-    alignItems: 'center',
-    height: height,
-    width: width,
-    alignSelf: 'center'
+    display: "flex",
+    justifyContent: "flex-start",
+    flexDirection: "column",
+    alignItems: "center",
+    height: 700,
+    width: 400,
+    alignSelf: "center"
   },
   image: {
-    width: width,
-    height: .5*height,
+    width: 400,
+    height: 350, //may need to fix this for my screen
+    marginTop: 40
   },
   wejayLogo: {
     width: 300,
@@ -132,15 +127,21 @@ const styles = StyleSheet.create({
     paddingTop: 100
   },
   songName: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     fontSize: 25,
     paddingBottom: 15,
-    alignSelf: 'center',
-    marginTop:15
+    alignSelf: "center",
+    color: "white"
   },
   songArtist: {
     fontSize: 20,
-    alignSelf: 'center'
+    alignSelf: "center",
+    color: "white"
+  },
+  songAlbum: {
+    fontSize: 20,
+    alignSelf: "center",
+    color: "white"
   },
   textContainer: {
     width: 300

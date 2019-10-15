@@ -3,8 +3,9 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { getTokens, makeNewPlaylist } from '../api/spotify';
 import { createRoom } from '../firebase/index';
-import {setDocId, fetchRoomDataThunk, setUserName} from '../redux/store'
+import { setDocId, fetchRoomDataThunk, setUserName } from '../redux/store';
 import { connect } from 'react-redux';
+import { Feather } from '@expo/vector-icons';
 
 function CreatePlaylistForm(props) {
   const [roomData, setRoomData] = useState({
@@ -40,6 +41,7 @@ function CreatePlaylistForm(props) {
       console.log(err);
     }
   };
+
   return (
     <View style={styles.container}>
       <View>
@@ -78,28 +80,31 @@ function CreatePlaylistForm(props) {
   );
 }
 const mapDispatchToProps = dispatch => {
-    return {
-        setStoreDocId: (result) => dispatch(setDocId(result)),
-        setStoreRoomData: (docId) => dispatch(fetchRoomDataThunk(docId)),
-        setUserName: (userName) => dispatch(setUserName(userName))
-    };
+  return {
+    setStoreDocId: result => dispatch(setDocId(result)),
+    setStoreRoomData: docId => dispatch(fetchRoomDataThunk(docId)),
+    setUserName: userName => dispatch(setUserName(userName))
+  };
 };
 
-export default connect(null, mapDispatchToProps)(CreatePlaylistForm)
+export default connect(
+  null,
+  mapDispatchToProps
+)(CreatePlaylistForm);
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'flex-start',
     flexDirection: 'column',
-    backgroundColor: '#F4F8FF',
+    backgroundColor: '#423959',
     alignItems: 'center'
   },
   header: {
     fontSize: 30,
     textAlign: 'center',
     fontWeight: 'bold',
-    color: '#FF5857',
+    color: 'white',
     marginTop: 80
   },
   inputContainer: {
@@ -110,7 +115,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     borderColor: '#fff',
-    backgroundColor: '#fff',
+    backgroundColor: '#E9DBFF',
     borderRadius: 30,
     borderWidth: 1,
     width: 250,
@@ -119,25 +124,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 20,
     flexDirection: 'row',
-    alignItems: 'center',
-    shadowColor: '#999',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 2,
-    elevation: 1
+    alignItems: 'center'
   },
   saveButton: {
     backgroundColor: '#FF5857',
     padding: 15,
     borderRadius: 25,
-    width: 200,
-    shadowColor: '#999',
-    shadowOffset: { width: 1, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 2
+    width: 200
   },
   saveButtonText: {
-    color: '#FFFFFF',
+    color: 'white',
     fontSize: 20,
     textAlign: 'center',
     fontWeight: 'bold'
