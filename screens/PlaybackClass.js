@@ -1,13 +1,13 @@
-import React, { Component } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { Component } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import {
   playSong,
   nextSong,
   pauseSong,
   resumeSong
-} from "../playback/playbackControls";
-import { Feather } from "@expo/vector-icons";
-import { connect } from "react-redux";
+} from '../playback/playbackControls';
+import { Feather } from '@expo/vector-icons';
+import { connect } from 'react-redux';
 
 class PlaylistClass extends Component {
   constructor(props) {
@@ -28,7 +28,6 @@ class PlaylistClass extends Component {
     resumeSong(this.props.docId);
   }
 
-  //ADDED THIS TO HIDE PLAY BUTTON AFTER INITIAL PRESS TO START MUSIC
   hidePlayButton() {
     playSong(this.props.docId);
     this.setState({ playButton: false });
@@ -36,7 +35,6 @@ class PlaylistClass extends Component {
   }
 
   render() {
-    // console.log('this is state', this.state.songs);
     const hostName = this.props.roomData.hostName;
     const userName = this.props.userName;
     if (userName === hostName) {
@@ -92,20 +90,20 @@ const mapStateToProps = state => {
 export default connect(mapStateToProps)(PlaylistClass);
 const styles = StyleSheet.create({
   icons: {
-    flexDirection: "row",
-    justifyContent: "space-between"
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
   pause: {
     paddingLeft: 25,
     paddingRight: 25
   },
   guest: {
-    flexDirection: "row"
+    flexDirection: 'row'
   },
   nowPlaying: {
     fontSize: 20,
-    color: "#423959",
+    color: '#423959',
     paddingLeft: 3,
-    fontWeight: "bold"
+    fontWeight: 'bold'
   }
 });

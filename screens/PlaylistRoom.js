@@ -7,8 +7,8 @@ import {
   View,
   FlatList,
   ImageBackground,
-  StatusBar,
-  SafeAreaView
+  SafeAreaView,
+  Image
 } from 'react-native';
 import { connect } from 'react-redux';
 import { Feather } from '@expo/vector-icons';
@@ -18,9 +18,11 @@ import SingleSong from './SingleSong';
 function PlaylistRoom(props) {
   const docId = props.docId;
   const userName = props.userName;
+  let currentSong;
   let title;
   if (props.roomData) {
     title = props.roomData.title;
+    currentSong = props.roomData.currentSong;
   }
   let [songs, setSongs] = useState([]);
   let [songData, setSongData] = useState({});
@@ -82,28 +84,47 @@ function PlaylistRoom(props) {
           >
             {title}
           </Text>
+
+          {currentSong ? (
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignContent: 'flex-end',
+                justifyContent: 'center'
+              }}
+            >
+              <Feather
+                name="speaker"
+                size={18}
+                color="white"
+                style={{ alignSelf: 'center', paddingTop: 15 }}
+              />
+              <Text
+                style={{
+                  fontSize: 16,
+                  color: 'white',
+                  paddingTop: 15,
+                  maxWidth: 300,
+                  alignSelf: 'flex-start'
+                }}
+                ellipsizeMode="tail"
+                numberOfLines={1}
+              >
+                Now Playing: {songData.name}
+              </Text>
+            </View>
+          ) : null}
           <Text
             style={{
               fontSize: 16,
               color: 'white',
               alignSelf: 'center',
-              paddingTop: 15,
-              maxWidth: 300
-            }}
-            ellipsizeMode="tail"
-            numberOfLines={1}
-          >
-            Now Playing {songData.name}
-          </Text>
-          <Text
-            style={{
-              fontSize: 14,
-              color: 'white',
-              alignSelf: 'center',
-              paddingTop: 25
+              paddingTop: 20,
+              paddingLeft: 3
             }}
           >
-            Welcome to the party {userName}!
+            Welcome, DJ {userName}
           </Text>
         </ImageBackground>
         {songs !== [] ? (

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
 import {
   Text,
@@ -6,22 +6,23 @@ import {
   FlatList,
   StyleSheet,
   ScrollView,
-  TouchableOpacity
-} from "react-native";
-import { Feather } from "@expo/vector-icons";
+  TouchableOpacity,
+  Image
+} from 'react-native';
+import { Feather } from '@expo/vector-icons';
 
-import { SearchBar } from "react-native-elements";
-import { Container, Content } from "native-base";
-import SongCard from "../screens/SongCard.js";
-import { refreshRoomToken } from "../firebase/index";
-import { connect } from "react-redux";
+import { SearchBar } from 'react-native-elements';
+import { Container, Content } from 'native-base';
+import SongCard from '../screens/SongCard.js';
+import { refreshRoomToken } from '../firebase/index';
+import { connect } from 'react-redux';
 
 function SearchScreen(props) {
   const userName = props.userName;
   const docId = props.docId;
-  let [search, setSearch] = useState("");
+  let [search, setSearch] = useState('');
   let [results, setResults] = useState({});
-  let [accessToken, setAccessToken] = useState("");
+  let [accessToken, setAccessToken] = useState('');
 
   const accountInitialize = async () => {
     try {
@@ -37,11 +38,11 @@ function SearchScreen(props) {
   }, []);
 
   const searchHandler = async () => {
-    const q = encodeURIComponent(search);
+    const q = encodeURIComponent(`"${search}*"`);
     const response = await fetch(
-      `https://api.spotify.com/v1/search?type=track&limit=10&market=US&q=${q}`,
+      `https://api.spotify.com/v1/search?type=artist,track,album&limit=10&market=US&q=${q}`,
       {
-        method: "GET",
+        method: 'GET',
         headers: {
           Authorization: `Bearer ${accessToken}`
         }
@@ -49,7 +50,6 @@ function SearchScreen(props) {
     );
     const searchJSON = await response.json();
     setResults(searchJSON);
-    // setSearch("");
   };
 
   const activeSearch = async text => {
@@ -62,7 +62,7 @@ function SearchScreen(props) {
     headerLeft: (
       <TouchableOpacity
         onPress={() => {
-          props.navigation.navigate("PlaylistRoom");
+          props.navigation.navigate('PlaylistRoom');
         }}
       >
         <Feather name="chevron-left" size={32} color="#4392F1" />
@@ -73,32 +73,36 @@ function SearchScreen(props) {
   return (
     <Container style={styles.mainView}>
       <View style={{ height: 13 }} />
-
-      <Content>
-        <SearchBar
-          placeholder="Search"
-          onChangeText={text => activeSearch(text)}
-          value={search}
-          onSubmitEditing={searchHandler}
-          returnKeyType="search"
-          style={styles.searchBar}
-          inputStyle={{ backgroundColor: "white" }}
-          containerStyle={{
-            backgroundColor: "white",
-            borderWidth: 1,
-            borderRadius: 40,
-            borderColor: "black",
-            width: "95%",
-            alignSelf: "center"
-          }}
-          inputContainerStyle={{
-            backgroundColor: "white",
-            borderColor: "black"
-          }}
-        />
-
-        <ScrollView style={{ top: 10 }}>
-          {results.tracks ? (
+      <SearchBar
+        placeholder="Search"
+        onChangeText={text => activeSearch(text)}
+        value={search}
+        onSubmitEditing={searchHandler}
+        returnKeyType="search"
+        style={styles.searchBar}
+        inputStyle={{ backgroundColor: 'white' }}
+        containerStyle={{
+          backgroundColor: 'white',
+          borderWidth: 1,
+          borderRadius: 40,
+          borderColor: 'black',
+          width: '95%',
+          alignSelf: 'center'
+        }}
+        inputContainerStyle={{
+          backgroundColor: 'white',
+          borderColor: 'black'
+        }}
+      />
+      <View
+        style={{ display: 'flex', flex: 1 }}
+        contentContainerStyle={{
+          justifyContent: 'center',
+          alignItems: 'stretch'
+        }}
+      >
+        {results.tracks ? (
+          <ScrollView>
             <FlatList
               data={results.tracks.items}
               renderItem={({ item }) => (
@@ -106,11 +110,18 @@ function SearchScreen(props) {
               )}
               keyExtractor={item => item.id}
             />
-          ) : (
-            <Text style={styles.searchText}>Search weJay for a Song!</Text>
-          )}
-        </ScrollView>
-      </Content>
+          </ScrollView>
+        ) : (
+          <View
+            style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+          >
+            <Image
+              style={styles.searchImage}
+              source={require('../weJay.png')}
+            />
+          </View>
+        )}
+      </View>
     </Container>
   );
 }
@@ -128,38 +139,44 @@ const styles = StyleSheet.create({
     margin: 1,
     borderRadius: 25,
     borderWidth: 1,
-    borderColor: "#fff"
+    borderColor: '#fff'
   },
   text: {
     fontSize: 20,
-    textAlign: "center"
+    textAlign: 'center'
   },
   mainView: {
-    backgroundColor: "#a99bc9",
-    display: "flex",
-    alignItems: "stretch"
+    backgroundColor: '#a99bc9',
+    display: 'flex',
+    alignItems: 'stretch'
   },
   card: {
-    backgroundColor: "white",
-    color: "#E7F9A9",
-    display: "flex",
-    flexDirection: "row",
+    backgroundColor: 'white',
+    color: '#E7F9A9',
+    display: 'flex',
+    flexDirection: 'row',
     borderWidth: 2.5,
-    borderColor: "grey"
+    borderColor: 'grey'
   },
   songInfo: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "stretch",
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'stretch',
     padding: 13,
-    justifyContent: "center"
+    justifyContent: 'center'
   },
   searchBar: {
-    backgroundColor: "white"
+    backgroundColor: 'white'
   },
   searchText: {
     fontSize: 20,
-    color: "#FF5857",
-    alignSelf: "center"
+    color: '#FF5857',
+    alignSelf: 'center'
+  },
+  searchImage: {
+    opacity: 0.5,
+    width: 300,
+    height: 300,
+    marginBottom: 200
   }
 });

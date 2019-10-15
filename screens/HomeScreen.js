@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     width: 300
   },
   goToPlaylistButton: {
-    marginTop: 20,
+    marginTop: 30,
     borderRadius: 25,
     padding: 10,
     backgroundColor: '#A085AD',

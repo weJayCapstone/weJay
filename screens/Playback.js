@@ -1,19 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   StatusBar,
   TouchableOpacity,
-  ImageBackground,
-  Dimensions
-} from "react-native";
-import { Image } from "react-native-elements";
-import { Feather } from "@expo/vector-icons";
-import Modal from "react-native-modal";
-import PlaybackClass from "./PlaybackClass";
-import db from "../firebase/index";
-import { connect } from "react-redux";
+  ImageBackground
+} from 'react-native';
+import { Image } from 'react-native-elements';
+import { Feather } from '@expo/vector-icons';
+import Modal from 'react-native-modal';
+import PlaybackClass from './PlaybackClass';
+import db from '../firebase/index';
+import { connect } from 'react-redux';
 
 function Playback(props) {
   const docId = props.docId;
@@ -21,7 +20,7 @@ function Playback(props) {
   const [isPlaying, setPlaying] = useState(false);
 
   useEffect(() => {
-    let roomRef = db.collection("Rooms").doc(docId);
+    let roomRef = db.collection('Rooms').doc(docId);
     let unsub = roomRef.onSnapshot(snapshot => {
       if (snapshot.data().currentSong) {
         setSongData(snapshot.data().currentSong);
@@ -34,19 +33,19 @@ function Playback(props) {
 
   function closeModal() {
     setIsVisible(!isVisible);
-    props.navigation.navigate("PlaylistRoom");
+    props.navigation.navigate('PlaylistRoom');
   }
 
   return (
     <Modal isVisible={isVisible}>
       <StatusBar hidden />
       <ImageBackground
-        source={require("../gradient3.png")}
+        source={require('../gradient3.png')}
         style={{
           width: 400,
           height: 700,
-          alignSelf: "center",
-          display: "flex"
+          alignSelf: 'center',
+          display: 'flex'
         }}
       >
         <View style={styles.container}>
@@ -65,7 +64,7 @@ function Playback(props) {
             <Image
               style={styles.wejayLogo}
               resizeMode="cover"
-              source={require("../weJay.png")}
+              source={require('../weJay.png')}
             />
           )}
           <View style={styles.textContainer}>
@@ -91,7 +90,7 @@ function Playback(props) {
               {songData.albumName}
             </Text>
           </View>
-          <View style={{ top: 75 }}>
+          <View style={{ top: 50 }}>
             <PlaybackClass setPlaying={setPlaying} />
           </View>
         </View>
@@ -108,13 +107,13 @@ export default connect(mapStateToProps)(Playback);
 
 const styles = StyleSheet.create({
   container: {
-    display: "flex",
-    justifyContent: "flex-start",
-    flexDirection: "column",
-    alignItems: "center",
+    display: 'flex',
+    justifyContent: 'flex-start',
+    flexDirection: 'column',
+    alignItems: 'center',
     height: 700,
     width: 400,
-    alignSelf: "center"
+    alignSelf: 'center'
   },
   image: {
     width: 400,
@@ -127,21 +126,21 @@ const styles = StyleSheet.create({
     paddingTop: 100
   },
   songName: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: 25,
     paddingBottom: 15,
-    alignSelf: "center",
-    color: "white"
+    alignSelf: 'center',
+    color: 'white'
   },
   songArtist: {
     fontSize: 20,
-    alignSelf: "center",
-    color: "white"
+    alignSelf: 'center',
+    color: 'white'
   },
   songAlbum: {
     fontSize: 20,
-    alignSelf: "center",
-    color: "white"
+    alignSelf: 'center',
+    color: 'white'
   },
   textContainer: {
     width: 300

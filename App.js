@@ -1,5 +1,3 @@
-//UNALTERED BOILER PLATE CODE CAN BE FOUND IN APPTEST.JS
-
 'use strict';
 import React, { Component } from 'react';
 import {
