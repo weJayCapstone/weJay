@@ -51,7 +51,7 @@ function PlaylistRoom(props) {
         roomRef.update({ queue: songArr });
         setSongs(songArr);
       });
-    return unsub;
+    return ()=> unsub();
   }, [docId]);
 
 return (
