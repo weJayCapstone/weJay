@@ -5,6 +5,7 @@ import { Feather } from '@expo/vector-icons';
 import { play } from '../api/spotify';
 import db, { updateVote } from '../firebase/index.js';
 import { connect } from 'react-redux';
+import {width, height} from '../constants/Layout'
 
 function SingleSong(props) {
   const song = props.song;

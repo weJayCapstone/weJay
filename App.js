@@ -119,6 +119,11 @@ const StackNav = createStackNavigator({
   PlaylistRoom: {
     screen: PlaylistRoom,
     navigationOptions: ({ navigation }) => ({
+        headerStyle: {
+            backgroundColor: "#423959",
+            borderBottomWidth: 0,
+            color: '#999'
+          },
         headerRight: (
           <TouchableOpacity
             onPress={() => navigation.navigate('Playback')}
@@ -128,7 +133,7 @@ const StackNav = createStackNavigator({
               <Feather
                 name="music"
                 size={30}
-                color="#4392F1"
+                color="#fff"
                 style={styles.musicnote}
               />
             </View>
@@ -140,7 +145,7 @@ const StackNav = createStackNavigator({
               navigation.navigate('Home');
             }}
           >
-            <Feather name="chevron-left" size={32} color="#4392F1" />
+            <Feather name="chevron-left" size={32} color="#fff" />
           </TouchableOpacity>
         )
       })
@@ -164,7 +169,7 @@ const styles = StyleSheet.create({
     },
     feather: { marginLeft: 'auto' },
     nowPlayingText: {
-      color: '#4392F1',
+      color: '#fff',
       fontSize: 18,
       paddingRight: 3,
       paddingTop: 5

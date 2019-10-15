@@ -10,8 +10,7 @@ import {
   Dimensions
 } from 'react-native';
 import { connect } from 'react-redux';
-const width = Dimensions.get('window').width;
-const height = Dimensions.get('window').height;
+import {width, height} from '../constants/Layout'
 
 function HomeScreen(props) {
   const docId = props.docId;
@@ -23,11 +22,10 @@ function HomeScreen(props) {
           uri:
             'https://s30226.pcdn.co/wp-content/uploads/2015/02/half-moon-party-dates.jpg'
         }}
-        style={{ width: 375, height: 1000 }}
+        style={{ width: '100%', height: '100%' }}
         imageStyle={{ opacity: 0.7 }}
-        resizeMode="cover"
       >
-        <View style ={styles.container}>
+        <View style ={styles.itemsContainer}>
             <Image
             source={require('../weJay.png')}
             style={{ width: 150, height: 150 }}
@@ -86,7 +84,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     flexDirection: 'column',
-    alignItems: 'center'
+    alignItems: 'center',
+    width: width,
+    height: height,
+  },
+  itemsContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    alignItems: 'center',
   },
   text: {
     fontSize: 24,

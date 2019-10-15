@@ -10,16 +10,26 @@ import {
   SafeAreaView
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import db from '../firebase/index';
+import db, { refreshRoomToken, getCurrentSongData } from '../firebase/index';
 import SingleSong from './SingleSong';
 import { connect } from 'react-redux';
 
 function PlaylistRoom(props) {
   const docId = props.docId;
   const userName = props.userName;
+  let title;
+  if(props.roomData){
+      title = props.roomData.title;
+  }
   let [songs, setSongs] = useState([]);
+  let [songData, setSongData] = useState({});
   useEffect(() => {
     let roomRef = db.collection("Rooms").doc(docId);
+    roomRef.onSnapshot(snapshot => {
+      if (snapshot.data().currentSong) {
+        setSongData(snapshot.data().currentSong);
+      }
+    });
     let unsub = roomRef
       .collection("Playlist")
       .orderBy("timeAdded")
@@ -46,7 +56,7 @@ function PlaylistRoom(props) {
 
 return (
       <>
-        <ScrollView>
+        <ScrollView style={styles.background}>
           <ImageBackground
             source={require("../gradient3.png")}
             style={{
@@ -131,7 +141,6 @@ return (
         </ScrollView>
         <View style={styles.buttonBackground}>
           <TouchableOpacity
-            style={styles.button}
             onPress={() =>
               props.navigation.navigate("SearchScreen", { docId, userName })
             }
@@ -195,10 +204,13 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "white",
     fontSize: 20,
-    textAlign: "center"
+    textAlign: "center",
+    fontWeight:'bold'
   },
   buttonBackground: {
-    backgroundColor: "#FF5857"
+    backgroundColor: "#FF5857",
+    paddingBottom: 10,
+    paddingTop: 10,
   },
   vote: {
     color: "#000"

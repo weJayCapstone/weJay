@@ -61,8 +61,8 @@ function Playback(props) {
         style={{ width: width, height: height, alignSelf: 'center', display: 'flex' }}
       >
         <View style={styles.container}>
-          <TouchableOpacity onPress={() => closeModal()}>
-            <Feather name="chevron-down" size={50} color="black" />
+        <TouchableOpacity onPress={() => closeModal()} style={{backgroundColor: 'transparent', padding:0, margin:0}}>
+            <Feather name="chevron-down" size={50} color="white" style={{alignSelf:'center', opacity: .7, margin:0, padding:0}}/>
           </TouchableOpacity>
           {songData.imageUrl ? (
             <Image
@@ -77,7 +77,7 @@ function Playback(props) {
               style={styles.wejayLogo}
               resizeMode="cover"
               source={require('../weJay2.png')}
-            />
+           />
           )}
           <View style={styles.textContainer}>
             <Text
@@ -123,9 +123,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center'
   },
   image: {
-    width: .5* width,
-    height: .3 * height,
-    marginTop: 40
+    width: width,
+    height: .5*height,
   },
   wejayLogo: {
     width: 300,
@@ -136,7 +135,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 25,
     paddingBottom: 15,
-    alignSelf: 'center'
+    alignSelf: 'center',
+    marginTop:15
   },
   songArtist: {
     fontSize: 20,
