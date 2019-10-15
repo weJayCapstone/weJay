@@ -8,8 +8,9 @@ import {
   createDrawerNavigator,
   createSwitchNavigator
 } from 'react-navigation';
+
 import { DrawerActions } from 'react-navigation-drawer';
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, StatusBar } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 
 //screens
@@ -25,7 +26,12 @@ require('./secrets');
 
 export default class ReactNav extends Component {
   render() {
-    return <App />;
+    return (
+      <>
+        <StatusBar barStyle="light-content" />
+        <App />
+      </>
+    );
   }
 }
 

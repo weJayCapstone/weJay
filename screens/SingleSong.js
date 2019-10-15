@@ -34,7 +34,7 @@ export default function SingleSong(props) {
               paddingTop: 15,
               fontWeight: 'bold',
               fontSize: 14,
-              width: 150
+              width: 200
             }}
           >
             {song.name}
@@ -111,15 +111,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginLeft: 10,
     marginRight: 10,
-    marginBottom: 10,
-    opacity: 0.7
+    marginBottom: 10
   },
   containerStyle: {
     display: 'flex',
     flexDirection: 'row',
     backgroundColor: '#E9DBFF'
   },
-  feather: { marginLeft: 'auto' },
+  feather: { marginLeft: 'auto', paddingRight: 10 },
   button: {
     padding: 15,
     backgroundColor: '#FF5857',

@@ -42,8 +42,6 @@ export default class PlaylistClass extends Component {
   }
 
   render() {
-    // console.log('this is state', this.state.songs);
-
     if (this.props.hostName) {
       //set current song here in db make a new song queue with shifted array
       return (
@@ -51,7 +49,7 @@ export default class PlaylistClass extends Component {
           <TouchableOpacity onPress={() => this.hidePlayButton()}>
             <View>
               {this.state.playButton ? (
-                <Feather name="play" size={50} color="#FF5857" />
+                <Feather name="play" size={80} color="#423959" />
               ) : null}
             </View>
           </TouchableOpacity>
@@ -59,20 +57,20 @@ export default class PlaylistClass extends Component {
           {!this.state.paused ? (
             <TouchableOpacity onPress={() => this.handlePause()}>
               <View style={styles.pause}>
-                <Feather name="pause" size={50} color="#FF5857" />
+                <Feather name="pause" size={80} color="#423959" />
               </View>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity onPress={() => this.handleResume()}>
               <View style={styles.pause}>
-                <Feather name="play" size={50} color="#FF5857" />
+                <Feather name="play" size={80} color="#423959" />
               </View>
             </TouchableOpacity>
           )}
 
           <TouchableOpacity onPress={() => nextSong(this.props.docId)}>
             <View>
-              <Feather name="skip-forward" size={50} color="#FF5857" />
+              <Feather name="skip-forward" size={80} color="#423959" />
             </View>
           </TouchableOpacity>
         </View>
@@ -80,7 +78,7 @@ export default class PlaylistClass extends Component {
     } else {
       return (
         <View style={styles.guest}>
-          <Feather name="speaker" size={20} color="#FF5857" />
+          <Feather name="speaker" size={25} color="#423959" />
           <Text style={styles.nowPlaying}>Now Playing</Text>
         </View>
       );
@@ -102,7 +100,8 @@ const styles = StyleSheet.create({
   },
   nowPlaying: {
     fontSize: 20,
-    color: '#FF5857',
-    paddingLeft: 3
+    color: '#423959',
+    paddingLeft: 3,
+    fontWeight: 'bold'
   }
 });

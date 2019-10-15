@@ -43,7 +43,7 @@ export default function JoinPlayListForm(props) {
           props.navigation.navigate('Home');
         }}
       >
-        <Feather name="chevron-left" size={32} color="#FF5857" />
+        <Feather name="chevron-left" size={32} color="white" />
       </TouchableOpacity>
     )
   };
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     textAlign: 'center',
     fontWeight: 'bold',
-    color: '#FF5857',
+    color: 'white',
     marginTop: 80
   },
   inputContainer: {
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     // shadowRadius: 2
   },
   saveButtonText: {
-    color: '#E9DBFF',
+    color: 'white',
     fontSize: 20,
     textAlign: 'center',
     fontWeight: 'bold'

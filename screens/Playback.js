@@ -74,7 +74,7 @@ export default function Playback(props) {
     <Modal isVisible={isVisible}>
       <StatusBar hidden />
       <ImageBackground
-        source={require('../weJayGradient.png')}
+        source={require('../gradient3.png')}
         style={{
           width: 400,
           height: 700,
@@ -84,7 +84,7 @@ export default function Playback(props) {
       >
         <View style={styles.container}>
           <TouchableOpacity onPress={() => closeModal()}>
-            <Feather name="chevron-down" size={50} color="black" />
+            <Feather name="chevron-down" size={50} color="white" />
           </TouchableOpacity>
           {songData.imageUrl ? (
             <Image
@@ -98,7 +98,7 @@ export default function Playback(props) {
             <Image
               style={styles.wejayLogo}
               resizeMode="cover"
-              source={require('../weJay2.png')}
+              source={require('../weJay.png')}
             />
           )}
           <View style={styles.textContainer}>
@@ -115,6 +115,13 @@ export default function Playback(props) {
               style={styles.songArtist}
             >
               {songData.artist}
+            </Text>
+            <Text
+              ellipsizeMode="tail"
+              numberOfLines={1}
+              style={styles.songAlbum}
+            >
+              {songData.albumName}
             </Text>
           </View>
           <View style={{ top: 75 }}>
@@ -154,11 +161,18 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 25,
     paddingBottom: 15,
-    alignSelf: 'center'
+    alignSelf: 'center',
+    color: 'white'
   },
   songArtist: {
     fontSize: 20,
-    alignSelf: 'center'
+    alignSelf: 'center',
+    color: 'white'
+  },
+  songAlbum: {
+    fontSize: 20,
+    alignSelf: 'center',
+    color: 'white'
   },
   textContainer: {
     width: 300
