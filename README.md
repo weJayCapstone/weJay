@@ -42,7 +42,7 @@ npm start
 
 ## License
 
-put a link
+[MIT](https://choosealicense.com/licenses/mit/)
 
 ## Acknowledgments
 
