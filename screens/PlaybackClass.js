@@ -8,6 +8,10 @@ import {
 } from "../playback/playbackControls";
 import { Feather } from "@expo/vector-icons";
 import { connect } from "react-redux";
+import {
+    heightPercentageToDP as hp,
+    widthPercentageToDP as wp,
+   } from 'react-native-responsive-screen'
 
 class PlaylistClass extends Component {
   constructor(props) {
@@ -46,7 +50,7 @@ class PlaylistClass extends Component {
           <TouchableOpacity onPress={() => this.hidePlayButton()}>
             <View>
               {this.state.playButton ? (
-                <Feather name="play" size={80} color="#423959" />
+                <Feather name="play" size={hp('11%')} color="#423959" />
               ) : null}
             </View>
           </TouchableOpacity>
@@ -54,20 +58,20 @@ class PlaylistClass extends Component {
           {!this.state.paused ? (
             <TouchableOpacity onPress={() => this.handlePause()}>
               <View style={styles.pause}>
-                <Feather name="pause" size={80} color="#423959" />
+                <Feather name="pause" size={hp('11%')} color="#423959" />
               </View>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity onPress={() => this.handleResume()}>
               <View style={styles.pause}>
-                <Feather name="play" size={80} color="#423959" />
+                <Feather name="play" size={hp('11%')} color="#423959" />
               </View>
             </TouchableOpacity>
           )}
 
           <TouchableOpacity onPress={() => nextSong(this.props.docId)}>
             <View>
-              <Feather name="skip-forward" size={80} color="#423959" />
+              <Feather name="skip-forward" size={hp('11%')} color="#423959" />
             </View>
           </TouchableOpacity>
         </View>
@@ -75,7 +79,7 @@ class PlaylistClass extends Component {
     } else {
       return (
         <View style={styles.guest}>
-          <Feather name="speaker" size={25} color="#423959" />
+          <Feather name="speaker" size={hp('3%')} color="#423959" />
           <Text style={styles.nowPlaying}>Now Playing</Text>
         </View>
       );

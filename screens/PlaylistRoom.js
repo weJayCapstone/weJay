@@ -14,6 +14,10 @@ import { connect } from 'react-redux';
 import { Feather } from '@expo/vector-icons';
 import db from '../firebase/index';
 import SingleSong from './SingleSong';
+import {
+    heightPercentageToDP as hp,
+    widthPercentageToDP as wp,
+   } from 'react-native-responsive-screen'
 
 function PlaylistRoom(props) {
   const docId = props.docId;
@@ -62,7 +66,7 @@ function PlaylistRoom(props) {
         <ImageBackground
           source={require('../gradient3.png')}
           style={{
-            height: 200,
+            height: hp('28%'),
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center'
@@ -71,7 +75,7 @@ function PlaylistRoom(props) {
         >
           <Text
             style={{
-              fontSize: 30,
+              fontSize: hp('4.2%'),
               fontWeight: 'bold',
               color: 'white',
               alignSelf: 'center',
@@ -84,7 +88,7 @@ function PlaylistRoom(props) {
           </Text>
           <Text
             style={{
-              fontSize: 16,
+              fontSize: hp('2.2%'),
               color: 'white',
               alignSelf: 'center',
               paddingTop: 15,
@@ -103,7 +107,7 @@ function PlaylistRoom(props) {
               paddingTop: 25
             }}
           >
-            Welcome to the party {userName}!
+            Welcome DJ {userName}!
           </Text>
         </ImageBackground>
         {songs !== [] ? (
@@ -164,18 +168,18 @@ const styles = StyleSheet.create({
     paddingTop: 5
   },
   button: {
-    padding: 15,
+    padding: hp('2.1%'),
     backgroundColor: '#423959',
     borderRadius: 25,
-    width: 200,
-    marginBottom: 25,
-    marginTop: 20,
+    width: hp('26%'),
+    marginBottom: hp('3%'),
+    marginTop: hp('2%'),
     margin: 'auto',
     alignSelf: 'center'
   },
   buttonText: {
     color: 'white',
-    fontSize: 20,
+    fontSize: hp('2.8%'),
     textAlign: 'center'
   },
   buttonBackground: {
