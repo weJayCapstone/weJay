@@ -6,7 +6,8 @@ import {
   FlatList,
   StyleSheet,
   ScrollView,
-  TouchableOpacity
+  TouchableOpacity,
+  Image
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
@@ -15,6 +16,10 @@ import { Container, Content } from "native-base";
 import SongCard from "../screens/SongCard.js";
 import { refreshRoomToken } from "../firebase/index";
 import { connect } from "react-redux";
+import {
+    heightPercentageToDP as hp,
+    widthPercentageToDP as wp,
+   } from 'react-native-responsive-screen'
 
 function SearchScreen(props) {
   const userName = props.userName;
@@ -73,8 +78,6 @@ function SearchScreen(props) {
   return (
     <Container style={styles.mainView}>
       <View style={{ height: 13 }} />
-
-      <Content>
         <SearchBar
           placeholder="Search"
           onChangeText={text => activeSearch(text)}
@@ -97,20 +100,31 @@ function SearchScreen(props) {
           }}
         />
 
-        <ScrollView style={{ top: 10 }}>
+        
+      <View
+      style={{display: 'flex', flex: 1}}
+              contentContainerStyle={{justifyContent: 'center', alignItems: 'stretch'}}
+      >
           {results.tracks ? (
-            <FlatList
-              data={results.tracks.items}
-              renderItem={({ item }) => (
-                <SongCard item={item} docId={docId} userName={userName} />
-              )}
-              keyExtractor={item => item.id}
-            />
+            <ScrollView style={{marginBottom: 30}}>
+              <FlatList
+                data={results.tracks.items}
+                renderItem={({ item }) => (
+                  <SongCard item={item} docId={docId} userName={userName} />
+                )}
+                keyExtractor={item => item.id}
+              />
+            </ScrollView>
           ) : (
-            <Text style={styles.searchText}>Search weJay for a Song!</Text>
+            <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+            <Image
+            style={styles.searchImage}
+            source={require('../weJay.png')}
+            resizeMode="contain"
+             />
+            </View>
           )}
-        </ScrollView>
-      </Content>
+      </View>
     </Container>
   );
 }
@@ -161,5 +175,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: "#FF5857",
     alignSelf: "center"
-  }
+  },
+  searchImage: {
+    opacity: 0.5,
+    width: wp('80%'),
+    height: hp('50%'),
+    marginBottom: hp('25%')
+  },
 });

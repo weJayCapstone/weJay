@@ -14,6 +14,10 @@ import Modal from "react-native-modal";
 import PlaybackClass from "./PlaybackClass";
 import db from "../firebase/index";
 import { connect } from "react-redux";
+import {
+    heightPercentageToDP as hp,
+    widthPercentageToDP as wp,
+   } from 'react-native-responsive-screen'
 
 function Playback(props) {
   const docId = props.docId;
@@ -43,8 +47,8 @@ function Playback(props) {
       <ImageBackground
         source={require("../gradient3.png")}
         style={{
-          width: 400,
-          height: 700,
+          width: wp('100%'),
+          height: hp('100%'),
           alignSelf: "center",
           display: "flex"
         }}
@@ -56,7 +60,7 @@ function Playback(props) {
           {songData.imageUrl ? (
             <Image
               style={styles.image}
-              resizeMode="cover"
+              resizeMode="contain"
               source={{
                 uri: songData.imageUrl
               }}
@@ -91,7 +95,7 @@ function Playback(props) {
               {songData.albumName}
             </Text>
           </View>
-          <View style={{ top: 75 }}>
+          <View style={{ top: 30 }}>
             <PlaybackClass setPlaying={setPlaying} />
           </View>
         </View>
@@ -112,13 +116,14 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     flexDirection: "column",
     alignItems: "center",
-    height: 700,
-    width: 400,
+    marginTop: hp('5%'),
+    height: hp('90%'),
+    width: wp(('100%')),
     alignSelf: "center"
   },
   image: {
-    width: 400,
-    height: 350, //may need to fix this for my screen
+    width: wp('90%'),
+    height: hp('50%'), //may need to fix this for my screen
     marginTop: 40
   },
   wejayLogo: {
@@ -128,18 +133,18 @@ const styles = StyleSheet.create({
   },
   songName: {
     fontWeight: "bold",
-    fontSize: 25,
+    fontSize: hp('3%'),
     paddingBottom: 15,
     alignSelf: "center",
     color: "white"
   },
   songArtist: {
-    fontSize: 20,
+    fontSize: hp('2%'),
     alignSelf: "center",
     color: "white"
   },
   songAlbum: {
-    fontSize: 20,
+    fontSize: hp('2%'),
     alignSelf: "center",
     color: "white"
   },

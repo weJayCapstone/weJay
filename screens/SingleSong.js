@@ -4,6 +4,10 @@ import { Image } from "react-native-elements";
 import { Feather } from "@expo/vector-icons";
 import { updateVote } from "../firebase/index.js";
 import { connect } from "react-redux";
+import {
+    heightPercentageToDP as hp,
+    widthPercentageToDP as wp,
+   } from 'react-native-responsive-screen'
 
 function SingleSong(props) {
   const song = props.song;
@@ -32,7 +36,7 @@ function SingleSong(props) {
               paddingTop: 15,
               fontWeight: "bold",
               fontSize: 14,
-              width: 200
+              width: wp('44%')
             }}
           >
             {song.name}

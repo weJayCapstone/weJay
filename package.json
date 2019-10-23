@@ -36,6 +36,7 @@
     "react-native-gradient-buttons": "^2.0.1",
     "react-native-marquee": "^0.3.2",
     "react-native-modal": "^11.4.0",
+    "react-native-responsive-screen": "^1.3.0",
     "react-native-text-ticker": "^1.0.0",
     "react-native-web": "^0.11.7",
     "react-navigation": "^3.12.0",
