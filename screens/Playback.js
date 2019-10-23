@@ -5,7 +5,8 @@ import {
   StyleSheet,
   StatusBar,
   TouchableOpacity,
-  ImageBackground
+  ImageBackground,
+  ScrollView
 } from 'react-native';
 import { Image } from 'react-native-elements';
 import { Feather } from '@expo/vector-icons';
@@ -13,6 +14,7 @@ import Modal from 'react-native-modal';
 import PlaybackClass from './PlaybackClass';
 import db from '../firebase/index';
 import { connect } from 'react-redux';
+import TextTicker from 'react-native-text-ticker';
 
 function Playback(props) {
   const docId = props.docId;
@@ -37,65 +39,83 @@ function Playback(props) {
   }
 
   return (
-    <Modal isVisible={isVisible}>
-      <StatusBar hidden />
-      <ImageBackground
-        source={require('../gradient3.png')}
-        style={{
-          width: 400,
-          height: 700,
-          alignSelf: 'center',
-          display: 'flex'
-        }}
-      >
-        <View style={styles.container}>
-          <TouchableOpacity onPress={() => closeModal()}>
-            <Feather name="chevron-down" size={50} color="white" />
-          </TouchableOpacity>
-          {songData.imageUrl ? (
-            <Image
-              style={styles.image}
-              resizeMode="cover"
-              source={{
-                uri: songData.imageUrl
-              }}
-            />
-          ) : (
-            <Image
-              style={styles.wejayLogo}
-              resizeMode="cover"
-              source={require('../weJay.png')}
-            />
-          )}
-          <View style={styles.textContainer}>
-            <Text
+    <ScrollView style={{ backgroundColor: '#423959' }}>
+      <Modal isVisible={isVisible}>
+        <StatusBar hidden />
+        <ImageBackground
+          source={require('../weJayGradient.png')}
+          style={{
+            width: 400,
+            height: 700,
+            alignSelf: 'center',
+            display: 'flex'
+          }}
+        >
+          <View style={styles.container}>
+            <TouchableOpacity onPress={() => closeModal()}>
+              <Feather name="chevron-down" size={50} color="white" />
+            </TouchableOpacity>
+            {songData.imageUrl ? (
+              <Image
+                style={styles.image}
+                resizeMode="cover"
+                source={{
+                  uri: songData.imageUrl
+                }}
+              />
+            ) : (
+              <Image
+                style={styles.wejayLogo}
+                resizeMode="cover"
+                source={require('../weJay.png')}
+              />
+            )}
+            <View style={styles.textContainer}>
+              {/* <Text
               ellipsizeMode="tail"
               numberOfLines={1}
               style={styles.songName}
             >
               {songData.name}
-            </Text>
-            <Text
-              ellipsizeMode="tail"
-              numberOfLines={1}
-              style={styles.songArtist}
-            >
-              {songData.artist}
-            </Text>
-            <Text
-              ellipsizeMode="tail"
-              numberOfLines={1}
-              style={styles.songAlbum}
-            >
-              {songData.albumName}
-            </Text>
+            </Text> */}
+              <View style={{ display: 'flex', alignItems: 'center' }}>
+                <TextTicker
+                  style={{
+                    display: 'flex',
+                    fontSize: 20,
+                    color: 'white',
+                    paddingTop: 15
+                  }}
+                  duration={15000}
+                  loop
+                  repeatSpacer={30}
+                  marqueeDelay={1000}
+                >
+                  {songData.name}
+                </TextTicker>
+              </View>
+              <Text
+                ellipsizeMode="tail"
+                numberOfLines={1}
+                style={styles.songArtist}
+              >
+                {songData.artist}
+              </Text>
+              <Text
+                ellipsizeMode="tail"
+                numberOfLines={1}
+                style={styles.songAlbum}
+              >
+                {songData.albumName}
+              </Text>
+            </View>
+            <View style={{ top: 40 }}>
+              <PlaybackClass setPlaying={setPlaying} />
+            </View>
           </View>
-          <View style={{ top: 50 }}>
-            <PlaybackClass setPlaying={setPlaying} />
-          </View>
-        </View>
-      </ImageBackground>
-    </Modal>
+        </ImageBackground>
+      </Modal>
+    </ScrollView>
   );
 }
 const mapStateToProps = state => {
@@ -116,7 +136,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center'
   },
   image: {
-    width: 400,
+    width: 350,
     height: 350, //may need to fix this for my screen
     marginTop: 40
   },

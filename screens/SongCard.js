@@ -11,13 +11,15 @@ import {
 } from 'react-native';
 import Modal from 'react-native-modal';
 import { addSongToDB } from '../firebase/index';
+import { connect } from 'react-redux';
 
-export default class SongCard extends Component {
+class SongCard extends Component {
   constructor(props) {
     super(props);
     this.state = {
       docId: this.props.docId,
-      visibleModal: false
+      visibleModal: false,
+      userName: this.props.userName
     };
     this.handleSongSelection = this.handleSongSelection.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
@@ -37,7 +39,8 @@ export default class SongCard extends Component {
       timeAdded: Date.now(),
       users: {
         [this.props.userName]: null
-      }
+      },
+      addedBy: this.state.userName
     };
     return result;
   };
@@ -146,6 +149,14 @@ export default class SongCard extends Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    userName: state.userName
+  };
+};
+export default connect(mapStateToProps)(SongCard);
+
 const styles = StyleSheet.create({
   card: {
     backgroundColor: 'white',

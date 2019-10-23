@@ -87,7 +87,8 @@ function SearchScreen(props) {
           borderRadius: 40,
           borderColor: 'black',
           width: '95%',
-          alignSelf: 'center'
+          alignSelf: 'center',
+          marginBottom: 5
         }}
         inputContainerStyle={{
           backgroundColor: 'white',
@@ -102,7 +103,7 @@ function SearchScreen(props) {
         }}
       >
         {results.tracks ? (
-          <ScrollView>
+          <ScrollView style={{ marginBottom: 30 }}>
             <FlatList
               data={results.tracks.items}
               renderItem={({ item }) => (

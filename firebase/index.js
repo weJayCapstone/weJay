@@ -96,9 +96,6 @@ export async function refreshRoomToken(docId) {
 
 export async function addSongToDB(roomId, songData) {
   try {
-    let result = await refreshRoomToken(roomId);
-    //add song to spotify playlist
-    await addSong(result, songData);
     const playlist = db
       .collection('Rooms')
       .doc(roomId)
@@ -111,28 +108,33 @@ export async function addSongToDB(roomId, songData) {
   }
 }
 export function subToPlaylist(roomId, userName) {
-    try{
-        let songArr =[];
-        let roomRef = db.collection('Rooms').doc(roomId);
-        let unsub =
-        roomRef
+  try {
+    let songArr = [];
+    let roomRef = db.collection('Rooms').doc(roomId);
+    let unsub = roomRef
+      .collection('Playlist')
+      .orderBy('timeAdded')
+      .onSnapshot(snapshot => {
+        snapshot.forEach(doc => {
+          songArr.push(doc.data());
+        });
+        snapshot.forEach(doc =>
+          roomRef
             .collection('Playlist')
-            .orderBy('timeAdded')
-            .onSnapshot((snapshot) => {
-                snapshot.forEach(doc => {
-                    songArr.push(doc.data())
-                });
-                snapshot.forEach(doc =>
-                    roomRef.collection('Playlist').doc(doc.id).set({
-                    users: {
-                        [userName]: null
-                    }
-                  }, {merge: true}));
-                });
-            return songArr;
-    }catch(err){
-        console.log(err);
-    }
+            .doc(doc.id)
+            .set(
+              {
+                users: {
+                  [userName]: null
+                }
+              },
+              { merge: true }
+            ));
+      });
+    return songArr;
+  } catch (err) {
+    console.log(err);
+  }
 }
 //get playlist return array of song objects (ideally?)
 export async function getPlaylist(roomId) {
@@ -142,7 +144,7 @@ export async function getPlaylist(roomId) {
       .collection('Rooms')
       .doc(roomId)
       .collection('Playlist')
-      .orderBy('timeAdded')
+      .orderBy('timeAdded');
     //   .orderBy('votes', 'desc');
     let allSongs = await playlist.get();
     if (allSongs.empty) {
@@ -157,90 +159,105 @@ export async function getPlaylist(roomId) {
   }
 }
 
-export async function updateVote(songId, vote, userName, docId){
-    let songsRef = db.collection('Rooms').doc(docId).collection('Playlist');
+export async function updateVote(songId, vote, userName, docId) {
+  let songsRef = db
+    .collection('Rooms')
+    .doc(docId)
+    .collection('Playlist');
 
-    try{
-        let query = await songsRef.where('id', '==', songId).get();
-        if (query.empty) {
-            console.log("something went wrong");
-          } 
-        else {
-            query.forEach(doc => {
-                let songRef = songsRef.doc(doc.id);
-                let songData = doc.data();
-                if(vote === 'up' && (songData.users[userName] !== 'up')){
-                    //increment vote
-                    songRef.update({
-                        votes: firebase.firestore.FieldValue.increment(1)
-                    });
-                }else if(vote === 'down' && (songData.users[userName] !== 'down')) {
-                    //decrease vote 
-                    songRef.update({
-                        votes: firebase.firestore.FieldValue.increment(-1)
-                    });
-                }
-                songRef.update({['users.' + userName]: vote});
-            });
-          }
-    }catch(err){
-        console.log(err)
+  try {
+    let query = await songsRef.where('id', '==', songId).get();
+    if (query.empty) {
+      console.log('something went wrong');
+    } else {
+      query.forEach(doc => {
+        let songRef = songsRef.doc(doc.id);
+        let songData = doc.data();
+        if (vote === 'up' && songData.users[userName] !== 'up') {
+          //increment vote
+          songRef.update({
+            votes: firebase.firestore.FieldValue.increment(1)
+          });
+        } else if (vote === 'down' && songData.users[userName] !== 'down') {
+          //decrease vote
+          songRef.update({
+            votes: firebase.firestore.FieldValue.increment(-1)
+          });
+        }
+        songRef.update({ ['users.' + userName]: vote });
+      });
     }
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 export async function setCurrentSong(roomData, docId) {
-    let songDocId;
-    let roomRef = db.collection('Rooms').doc(docId)
-    let currentSong = roomData.queue[0];
-    let newQueue = roomData.queue.slice(1);
-    //set currentSong
-    roomRef.set({currentSong}, {merge:true});
-    roomRef.update({queue: newQueue});
-    //get playlist 
-    let playlistRef = db.collection('Rooms').doc(docId).collection('Playlist');
-    try{
-        //add current song to master playlist
-        let finalPlaylist= roomRef.collection('Final Playlist');
-        await finalPlaylist.add({
-            addedToFP: Date.now(),
-            currentSong
-        });
-        //find song, and remove it from playlist collection
-        let query = await playlistRef.where('id', '==',currentSong.id).get();
-        query.forEach(doc => songDocId = doc.id);
-        await playlistRef.doc(songDocId).delete();
-
-    }catch(err){
-        console.log(err);
-    }
-    return currentSong;
+  let songDocId;
+  let roomRef = db.collection('Rooms').doc(docId);
+  let currentSong = roomData.queue[0];
+  let newQueue = roomData.queue.slice(1);
+  //set currentSong
+  roomRef.set({ currentSong }, { merge: true });
+  roomRef.update({ queue: newQueue });
+  //get playlist
+  let playlistRef = db
+    .collection('Rooms')
+    .doc(docId)
+    .collection('Playlist');
+  try {
+    //add current song to master playlist
+    let result = await refreshRoomToken(docId);
+    //add song to spotify playlist
+    await addSong(result, currentSong);
+    let finalPlaylist = roomRef.collection('Final Playlist');
+    await finalPlaylist.add({
+      addedToFP: Date.now(),
+      currentSong
+    });
+    //find song, and remove it from playlist collection
+    let query = await playlistRef.where('id', '==', currentSong.id).get();
+    query.forEach(doc => (songDocId = doc.id));
+    await playlistRef.doc(songDocId).delete();
+  } catch (err) {
+    console.log(err);
+  }
+  return currentSong;
 }
 
 export async function pauseCurrentSong(docId, progress) {
-    try{
-        let roomRef = db.collection('Rooms').doc(docId);
-        await roomRef.update({'currentSong.progress': progress});
-    }catch(err){
-        console.log(err);
-    }
+  try {
+    let roomRef = db.collection('Rooms').doc(docId);
+    await roomRef.update({ 'currentSong.progress': progress });
+  } catch (err) {
+    console.log(err);
+  }
 }
-export async function getCurrentSongData(docId){
-    try{
-        let roomRef = await db.collection('Rooms').doc(docId).get();
-        let currentSong = roomRef.data().currentSong;
-        return currentSong;
-    }catch(err){
-        console.log(err);
-    }
+export async function getCurrentSongData(docId) {
+  try {
+    let roomRef = await db
+      .collection('Rooms')
+      .doc(docId)
+      .get();
+    let currentSong = roomRef.data().currentSong;
+    return currentSong;
+  } catch (err) {
+    console.log(err);
+  }
 }
-export async function getFinalPlaylist(docId){
-    try{
-        let finalPlaylistRef = db.collection('Rooms').doc(docId).collection('Final Playlist');
-        let finalpl = await finalPlaylistRef.orderBy('addedToFP','asc').get();
-        //what do you want from this? song uri?
-        console.log(finalpl);
-    }catch(err){
-        console.log(err);
-    }
+export async function getFinalPlaylist(docId) {
+  let playlistArr = [];
+  try {
+    let finalPlaylistRef = db
+      .collection('Rooms')
+      .doc(docId)
+      .collection('Final Playlist');
+    let finalpl = await finalPlaylistRef.orderBy('addedToFP', 'asc').get();
+    finalpl.forEach(doc => playlistArr.push(doc.data()));
+    console.log('in final playlist ', playlistArr);
+    return playlistArr;
+  } catch (err) {
+    console.log(err);
+  }
 }
 //add users to playlist

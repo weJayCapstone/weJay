@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -7,35 +7,34 @@ import {
   View,
   FlatList,
   ImageBackground,
-  SafeAreaView,
-  Image
-} from 'react-native';
-import { connect } from 'react-redux';
-import { Feather } from '@expo/vector-icons';
-import db from '../firebase/index';
-import SingleSong from './SingleSong';
+  SafeAreaView
+} from "react-native";
+import { connect } from "react-redux";
+import { Feather } from "@expo/vector-icons";
+import db from "../firebase/index";
+import SingleSong from "./SingleSong";
 
 function PlaylistRoom(props) {
   const docId = props.docId;
   const userName = props.userName;
-  let currentSong;
+  const roomData = props.roomData || {};
+
   let title;
   if (props.roomData) {
     title = props.roomData.title;
-    currentSong = props.roomData.currentSong;
   }
   let [songs, setSongs] = useState([]);
   let [songData, setSongData] = useState({});
   useEffect(() => {
-    let roomRef = db.collection('Rooms').doc(docId);
+    let roomRef = db.collection("Rooms").doc(docId);
     let unsubFromSong = roomRef.onSnapshot(snapshot => {
       if (snapshot.data().currentSong) {
         setSongData(snapshot.data().currentSong);
       }
     });
     let unsub = roomRef
-      .collection('Playlist')
-      .orderBy('timeAdded')
+      .collection("Playlist")
+      .orderBy("timeAdded")
       .onSnapshot(snapshot => {
         const songArr = snapshot.docs.map(doc => doc.data());
         //sort by votes
@@ -58,26 +57,31 @@ function PlaylistRoom(props) {
       unsub();
     };
   }, [docId]);
+
+  const goToStats = () => {
+    props.navigation.navigate("Stats");
+  };
+
   return (
     <>
       <ScrollView style={styles.background}>
         <ImageBackground
-          source={require('../gradient3.png')}
+          source={require("../weJayGradient.png")}
           style={{
             height: 200,
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center'
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center"
           }}
           resizeMode="stretch"
         >
           <Text
             style={{
               fontSize: 30,
-              fontWeight: 'bold',
-              color: 'white',
-              alignSelf: 'center',
-              alignContent: 'center'
+              fontWeight: "bold",
+              color: "white",
+              alignSelf: "center",
+              alignContent: "center"
             }}
             ellipsizeMode="tail"
             numberOfLines={2}
@@ -85,28 +89,28 @@ function PlaylistRoom(props) {
             {title}
           </Text>
 
-          {currentSong ? (
+          {songData.id ? (
             <View
               style={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignContent: 'flex-end',
-                justifyContent: 'center'
+                display: "flex",
+                flexDirection: "row",
+                alignContent: "flex-end",
+                justifyContent: "center"
               }}
             >
               <Feather
                 name="speaker"
                 size={18}
                 color="white"
-                style={{ alignSelf: 'center', paddingTop: 15 }}
+                style={{ alignSelf: "center", paddingTop: 15 }}
               />
               <Text
                 style={{
                   fontSize: 16,
-                  color: 'white',
+                  color: "white",
                   paddingTop: 15,
                   maxWidth: 300,
-                  alignSelf: 'flex-start'
+                  alignSelf: "flex-start"
                 }}
                 ellipsizeMode="tail"
                 numberOfLines={1}
@@ -118,8 +122,8 @@ function PlaylistRoom(props) {
           <Text
             style={{
               fontSize: 16,
-              color: 'white',
-              alignSelf: 'center',
+              color: "white",
+              alignSelf: "center",
               paddingTop: 20,
               paddingLeft: 3
             }}
@@ -138,11 +142,40 @@ function PlaylistRoom(props) {
         ) : (
           <Text>Search To Add Songs to Your Playlist!</Text>
         )}
+        {userName === roomData.hostName ? (
+          <TouchableOpacity
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignContent: "flex-end",
+              justifyContent: "center"
+            }}
+            onPress={() => goToStats()}
+          >
+            <Text
+              style={{
+                color: "#fff",
+                alignSelf: "center",
+                fontSize: 20,
+                paddingRight: 5,
+                paddingTop: 30
+              }}
+            >
+              PLAYLIST STATS
+            </Text>
+            <Feather
+              name="bar-chart-2"
+              size={20}
+              color="#fff"
+              style={{ alignSelf: "center", paddingTop: 30 }}
+            />
+          </TouchableOpacity>
+        ) : null}
       </ScrollView>
       <View style={styles.buttonBackground}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => props.navigation.navigate('SearchScreen')}
+          onPress={() => props.navigation.navigate("SearchScreen")}
         >
           <Text style={styles.buttonText}>Add A Song</Text>
         </TouchableOpacity>
@@ -162,51 +195,51 @@ export default connect(mapStateToProps)(PlaylistRoom);
 
 const styles = StyleSheet.create({
   background: {
-    backgroundColor: '#FF5857'
+    backgroundColor: "#FF5857"
   },
   songContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap'
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap"
   },
   containerStyle: {
-    display: 'flex',
-    flexDirection: 'row'
+    display: "flex",
+    flexDirection: "row"
   },
   headerContainer: {
-    display: 'flex',
-    flexDirection: 'row'
+    display: "flex",
+    flexDirection: "row"
   },
-  feather: { marginLeft: 'auto' },
+  feather: { marginLeft: "auto" },
   nowPlayingText: {
-    color: 'white',
+    color: "white",
     fontSize: 18,
     paddingRight: 3,
     paddingTop: 5
   },
   button: {
     padding: 15,
-    backgroundColor: '#423959',
+    backgroundColor: "#423959",
     borderRadius: 25,
     width: 200,
     marginBottom: 25,
     marginTop: 20,
-    margin: 'auto',
-    alignSelf: 'center'
+    margin: "auto",
+    alignSelf: "center"
   },
   buttonText: {
-    color: 'white',
+    color: "white",
     fontSize: 20,
-    textAlign: 'center'
+    textAlign: "center"
   },
   buttonBackground: {
-    backgroundColor: '#FF5857'
+    backgroundColor: "#FF5857"
   },
   vote: {
-    color: '#000'
+    color: "#000"
   },
   voteHighlight: {
-    color: '#FF5857'
+    color: "#FF5857"
   },
   musicnote: {
     paddingRight: 10

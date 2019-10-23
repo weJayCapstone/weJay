@@ -9,7 +9,7 @@
     "orientation": "portrait",
     "icon": "./weJay.png",
     "splash": {
-      "image": "./weJay.png",
+      "image": "./weJay.gif",
       "resizeMode": "contain",
       "backgroundColor": "#423959"
     },
