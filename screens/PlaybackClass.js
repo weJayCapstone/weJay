@@ -1,24 +1,24 @@
-import React, { Component } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { Component } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import {
   playSong,
   nextSong,
   pauseSong,
   resumeSong
-} from "../playback/playbackControls";
-import { Feather } from "@expo/vector-icons";
-import { connect } from "react-redux";
+} from '../playback/playbackControls';
+import { Feather } from '@expo/vector-icons';
+import { connect } from 'react-redux';
 import {
-    heightPercentageToDP as hp,
-    widthPercentageToDP as wp,
-   } from 'react-native-responsive-screen'
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp
+} from 'react-native-responsive-screen';
 
 class PlaylistClass extends Component {
   constructor(props) {
     super(props);
     this.state = {
       paused: false,
-      playButton: true
+      playButton: !this.props.isPlaying
     };
   }
 
@@ -32,15 +32,13 @@ class PlaylistClass extends Component {
     resumeSong(this.props.docId);
   }
 
-  //ADDED THIS TO HIDE PLAY BUTTON AFTER INITIAL PRESS TO START MUSIC
   hidePlayButton() {
     playSong(this.props.docId);
-    this.setState({ playButton: false });
     this.props.setPlaying(true);
+    this.setState({ playButton: false });
   }
 
   render() {
-    // console.log('this is state', this.state.songs);
     const hostName = this.props.roomData.hostName;
     const userName = this.props.userName;
     if (userName === hostName) {
@@ -50,7 +48,7 @@ class PlaylistClass extends Component {
           <TouchableOpacity onPress={() => this.hidePlayButton()}>
             <View>
               {this.state.playButton ? (
-                <Feather name="play" size={hp('11%')} color="#423959" />
+                <Feather name="play" size={hp('9%')} color="#423959" />
               ) : null}
             </View>
           </TouchableOpacity>
@@ -58,20 +56,20 @@ class PlaylistClass extends Component {
           {!this.state.paused ? (
             <TouchableOpacity onPress={() => this.handlePause()}>
               <View style={styles.pause}>
-                <Feather name="pause" size={hp('11%')} color="#423959" />
+                <Feather name="pause" size={hp('9%')} color="#423959" />
               </View>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity onPress={() => this.handleResume()}>
               <View style={styles.pause}>
-                <Feather name="play" size={hp('11%')} color="#423959" />
+                <Feather name="play" size={hp('9%')} color="#423959" />
               </View>
             </TouchableOpacity>
           )}
 
           <TouchableOpacity onPress={() => nextSong(this.props.docId)}>
             <View>
-              <Feather name="skip-forward" size={hp('11%')} color="#423959" />
+              <Feather name="skip-forward" size={hp('9%')} color="#423959" />
             </View>
           </TouchableOpacity>
         </View>
@@ -90,26 +88,36 @@ const mapStateToProps = state => {
   return {
     docId: state.docId,
     roomData: state.roomData,
-    userName: state.userName
+    userName: state.userName,
+    isPlaying: state.isPlaying
   };
 };
-export default connect(mapStateToProps)(PlaylistClass);
+const mapDispatchToProps = dispatch => {
+  return {
+    setPlaying: bool => dispatch(setPlaying(bool))
+  };
+};
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PlaylistClass);
+
 const styles = StyleSheet.create({
   icons: {
-    flexDirection: "row",
-    justifyContent: "space-between"
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
   pause: {
     paddingLeft: 25,
     paddingRight: 25
   },
   guest: {
-    flexDirection: "row"
+    flexDirection: 'row'
   },
   nowPlaying: {
     fontSize: 20,
-    color: "#423959",
-    paddingLeft: 3,
-    fontWeight: "bold"
+    color: '#423959',
+    paddingLeft: 5,
+    fontWeight: 'bold'
   }
 });

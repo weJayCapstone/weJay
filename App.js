@@ -1,5 +1,3 @@
-//UNALTERED BOILER PLATE CODE CAN BE FOUND IN APPTEST.JS
-
 'use strict';
 import React, { Component } from 'react';
 import {
@@ -23,10 +21,12 @@ import JoinPlaylistForm from './screens/JoinPlaylistForm';
 import PlaylistRoom from './screens/PlaylistRoom';
 import SearchScreen from './screens/SearchScreen';
 import Playback from './screens/Playback';
+import Stats from './screens/Stats';
+
 import {
-    heightPercentageToDP as hp,
-    widthPercentageToDP as wp,
-   } from 'react-native-responsive-screen'
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp
+} from 'react-native-responsive-screen';
 require('./secrets');
 
 //redux
@@ -138,7 +138,54 @@ const StackNav = createStackNavigator({
     })
   },
   Playback: {
-    screen: Playback
+    screen: Playback,
+    navigationOptions: ({ navigation }) => ({
+      headerStyle: {
+        backgroundColor: '#423959',
+        borderBottomWidth: 0,
+        color: '#999'
+      },
+      headerRight: (
+        <TouchableOpacity onPress={() => navigation.navigate('Playback')}>
+          <View style={styles.headerContainer}>
+            <Text style={styles.nowPlayingText}>Now Playing</Text>
+            <Feather
+              name="music"
+              size={30}
+              color="#fff"
+              style={styles.musicnote}
+            />
+          </View>
+        </TouchableOpacity>
+      ),
+      headerLeft: (
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('Home');
+          }}
+        >
+          <Feather name="chevron-left" size={32} color="#fff" />
+        </TouchableOpacity>
+      )
+    })
+  },
+  Stats: {
+    screen: Stats,
+    navigationOptions: ({ navigation }) => ({
+      headerStyle: {
+        backgroundColor: '#423959',
+        borderBottomWidth: 0
+      },
+      headerLeft: (
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('PlaylistRoom');
+          }}
+        >
+          <Feather name="chevron-left" size={32} color="white" />
+        </TouchableOpacity>
+      )
+    })
   }
 });
 

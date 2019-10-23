@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { Card } from "react-native-cards";
+import React, { Component } from 'react';
+import { Card } from 'react-native-cards';
 import {
   Text,
   View,
@@ -8,16 +8,18 @@ import {
   StyleSheet,
   TouchableHighlight,
   TouchableOpacity
-} from "react-native";
-import Modal from "react-native-modal";
-import { addSongToDB } from "../firebase/index";
+} from 'react-native';
+import Modal from 'react-native-modal';
+import { addSongToDB } from '../firebase/index';
+import { connect } from 'react-redux';
 
-export default class SongCard extends Component {
+class SongCard extends Component {
   constructor(props) {
     super(props);
     this.state = {
       docId: this.props.docId,
-      visibleModal: false
+      visibleModal: false,
+      userName: this.props.userName
     };
     this.handleSongSelection = this.handleSongSelection.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
@@ -37,7 +39,8 @@ export default class SongCard extends Component {
       timeAdded: Date.now(),
       users: {
         [this.props.userName]: null
-      }
+      },
+      addedBy: this.state.userName
     };
     return result;
   };
@@ -45,9 +48,7 @@ export default class SongCard extends Component {
     this.toggleModal();
     const roomID = this.state.docId;
     //    const songURI = {songUri: 'spotify:track:4JGKZS7h4Qa16gOU3oNETV'}
-    //roomId and songData
     const songData = this.songDataParser(this.props.item);
-    //console.log(songData);
     try {
       await addSongToDB(roomID, songData);
     } catch (err) {
@@ -60,16 +61,19 @@ export default class SongCard extends Component {
   }
 
   render() {
+    let albumArt = this.props.item.album.images;
     return (
       <View>
         <TouchableHighlight onPress={this.toggleModal}>
           <Card style={styles.card}>
             <View>
-              <Image
-                style={{ width: 75, height: 75 }}
-                resizeMode="cover"
-                source={{ uri: `${this.props.item.album.images[1].url}` }}
-              />
+              {albumArt.length > 0 ? (
+                <Image
+                  style={{ width: 75, height: 75 }}
+                  resizeMode="cover"
+                  source={{ uri: `${this.props.item.album.images[1].url}` }}
+                />
+              ) : null}
             </View>
             <View style={styles.songInfo}>
               <View>
@@ -78,37 +82,37 @@ export default class SongCard extends Component {
                   ellipsizeMode="tail"
                   style={{ fontSize: 19 }}
                 >
-                  {this.props.item.name}{" "}
+                  {this.props.item.name}{' '}
                 </Text>
               </View>
-
               <View style={{ top: 10 }}>
                 <Text
                   numberOfLines={1}
                   ellipsizeMode="tail"
                   style={{ fontSize: 15 }}
                 >
-                  {this.props.item.album.artists[0].name} -{" "}
+                  {this.props.item.album.artists[0].name} -{' '}
                   {this.props.item.album.name}
                 </Text>
               </View>
             </View>
           </Card>
         </TouchableHighlight>
-
         <Modal isVisible={this.state.visibleModal}>
           <View style={styles.content}>
             <View style={styles.modalDetails}>
-              <Image
-                style={{
-                  width: 200,
-                  height: 200,
-                  marginBottom: 20,
-                  marginTop: 15
-                }}
-                resizeMode="cover"
-                source={{ uri: `${this.props.item.album.images[1].url}` }}
-              />
+              {albumArt.length > 0 ? (
+                <Image
+                  style={{
+                    width: 200,
+                    height: 200,
+                    marginBottom: 20,
+                    marginTop: 15
+                  }}
+                  resizeMode="cover"
+                  source={{ uri: `${this.props.item.album.images[1].url}` }}
+                />
+              ) : null}
               <Text
                 numberOfLines={2}
                 ellipsizeMode="tail"
@@ -119,13 +123,12 @@ export default class SongCard extends Component {
               <Text
                 numberOfLines={1}
                 ellipsizeMode="tail"
-                style={{ fontSize: 18, marginBottom: 20, color: "#fff" }}
+                style={{ fontSize: 18, marginBottom: 20, color: '#fff' }}
               >
-                {this.props.item.album.artists[0].name} -{" "}
+                {this.props.item.album.artists[0].name} -{' '}
                 {this.props.item.album.name}
               </Text>
             </View>
-
             <View>
               <TouchableOpacity
                 style={styles.addButton}
@@ -133,7 +136,6 @@ export default class SongCard extends Component {
               >
                 <Text style={styles.addButtonText}>Add To Playlist</Text>
               </TouchableOpacity>
-
               <Button
                 title="Cancel"
                 color="#fff"
@@ -148,64 +150,70 @@ export default class SongCard extends Component {
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    userName: state.userName
+  };
+};
+export default connect(mapStateToProps)(SongCard);
+
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "white",
-    // color: '#feffe8',
-    display: "flex",
-    flexDirection: "row",
+    backgroundColor: 'white',
+    display: 'flex',
+    flexDirection: 'row',
     borderWidth: 1,
-    borderColor: "grey",
+    borderColor: 'grey',
     padding: 4
   },
   songInfo: {
-    display: "flex",
-    flexDirection: "column",
-    flexWrap: "wrap",
-    alignItems: "stretch",
+    display: 'flex',
+    flexDirection: 'column',
+    flexWrap: 'wrap',
+    alignItems: 'stretch',
     flex: 1,
     padding: 13,
-    justifyContent: "center"
+    justifyContent: 'center'
   },
   searchBar: {
-    backgroundColor: "white"
+    backgroundColor: 'white'
   },
   content: {
-    backgroundColor: "#423959",
+    backgroundColor: '#423959',
     padding: 22,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     borderRadius: 20,
-    borderColor: "rgba(0, 0, 0, 0.1)"
+    borderColor: 'rgba(0, 0, 0, 0.1)'
   },
   contentTitle: {
     fontSize: 20,
     marginBottom: 12,
-    fontWeight: "bold",
-    textAlign: "center",
-    color: "#fff"
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: '#fff'
   },
   modalDetails: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center"
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   addButton: {
     // marginRight: 80,
     // marginLeft: 80,
     // marginTop: 25,
     // paddingTop: 10,
-    backgroundColor: "#FF5857",
+    backgroundColor: '#FF5857',
     borderRadius: 25
   },
   addButtonText: {
-    color: "white",
-    textAlign: "center",
+    color: 'white',
+    textAlign: 'center',
     fontSize: 20,
     paddingLeft: 20,
     paddingRight: 20,
     paddingTop: 10,
     paddingBottom: 10,
-    fontWeight: "bold"
+    fontWeight: 'bold'
   }
 });

@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-
 import {
-  Text,
   View,
   FlatList,
   StyleSheet,
@@ -17,9 +15,9 @@ import SongCard from "../screens/SongCard.js";
 import { refreshRoomToken } from "../firebase/index";
 import { connect } from "react-redux";
 import {
-    heightPercentageToDP as hp,
-    widthPercentageToDP as wp,
-   } from 'react-native-responsive-screen'
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp
+} from "react-native-responsive-screen";
 
 function SearchScreen(props) {
   const userName = props.userName;
@@ -42,9 +40,9 @@ function SearchScreen(props) {
   }, []);
 
   const searchHandler = async () => {
-    const q = encodeURIComponent(search);
+    const q = encodeURIComponent(`"${search}*"`);
     const response = await fetch(
-      `https://api.spotify.com/v1/search?type=track&limit=10&market=US&q=${q}`,
+      `https://api.spotify.com/v1/search?type=artist,track,album&limit=10&market=US&q=${q}`,
       {
         method: "GET",
         headers: {
@@ -54,7 +52,6 @@ function SearchScreen(props) {
     );
     const searchJSON = await response.json();
     setResults(searchJSON);
-    // setSearch("");
   };
 
   const activeSearch = async text => {
@@ -78,52 +75,55 @@ function SearchScreen(props) {
   return (
     <Container style={styles.mainView}>
       <View style={{ height: 13 }} />
-        <SearchBar
-          placeholder="Search"
-          onChangeText={text => activeSearch(text)}
-          value={search}
-          onSubmitEditing={searchHandler}
-          returnKeyType="search"
-          style={styles.searchBar}
-          inputStyle={{ backgroundColor: "white" }}
-          containerStyle={{
-            backgroundColor: "white",
-            borderWidth: 1,
-            borderRadius: 40,
-            borderColor: "black",
-            width: "95%",
-            alignSelf: "center"
-          }}
-          inputContainerStyle={{
-            backgroundColor: "white",
-            borderColor: "black"
-          }}
-        />
-
-        
+      <SearchBar
+        placeholder="Search"
+        onChangeText={text => activeSearch(text)}
+        value={search}
+        onSubmitEditing={searchHandler}
+        returnKeyType="search"
+        style={styles.searchBar}
+        inputStyle={{ backgroundColor: "white" }}
+        containerStyle={{
+          backgroundColor: "white",
+          borderWidth: 1,
+          borderRadius: 40,
+          borderColor: "black",
+          width: "95%",
+          alignSelf: "center"
+        }}
+        inputContainerStyle={{
+          backgroundColor: "white",
+          borderColor: "black"
+        }}
+      />
       <View
-      style={{display: 'flex', flex: 1}}
-              contentContainerStyle={{justifyContent: 'center', alignItems: 'stretch'}}
+        style={{ display: "flex", flex: 1 }}
+        contentContainerStyle={{
+          justifyContent: "center",
+          alignItems: "stretch"
+        }}
       >
-          {results.tracks ? (
-            <ScrollView style={{marginBottom: 30}}>
-              <FlatList
-                data={results.tracks.items}
-                renderItem={({ item }) => (
-                  <SongCard item={item} docId={docId} userName={userName} />
-                )}
-                keyExtractor={item => item.id}
-              />
-            </ScrollView>
-          ) : (
-            <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+        {results.tracks ? (
+          <ScrollView style={{ marginBottom: 30 }}>
+            <FlatList
+              data={results.tracks.items}
+              renderItem={({ item }) => (
+                <SongCard item={item} docId={docId} userName={userName} />
+              )}
+              keyExtractor={item => item.id}
+            />
+          </ScrollView>
+        ) : (
+          <View
+            style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+          >
             <Image
-            style={styles.searchImage}
-            source={require('../weJay.png')}
-            resizeMode="contain"
-             />
-            </View>
-          )}
+              style={styles.searchImage}
+              source={require("../weJay.png")}
+              resizeMode="contain"
+            />
+          </View>
+        )}
       </View>
     </Container>
   );
@@ -178,8 +178,8 @@ const styles = StyleSheet.create({
   },
   searchImage: {
     opacity: 0.5,
-    width: wp('80%'),
-    height: hp('50%'),
-    marginBottom: hp('25%')
-  },
+    width: wp("80%"),
+    height: hp("50%"),
+    marginBottom: hp("25%")
+  }
 });

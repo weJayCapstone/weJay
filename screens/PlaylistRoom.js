@@ -7,7 +7,6 @@ import {
   View,
   FlatList,
   ImageBackground,
-  StatusBar,
   SafeAreaView
 } from 'react-native';
 import { connect } from 'react-redux';
@@ -15,13 +14,15 @@ import { Feather } from '@expo/vector-icons';
 import db from '../firebase/index';
 import SingleSong from './SingleSong';
 import {
-    heightPercentageToDP as hp,
-    widthPercentageToDP as wp,
-   } from 'react-native-responsive-screen'
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp
+} from 'react-native-responsive-screen';
 
 function PlaylistRoom(props) {
   const docId = props.docId;
   const userName = props.userName;
+  const roomData = props.roomData || {};
+
   let title;
   if (props.roomData) {
     title = props.roomData.title;
@@ -60,11 +61,16 @@ function PlaylistRoom(props) {
       unsub();
     };
   }, [docId]);
+
+  const goToStats = () => {
+    props.navigation.navigate('Stats');
+  };
+
   return (
     <>
       <ScrollView style={styles.background}>
         <ImageBackground
-          source={require('../gradient3.png')}
+          source={require('../weJayGradient.png')}
           style={{
             height: hp('28%'),
             display: 'flex',
@@ -86,6 +92,37 @@ function PlaylistRoom(props) {
           >
             {title}
           </Text>
+
+          {songData.id ? (
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignContent: 'flex-end',
+                justifyContent: 'center'
+              }}
+            >
+              <Feather
+                name="speaker"
+                size={18}
+                color="white"
+                style={{ alignSelf: 'center', paddingTop: 15 }}
+              />
+              <Text
+                style={{
+                  fontSize: 16,
+                  color: 'white',
+                  paddingTop: 15,
+                  maxWidth: 300,
+                  alignSelf: 'flex-start'
+                }}
+                ellipsizeMode="tail"
+                numberOfLines={1}
+              >
+                Now Playing: {songData.name}
+              </Text>
+            </View>
+          ) : null}
           <Text
             style={{
               fontSize: hp('2.2%'),
@@ -94,20 +131,8 @@ function PlaylistRoom(props) {
               paddingTop: 15,
               maxWidth: 300
             }}
-            ellipsizeMode="tail"
-            numberOfLines={1}
           >
-            Now Playing {songData.name}
-          </Text>
-          <Text
-            style={{
-              fontSize: 14,
-              color: 'white',
-              alignSelf: 'center',
-              paddingTop: 25
-            }}
-          >
-            Welcome DJ {userName}!
+            Welcome, DJ {userName}
           </Text>
         </ImageBackground>
         {songs !== [] ? (
@@ -121,6 +146,35 @@ function PlaylistRoom(props) {
         ) : (
           <Text>Search To Add Songs to Your Playlist!</Text>
         )}
+        {userName === roomData.hostName ? (
+          <TouchableOpacity
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignContent: 'flex-end',
+              justifyContent: 'center'
+            }}
+            onPress={() => goToStats()}
+          >
+            <Text
+              style={{
+                color: '#fff',
+                alignSelf: 'center',
+                fontSize: 20,
+                paddingRight: 5,
+                paddingTop: 30
+              }}
+            >
+              PLAYLIST STATS
+            </Text>
+            <Feather
+              name="bar-chart-2"
+              size={20}
+              color="#fff"
+              style={{ alignSelf: 'center', paddingTop: 30 }}
+            />
+          </TouchableOpacity>
+        ) : null}
       </ScrollView>
       <View style={styles.buttonBackground}>
         <TouchableOpacity
@@ -171,7 +225,7 @@ const styles = StyleSheet.create({
     padding: hp('2.1%'),
     backgroundColor: '#423959',
     borderRadius: 25,
-    width: hp('26%'),
+    width: hp('24%'),
     marginBottom: hp('3%'),
     marginTop: hp('2%'),
     margin: 'auto',
