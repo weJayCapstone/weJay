@@ -2,6 +2,9 @@
 
 A collaborative, interactive mobile playlist app that uses Spotify's API in tandem with Google Cloud Firestore and React Native in order to allow users to vote on songs, allowing the playlist order to update in real time. 
 
+Our Capstone Presentation Video
+https://youtu.be/2NvC6te1Nak
+
 ## Getting Started
 
 The following instructions will provide a copy of weJay and ready it for launch on a local machine for development purposes.
