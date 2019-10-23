@@ -10,7 +10,12 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import { width, height } from '../constants/Layout';
-
+import {
+    heightPercentageToDP as hp,
+    widthPercentageToDP as wp,
+   } from 'react-native-responsive-screen'
+   
+//400 x 700
 function HomeScreen(props) {
   const docId = props.docId;
   const userName = props.userName;
@@ -21,14 +26,15 @@ function HomeScreen(props) {
           uri:
             'https://s30226.pcdn.co/wp-content/uploads/2015/02/half-moon-party-dates.jpg'
         }}
-        style={{ width: 375, height: 1000 }}
+        style={{ width: wp('100%'), height: hp('100%') }}
         imageStyle={{ opacity: 0.7 }}
         resizeMode="cover"
       >
         <View style={styles.itemsContainer}>
           <Image
             source={require('../weJay.png')}
-            style={{ width: 250, height: 250, marginTop: 150 }}
+            style={{ width: wp('70%'), height: hp('40%'), marginTop: hp('15%') }}
+            resizeMode="contain"
           />
           <View>
             <TouchableHighlight
@@ -83,8 +89,8 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     flexDirection: 'column',
     alignItems: 'center',
-    width: 375,
-    height: 700
+    width: wp('100%'),
+    height: hp('100%')
   },
   itemsContainer: {
     flex: 1,

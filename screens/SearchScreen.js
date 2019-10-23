@@ -1,28 +1,30 @@
-import React, { useState, useEffect } from 'react';
-
+import React, { useState, useEffect } from "react";
 import {
-  Text,
   View,
   FlatList,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
   Image
-} from 'react-native';
-import { Feather } from '@expo/vector-icons';
+} from "react-native";
+import { Feather } from "@expo/vector-icons";
 
-import { SearchBar } from 'react-native-elements';
-import { Container, Content } from 'native-base';
-import SongCard from '../screens/SongCard.js';
-import { refreshRoomToken } from '../firebase/index';
-import { connect } from 'react-redux';
+import { SearchBar } from "react-native-elements";
+import { Container, Content } from "native-base";
+import SongCard from "../screens/SongCard.js";
+import { refreshRoomToken } from "../firebase/index";
+import { connect } from "react-redux";
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp
+} from "react-native-responsive-screen";
 
 function SearchScreen(props) {
   const userName = props.userName;
   const docId = props.docId;
-  let [search, setSearch] = useState('');
+  let [search, setSearch] = useState("");
   let [results, setResults] = useState({});
-  let [accessToken, setAccessToken] = useState('');
+  let [accessToken, setAccessToken] = useState("");
 
   const accountInitialize = async () => {
     try {
@@ -42,7 +44,7 @@ function SearchScreen(props) {
     const response = await fetch(
       `https://api.spotify.com/v1/search?type=artist,track,album&limit=10&market=US&q=${q}`,
       {
-        method: 'GET',
+        method: "GET",
         headers: {
           Authorization: `Bearer ${accessToken}`
         }
@@ -62,7 +64,7 @@ function SearchScreen(props) {
     headerLeft: (
       <TouchableOpacity
         onPress={() => {
-          props.navigation.navigate('PlaylistRoom');
+          props.navigation.navigate("PlaylistRoom");
         }}
       >
         <Feather name="chevron-left" size={32} color="#4392F1" />
@@ -80,26 +82,25 @@ function SearchScreen(props) {
         onSubmitEditing={searchHandler}
         returnKeyType="search"
         style={styles.searchBar}
-        inputStyle={{ backgroundColor: 'white' }}
+        inputStyle={{ backgroundColor: "white" }}
         containerStyle={{
-          backgroundColor: 'white',
+          backgroundColor: "white",
           borderWidth: 1,
           borderRadius: 40,
-          borderColor: 'black',
-          width: '95%',
-          alignSelf: 'center',
-          marginBottom: 5
+          borderColor: "black",
+          width: "95%",
+          alignSelf: "center"
         }}
         inputContainerStyle={{
-          backgroundColor: 'white',
-          borderColor: 'black'
+          backgroundColor: "white",
+          borderColor: "black"
         }}
       />
       <View
-        style={{ display: 'flex', flex: 1 }}
+        style={{ display: "flex", flex: 1 }}
         contentContainerStyle={{
-          justifyContent: 'center',
-          alignItems: 'stretch'
+          justifyContent: "center",
+          alignItems: "stretch"
         }}
       >
         {results.tracks ? (
@@ -114,11 +115,12 @@ function SearchScreen(props) {
           </ScrollView>
         ) : (
           <View
-            style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+            style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
           >
             <Image
               style={styles.searchImage}
-              source={require('../weJay.png')}
+              source={require("../weJay.png")}
+              resizeMode="contain"
             />
           </View>
         )}
@@ -140,44 +142,44 @@ const styles = StyleSheet.create({
     margin: 1,
     borderRadius: 25,
     borderWidth: 1,
-    borderColor: '#fff'
+    borderColor: "#fff"
   },
   text: {
     fontSize: 20,
-    textAlign: 'center'
+    textAlign: "center"
   },
   mainView: {
-    backgroundColor: '#a99bc9',
-    display: 'flex',
-    alignItems: 'stretch'
+    backgroundColor: "#a99bc9",
+    display: "flex",
+    alignItems: "stretch"
   },
   card: {
-    backgroundColor: 'white',
-    color: '#E7F9A9',
-    display: 'flex',
-    flexDirection: 'row',
+    backgroundColor: "white",
+    color: "#E7F9A9",
+    display: "flex",
+    flexDirection: "row",
     borderWidth: 2.5,
-    borderColor: 'grey'
+    borderColor: "grey"
   },
   songInfo: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'stretch',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "stretch",
     padding: 13,
-    justifyContent: 'center'
+    justifyContent: "center"
   },
   searchBar: {
-    backgroundColor: 'white'
+    backgroundColor: "white"
   },
   searchText: {
     fontSize: 20,
-    color: '#FF5857',
-    alignSelf: 'center'
+    color: "#FF5857",
+    alignSelf: "center"
   },
   searchImage: {
     opacity: 0.5,
-    width: 300,
-    height: 300,
-    marginBottom: 200
+    width: wp("80%"),
+    height: hp("50%"),
+    marginBottom: hp("25%")
   }
 });

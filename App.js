@@ -23,6 +23,10 @@ import SearchScreen from './screens/SearchScreen';
 import Playback from './screens/Playback';
 import Stats from './screens/Stats';
 
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp
+} from 'react-native-responsive-screen';
 require('./secrets');
 
 //redux
@@ -199,7 +203,7 @@ const styles = StyleSheet.create({
   feather: { marginLeft: 'auto' },
   nowPlayingText: {
     color: '#fff',
-    fontSize: 18,
+    fontSize: hp('2.5%'),
     paddingRight: 3,
     paddingTop: 5
   },
