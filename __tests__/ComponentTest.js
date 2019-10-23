@@ -1,29 +1,36 @@
 import React from 'react';
-import NavigationTestUtils from 'react-navigation/NavigationTestUtils';
 import renderer from 'react-test-renderer';
-
 import App from '../App';
+import CreatePlaylistForm from '../screens/CreatePlaylistForm'
+import HomeScreen from '../screens/HomeScreen';
+import { Provider } from "react-redux";
+import configureMockStore from 'redux-mock-store'
 
-jest.mock('expo', () => ({
-  AppLoading: 'AppLoading',
-}));
+const mockStore = configureMockStore()
 
-jest.mock('../navigation/AppNavigator', () => 'AppNavigator');
+describe('Component Snapshots', () => {
 
-describe('App', () => {
-  jest.useFakeTimers();
-
-  beforeEach(() => {
-    NavigationTestUtils.resetInternalState();
+  it(`App.js renders correctly`, () => {
+    const tree = renderer.create(<App/>).toJSON();
+    expect(tree).toMatchSnapshot();
   });
-
-  it(`renders the loading screen`, () => {
-    const tree = renderer.create(<App />).toJSON();
+  it('CreatePlaylistForm renders correctly', () => {
+    const store = mockStore({});
+    const tree =renderer.create(
+        <Provider store ={store}>
+            <CreatePlaylistForm/>
+        </Provider>
+    ).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+  it(`HomeScreen renders correctly`, () => {
+    const store = mockStore({})
+    const tree = renderer.create(
+      <Provider store={store}>
+          <HomeScreen/>
+      </Provider>
+    ).toJSON();
     expect(tree).toMatchSnapshot();
   });
 
-  it(`renders the root without loading screen`, () => {
-    const tree = renderer.create(<App skipLoadingScreen />).toJSON();
-    expect(tree).toMatchSnapshot();
-  });
 });
