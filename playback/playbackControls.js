@@ -9,7 +9,7 @@ import {
     resume
   } from '../api/spotify';
 
-  let timeout;
+  var timeout;
 
   const playbackTimer = async (songTime, docId) => {
     let roomData = await getRoomData(docId) 

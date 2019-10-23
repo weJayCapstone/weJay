@@ -56,6 +56,9 @@ function PlaylistRoom(props) {
       unsub();
     };
   }, [docId]);
+  const goToStats = () => {
+      props.navigation.navigate('Stats')
+  }
   return (
     <>
       <ScrollView style={styles.background}>
@@ -82,19 +85,36 @@ function PlaylistRoom(props) {
           >
             {title}
           </Text>
-          <Text
-            style={{
-              fontSize: 16,
-              color: 'white',
-              alignSelf: 'center',
-              paddingTop: 15,
-              maxWidth: 300
-            }}
-            ellipsizeMode="tail"
-            numberOfLines={1}
-          >
-            Now Playing {songData.name}
-          </Text>
+          {songData.id ? (
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignContent: 'flex-end',
+                justifyContent: 'center'
+              }}
+            >
+              <Feather
+                name="speaker"
+                size={18}
+                color="white"
+                style={{ alignSelf: 'center', paddingTop: 15 }}
+              />
+              <Text
+                style={{
+                  fontSize: 16,
+                  color: 'white',
+                  paddingTop: 15,
+                  maxWidth: 300,
+                  alignSelf: 'flex-start'
+                }}
+                ellipsizeMode="tail"
+                numberOfLines={1}
+              >
+                Now Playing: {songData.name}
+              </Text>
+            </View>
+          ) : null}
           <Text
             style={{
               fontSize: 14,
@@ -103,7 +123,7 @@ function PlaylistRoom(props) {
               paddingTop: 25
             }}
           >
-            Welcome to the party {userName}!
+            Welcome {userName}!
           </Text>
         </ImageBackground>
         {songs !== [] ? (
@@ -113,6 +133,12 @@ function PlaylistRoom(props) {
               renderItem={({ item }) => <SingleSong song={item} />}
               keyExtractor={item => item.id}
             />
+            <TouchableOpacity 
+            style={styles.endButton}
+            onPress={() => goToStats()}
+            >
+                <Text style={{color: '#fff', alignSelf:'center'}}>END</Text>
+            </TouchableOpacity>
           </SafeAreaView>
         ) : (
           <Text>Search To Add Songs to Your Playlist!</Text>
@@ -189,5 +215,13 @@ const styles = StyleSheet.create({
   },
   musicnote: {
     paddingRight: 10
+  },
+  endButton:{
+      borderWidth: 2,
+      borderRadius: 25,
+      borderColor:'#fff',
+      width: 100,
+      alignSelf: 'center',
+      padding: 5
   }
 });

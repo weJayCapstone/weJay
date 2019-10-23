@@ -96,9 +96,6 @@ export async function refreshRoomToken(docId) {
 
 export async function addSongToDB(roomId, songData) {
   try {
-    let result = await refreshRoomToken(roomId);
-    //add song to spotify playlist
-    await addSong(result, songData);
     const playlist = db
       .collection('Rooms')
       .doc(roomId)
@@ -200,6 +197,8 @@ export async function setCurrentSong(roomData, docId) {
     let playlistRef = db.collection('Rooms').doc(docId).collection('Playlist');
     try{
         //add current song to master playlist
+        let result = await refreshRoomToken(docId);
+        await addSong(result, currentSong);
         let finalPlaylist= roomRef.collection('Final Playlist');
         await finalPlaylist.add({
             addedToFP: Date.now(),
@@ -234,11 +233,12 @@ export async function getCurrentSongData(docId){
     }
 }
 export async function getFinalPlaylist(docId){
+    let playlistArr = [];
     try{
         let finalPlaylistRef = db.collection('Rooms').doc(docId).collection('Final Playlist');
         let finalpl = await finalPlaylistRef.orderBy('addedToFP','asc').get();
-        //what do you want from this? song uri?
-        console.log(finalpl);
+        finalpl.forEach(doc => playlistArr.push(doc.data()));
+        return playlistArr;
     }catch(err){
         console.log(err);
     }

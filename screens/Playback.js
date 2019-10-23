@@ -14,6 +14,8 @@ import Modal from "react-native-modal";
 import PlaybackClass from "./PlaybackClass";
 import db from "../firebase/index";
 import { connect } from "react-redux";
+const width = Dimensions.get('window').width;
+const height = Dimensions.get('window').height;
 
 function Playback(props) {
   const docId = props.docId;
@@ -43,8 +45,8 @@ function Playback(props) {
       <ImageBackground
         source={require("../gradient3.png")}
         style={{
-          width: 400,
-          height: 700,
+          width: width,
+          height: height,
           alignSelf: "center",
           display: "flex"
         }}
@@ -91,7 +93,7 @@ function Playback(props) {
               {songData.albumName}
             </Text>
           </View>
-          <View style={{ top: 75 }}>
+          <View style={{ top: 25, marginBottom: 30 }}>
             <PlaybackClass setPlaying={setPlaying} />
           </View>
         </View>
@@ -112,18 +114,18 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     flexDirection: "column",
     alignItems: "center",
-    height: 700,
-    width: 400,
+    height: height,
+    width: width,
     alignSelf: "center"
   },
   image: {
-    width: 400,
-    height: 350, //may need to fix this for my screen
-    marginTop: 40
+    width: width,
+    height: .5* height, //may need to fix this for my screen
+    marginTop: 20
   },
   wejayLogo: {
-    width: 300,
-    height: 300,
+    width: 200,
+    height: 200,
     paddingTop: 100
   },
   songName: {

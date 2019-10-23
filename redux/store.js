@@ -8,6 +8,7 @@ const SET_DOCID ='SET_DOCID';
 const SET_USERNAME ='SET_USERNAME';
 const SET_HOSTNAME = 'SET_HOSTNAME';
 const SET_ROOMDATA = 'SET_ROOMDATA';
+const IS_PLAYING ='IS_PLAYING';
 
 
 //action creators 
@@ -36,6 +37,12 @@ export const setHostName = (hostName) => {
         hostName
     }
 }
+export const setPlaying = (boolean) => {
+    return {
+        type: IS_PLAYING,
+        boolean
+    }
+}
 //thunks
 export const fetchRoomDataThunk = docId => {
     return async dispatch => {
@@ -48,7 +55,7 @@ export const fetchRoomDataThunk = docId => {
     }
 }
 
-const reducer = (state ={} , action) => {
+const reducer = (state ={isPlaying: false} , action) => {
     switch (action.type) {
         case SET_DOCID:
           return {...state, docId: action.docId}
@@ -56,6 +63,8 @@ const reducer = (state ={} , action) => {
           return {...state, userName: action.userName}
         case SET_ROOMDATA:
           return {...state, roomData: action.roomData}
+        case IS_PLAYING:
+          return {...state, isPlaying:action.boolean}
         default:
           return state;
       }

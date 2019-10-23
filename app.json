@@ -11,11 +11,11 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./weJay.png",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./weJayLogo.gif",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#423959"
     },
     "updates": {
       "fallbackToCacheTimeout": 0

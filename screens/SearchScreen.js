@@ -1,20 +1,22 @@
-import React, { useState, useEffect } from "react";
-
+import React, { Component, useState, useEffect } from "react";
+import { AuthSession } from "expo";
+import { encode as btoa } from "base-64";
 import {
   Text,
   View,
   FlatList,
   StyleSheet,
   ScrollView,
-  TouchableOpacity
+  TouchableOpacity,
+  Image
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
-import { SearchBar } from "react-native-elements";
-import { Container, Content } from "native-base";
+import { SearchBar} from "react-native-elements";
+import { Container, Content} from "native-base";
 import SongCard from "../screens/SongCard.js";
-import { refreshRoomToken } from "../firebase/index";
-import { connect } from "react-redux";
+import { refreshRoomToken} from "../firebase/index";
+import { connect } from 'react-redux';
 
 function SearchScreen(props) {
   const userName = props.userName;
@@ -22,7 +24,7 @@ function SearchScreen(props) {
   let [search, setSearch] = useState("");
   let [results, setResults] = useState({});
   let [accessToken, setAccessToken] = useState("");
-
+  
   const accountInitialize = async () => {
     try {
       let result = await refreshRoomToken(docId);
@@ -37,9 +39,9 @@ function SearchScreen(props) {
   }, []);
 
   const searchHandler = async () => {
-    const q = encodeURIComponent(search);
+    const q = encodeURIComponent(`"${search}*"`);
     const response = await fetch(
-      `https://api.spotify.com/v1/search?type=track&limit=10&market=US&q=${q}`,
+      `https://api.spotify.com/v1/search?type=artist,track,album&limit=10&market=US&q=${q}`,
       {
         method: "GET",
         headers: {
@@ -49,33 +51,19 @@ function SearchScreen(props) {
     );
     const searchJSON = await response.json();
     setResults(searchJSON);
-    // setSearch("");
   };
 
-  const activeSearch = async text => {
-    setSearch(text);
 
-    await searchHandler();
-  };
+  const activeSearch = async (text) => {
+    setSearch(text)
+    await searchHandler()
+  }
 
-  SearchScreen.navigationOptions = {
-    headerLeft: (
-      <TouchableOpacity
-        onPress={() => {
-          props.navigation.navigate("PlaylistRoom");
-        }}
-      >
-        <Feather name="chevron-left" size={32} color="#4392F1" />
-      </TouchableOpacity>
-    )
-  };
 
   return (
     <Container style={styles.mainView}>
       <View style={{ height: 13 }} />
-
-      <Content>
-        <SearchBar
+      <SearchBar
           placeholder="Search"
           onChangeText={text => activeSearch(text)}
           value={search}
@@ -89,37 +77,46 @@ function SearchScreen(props) {
             borderRadius: 40,
             borderColor: "black",
             width: "95%",
-            alignSelf: "center"
+            alignSelf: "center",
+            marginBottom:5
           }}
           inputContainerStyle={{
             backgroundColor: "white",
             borderColor: "black"
           }}
         />
-
-        <ScrollView style={{ top: 10 }}>
+      <View
+      style={{display: 'flex', flex: 1}}
+              contentContainerStyle={{justifyContent: 'center', alignItems: 'stretch'}}
+      >
           {results.tracks ? (
-            <FlatList
-              data={results.tracks.items}
-              renderItem={({ item }) => (
-                <SongCard item={item} docId={docId} userName={userName} />
-              )}
-              keyExtractor={item => item.id}
-            />
+            <ScrollView>
+              <FlatList
+                data={results.tracks.items}
+                renderItem={({ item }) => (
+                  <SongCard item={item} docId={docId} userName={userName} />
+                )}
+                keyExtractor={item => item.id}
+              />
+            </ScrollView>
           ) : (
-            <Text style={styles.searchText}>Search weJay for a Song!</Text>
+            <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+            <Image
+            style={styles.searchImage}
+            source={require('../weJay.png')}
+             />
+            </View>
           )}
-        </ScrollView>
-      </Content>
+      </View>
     </Container>
-  );
+  )
 }
 const mapStateToProps = state => {
-  return {
-    docId: state.docId,
-    userName: state.userName
-  };
-};
+    return{
+        docId: state.docId,
+        userName: state.userName
+    }
+}
 export default connect(mapStateToProps)(SearchScreen);
 
 const styles = StyleSheet.create({
@@ -155,11 +152,18 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
   searchBar: {
-    backgroundColor: "white"
+    backgroundColor: "white",
   },
   searchText: {
     fontSize: 20,
     color: "#FF5857",
     alignSelf: "center"
-  }
+  },
+  searchImage: {
+    marginTop: 20,
+    opacity: 0.3,
+    width: 300,
+    height: 300,
+    marginBottom: 200
+  },
 });

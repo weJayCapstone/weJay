@@ -11,6 +11,7 @@ import {
 import { connect } from 'react-redux';
 import { width, height } from '../constants/Layout';
 
+
 function HomeScreen(props) {
   const docId = props.docId;
   const userName = props.userName;
@@ -21,14 +22,14 @@ function HomeScreen(props) {
           uri:
             'https://s30226.pcdn.co/wp-content/uploads/2015/02/half-moon-party-dates.jpg'
         }}
-        style={{ width: 375, height: 1000 }}
+        style={{ width: '100%', height: '100%' }}
         imageStyle={{ opacity: 0.7 }}
         resizeMode="cover"
       >
         <View style={styles.itemsContainer}>
           <Image
             source={require('../weJay.png')}
-            style={{ width: 250, height: 250, marginTop: 150 }}
+            style={{ width: 200, height: 200, marginTop: 100 }}
           />
           <View>
             <TouchableHighlight
@@ -83,8 +84,8 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     flexDirection: 'column',
     alignItems: 'center',
-    width: 375,
-    height: 700
+    width: width,
+    height: height
   },
   itemsContainer: {
     flex: 1,

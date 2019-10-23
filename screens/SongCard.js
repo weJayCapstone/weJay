@@ -11,13 +11,15 @@ import {
 } from "react-native";
 import Modal from "react-native-modal";
 import { addSongToDB } from "../firebase/index";
+import {connect} from 'react-redux'
 
-export default class SongCard extends Component {
+class SongCard extends Component {
   constructor(props) {
     super(props);
     this.state = {
       docId: this.props.docId,
-      visibleModal: false
+      visibleModal: false,
+      userName: this.props.userName
     };
     this.handleSongSelection = this.handleSongSelection.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
@@ -37,7 +39,8 @@ export default class SongCard extends Component {
       timeAdded: Date.now(),
       users: {
         [this.props.userName]: null
-      }
+      },
+      addedBy:this.state.userName
     };
     return result;
   };
@@ -60,17 +63,17 @@ export default class SongCard extends Component {
   }
 
   render() {
+    let albumArt = this.props.item.album.images || [];
     return (
       <View>
         <TouchableHighlight onPress={this.toggleModal}>
           <Card style={styles.card}>
-            <View>
+          { albumArt ?
               <Image
                 style={{ width: 75, height: 75 }}
                 resizeMode="cover"
-                source={{ uri: `${this.props.item.album.images[1].url}` }}
-              />
-            </View>
+                source={{ uri: `${albumArt[1].url}` }}
+              /> : null}
             <View style={styles.songInfo}>
               <View>
                 <Text
@@ -99,7 +102,7 @@ export default class SongCard extends Component {
         <Modal isVisible={this.state.visibleModal}>
           <View style={styles.content}>
             <View style={styles.modalDetails}>
-              <Image
+              { albumArt !== [] ?<Image
                 style={{
                   width: 200,
                   height: 200,
@@ -107,8 +110,8 @@ export default class SongCard extends Component {
                   marginTop: 15
                 }}
                 resizeMode="cover"
-                source={{ uri: `${this.props.item.album.images[1].url}` }}
-              />
+                source={{ uri: `${albumArt[1].url}` }}
+              />: null}
               <Text
                 numberOfLines={2}
                 ellipsizeMode="tail"
@@ -147,6 +150,13 @@ export default class SongCard extends Component {
     );
   }
 }
+const mapStateToProps = state => {
+    return {
+        userName: state.userName
+    }
+}
+
+export default connect(mapStateToProps)(SongCard)
 
 const styles = StyleSheet.create({
   card: {

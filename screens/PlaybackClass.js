@@ -8,15 +8,18 @@ import {
 } from "../playback/playbackControls";
 import { Feather } from "@expo/vector-icons";
 import { connect } from "react-redux";
+import {getFinalPlaylistStats} from '../firebase/index';
+import {setPlaying} from '../redux/store'
 
 class PlaylistClass extends Component {
   constructor(props) {
     super(props);
     this.state = {
       paused: false,
-      playButton: true
+      playButton: !this.props.isPlaying
     };
   }
+ 
 
   handlePause() {
     this.setState({ paused: true });
@@ -31,8 +34,8 @@ class PlaylistClass extends Component {
   //ADDED THIS TO HIDE PLAY BUTTON AFTER INITIAL PRESS TO START MUSIC
   hidePlayButton() {
     playSong(this.props.docId);
-    this.setState({ playButton: false });
     this.props.setPlaying(true);
+    this.setState({ playButton: false });
   }
 
   render() {
@@ -86,10 +89,17 @@ const mapStateToProps = state => {
   return {
     docId: state.docId,
     roomData: state.roomData,
-    userName: state.userName
+    userName: state.userName,
+    isPlaying: state.isPlaying
   };
 };
-export default connect(mapStateToProps)(PlaylistClass);
+const mapDispatchToProps = dispatch => {
+    return {
+        setPlaying: (bool) => dispatch(setPlaying(bool))
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(PlaylistClass);
+
 const styles = StyleSheet.create({
   icons: {
     flexDirection: "row",

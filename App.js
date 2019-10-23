@@ -23,6 +23,7 @@ import JoinPlaylistForm from './screens/JoinPlaylistForm';
 import PlaylistRoom from './screens/PlaylistRoom';
 import SearchScreen from './screens/SearchScreen';
 import Playback from './screens/Playback';
+import Stats from './screens/Stats'
 require('./secrets');
 
 //redux
@@ -135,6 +136,9 @@ const StackNav = createStackNavigator({
   },
   Playback: {
     screen: Playback
+  },
+  Stats: {
+      screen: Stats
   }
 });
 
